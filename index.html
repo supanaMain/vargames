@@ -1,0 +1,159 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>雑多web( 'ω')</title>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <style>
+
+        test-text2 {
+            padding: 0px;
+            color: lime;
+        }
+        test-text3 {
+            padding: 0px;
+            color: white;
+        }
+        test-text4 {
+            padding: 0px;
+            color: gray;
+        }
+        body {
+            padding: 30px;
+            background-color: #222222;
+        }
+    </style>
+    <script>
+//    	alert("テストログ( 'ω')");
+
+    </script>
+
+</head>
+
+<body>
+  <home id="home" name="home">
+  	<p class="lead" style="color:white;">HOME</p>
+      	<strong style="color:white;">《おなまえを入力》</strong>     <input type="text" id= "player_name" value="ななし"> <input type="submit" value="けってい！" onClick="return name_check();">
+      <br><br><br>
+      <input type="submit" value="スロットをやる" class="btn btn-primary" id="slot-move-button" onClick="return slot_move_button();">
+    <br><br><br><br><br><br><br><br>
+    
+    <test class="btn btn-primary" id="delete-button">データを削除</test>
+    <script>
+   	var player_name = `ななし`;
+       function name_check() {
+           player_name = document.getElementById("player_name").value;
+       	alert(`${player_name}にしました( 'ω')`);
+       }
+       document.getElementById("delete-button").onclick = function() {
+       	var result = window.confirm('削除しますか？');
+           if(result == true) {
+           	result = window.confirm('本当に削除しますか？');
+               if(result == true) {
+              	result = window.confirm('消したデータは返ってきません。それでも削除しますか？');
+                  if(result == true) {
+                  	result = window.confirm('本当に消したデータは返ってきません。それでも削除しますか？');
+                      if(result == true) {
+                      	result = window.confirm('こうかいしませんね？');
+                          if(result == true) {
+                            alert("まあ消さないけどね( 'ω')");
+                          }
+                      }
+                  }
+               }
+           }
+       }
+    </script>
+  </home>
+  <slot id="slot-game">
+    <p class="lead" style="color:white;">すろっと</p>
+    <br>
+    <input type="submit" value="ホームに戻る" class="btn btn-primary" id="home-move-button" onClick="return home_move_button();"><test class="btn btn-primary" id="logclear-button">ログをクリア</test>
+    <br><br><br><br>
+    <test class="btn btn-primary" id="test-button">スロットをまわす</test>
+    <br>
+    <slot-pname><h4 id="slot-pname" style="color:white;">- - - - -</h4></slot-pname>
+    <test-text2><h1 id="test-button-text2">- - - - -</h1></test-text2>
+    <test-text3><h3 id="test-button-text3"></h3></test-text3>
+    <br>
+    <test-text4><p id="test-button-text4"></p></test-text4>
+    <script>
+    	var day = ``;
+    	setInterval(() => {
+          day = new Date().toLocaleString({ timeZone: 'Asia/Tokyo' });
+        },1000);
+    	var slot_1 = ``;
+        var slot_2 = ``;
+        var slot_3 = ``;
+        var result_txt = ``;
+        var result = ``;
+        var result_log = ``;
+       document.getElementById("test-button").onclick = function() {
+//            alert("クリックしました( 'ω')");
+            result_log = `${result} ${result_txt}<br>${result_log}`;
+            document.getElementById("test-button-text4").innerHTML = result_log;
+            slot_1 = Math.floor(Math.random() * 9) + 1;
+            slot_2 = Math.floor(Math.random() * 9) + 1;
+            slot_3 = Math.floor(Math.random() * 9) + 1;
+            if (slot_1 == slot_2 && slot_1 == slot_3 && slot_1 == 7) {
+                result_txt = "ラッキーセブン！ ";
+            } else if (slot_1 == slot_2 && slot_1 == slot_3 && slot_1 == 6) {
+                result_txt = "数字が不吉なのでおおはずれ！";
+            } else if (slot_1 == 3 && slot_2 == 3 && slot_3 == 4) {
+                result_txt = "なんでや！阪神関係無いやろ！ ";
+            } else if (slot_1 == slot_2 && slot_1 == slot_3) {
+                result_txt = "おめでとう！ ";
+            } else if (slot_1 == 3 && slot_2 == 1 && slot_3 == 4) {
+                result_txt = "円周率かな？( \'ω\') ";
+            } else if ((slot_1 == 5 && slot_2 == 1 && slot_3 == 4) || (slot_1 == 1 && slot_2 == 1 && slot_3 == 4) || (slot_1 == 9 && slot_2 == 3 && slot_3 == 1)) {
+                result_txt = "ざんねん！ 数字がきたないで賞！ ";
+            } else if (slot_1 == slot_2 || slot_2 == slot_3 || slot_1 == slot_3) {
+                result_txt = "おしい！ ";
+            } else {
+                result_txt = "ざんねん！ ";
+            }
+            result_txt = `${result_txt} -- ${day}`;
+            result = `| ${slot_1} : ${slot_2} : ${slot_3} |`;
+            document.getElementById("slot-pname").innerHTML = `${player_name}の結果は...`;
+            document.getElementById("test-button-text2").innerHTML = result;
+            document.getElementById("test-button-text3").innerHTML = result_txt;
+        };
+        
+       document.getElementById("logclear-button").onclick = function() {
+           var logclear = window.confirm('ログを削除しますか？');
+           if(logclear == true) document.getElementById("test-button-text4").innerHTML = ``;
+       }
+    </script>
+
+   </slot>
+     
+     
+     <!-- ページ操作 -->
+     <script>
+         function reset(){
+       	document.getElementById("home").style.display ="none";
+       	document.getElementById("slot-game").style.display ="none";
+         }
+         reset();
+     	document.getElementById("home").style.display ="block";
+     
+     	function slot_move_button(){
+        	reset();
+        	document.getElementById("slot-game").style.display ="block";
+         }
+     	function home_move_button(){
+        	reset();
+        	document.getElementById("home").style.display ="block";
+         }
+     </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</body>
+
+</html>
