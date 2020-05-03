@@ -5,15 +5,15 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="mobile-web-app-capable" content="yes">
 
-    <title>雑多げぇむweb( 'ω')</title>
+    <title>げぇむどす( 'ω')</title>
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <style>
 
         test-text2 {
             padding: 0px;
-            border: groove gray;
             color: lime;
             font-family: Georgia;
             font-size: 100%;
@@ -36,22 +36,66 @@
         }
     </style>
     <script>
-//    	alert("テストログ( 'ω')");
+       const now_version = "1.0.0";
+       
+       function rpg_player_status_set(){
+       var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+   	if(!player_status) {
+   	    player_status = JSON.stringify({
+   	        version : now_version,
+   	        name : player_name,
+   	        level : 1,
+               exp : 0,
+               nextexp : 20,
+               hp : 20,
+               maxhp : 20,
+               atk : 1,
+               def : 0,
+               coin : 100         
+   	    });
+           localStorage.setItem('player_status_key', player_status);
+       }
+       var rpg_player_status_view = (`
+             <おなまえ> ${player_status.name}<br>
+             ・レベル: ${player_status.level}<br>
+             ・けいけんち: ${player_status.exp} | つぎのレベルまで: ${player_status.nextexp}<br><br>
+             	
+             ・たいりょく: ${player_status.hp} / ${player_status.maxhp}<br>
+             ・こうげきりょく: ${player_status.atk}<br>
+             ・ぼうぎょりょく: ${player_status.def}<br>
+             ・しょじきん: ${player_status.coin}
+        `)
+        document.getElementById("rpg-player_status1").innerHTML = rpg_player_status_view;
+        document.getElementById("rpg-player_status2").innerHTML = rpg_player_status_view;
+    }
 
+
+ //バージョンが違う場合ステータスを初期化するコード(多分初期しか使わない)
+    var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+   	if(player_status && player_status.version != now_version) {
+          localStorage.removeItem('player_status_key');
+          rpg_player_status_set();
+          alert("バージョンが違うため ステータスを初期化しました。");
+   	}
     </script>
 
 </head>
 
 <body>
   <home id="home" name="home">
-  	<p class="lead" style="color:white;">HOME</p>
+  	<p class="lead" style="color:white;" id = "home_tag">げぇむ HOME   </p>
+      <script>document.getElementById("home_tag").innerHTML += `-- Ver ${now_version}`</script>
       	<strong style="color:white;">《おなまえを入力》</strong>     <input type="text" placeholder="おなまえを入力してください" id= "player_name_txt" value="ななし"> <input type="submit" value="けってい！" onClick="return name_check();">
       <br><br><br>
-      <input type="submit" value="スロットをやる" class="btn btn-primary" id="slot-move-button" onClick="return slot_move_button();">
+      <input type="submit" value="RPGもどきをやる(開発段階)" class="btn btn-primary" id="rpg-move-button" onClick="return rpg_move_button();">
       <br><br><br>
-      <input type="submit" value="RPGもどきをやる" class="btn btn-primary" id="rpg-move-button" onClick="return rpg_move_button();">
+      <input type="submit" value="スロットをやる" class="btn btn-primary" id="slot-move-button" onClick="return slot_move_button();">
+      <br><br><br><br>
+<rpg-player_status>
+    <p id="rpg-player_status1"style="border: groove white"></p>
+</rpg-player_status>
     <br><br><br><br><br><br><br><br>
-    <img class="img-responsive center-block" src = "https://cdn.discordapp.com/attachments/656126030062419998/704208453052137512/315.png">
+    <!-- <img class="img-responsive center-block" src = "https://cdn.discordapp.com/attachments/656126030062419998/704208453052137512/315.png"> -->
     <test class="btn btn-primary" id="delete-button">データを削除</test>
     <script>
        var player_name = localStorage.getItem('player_name_key');
@@ -67,6 +111,7 @@
                   player_status.name = player_name;
                   player_status = JSON.stringify(player_status);
                   localStorage.setItem('player_status_key', player_status);
+                  rpg_player_status_set();
               }
           	alert(`${player_name}にしました( 'ω')`);
            } else {
@@ -103,7 +148,7 @@
     <test class="btn btn-primary" id="test-button">スロットをまわす</test>
     <br>
     <slot-pname><h4 id="slot-pname" style="color:white;">- - - - -</h4></slot-pname>
-    <test-text2><h1 id="test-button-text2">- - - - -</h1></test-text2>
+    <test-text2><h1 id="test-button-text2" style="border: groove gray;">- - - - -</h1></test-text2>
     <test-text3><h3 id="test-button-text3"></h3></test-text3>
     <br>
     <test-text4><p id="test-button-text4"style="border: groove white"></p></test-text4>
@@ -161,40 +206,83 @@
     <br>
     <input type="submit" value="ホームに戻る" class="btn btn-primary" id="home-move-button" onClick="return home_move_button();">
     <br><br><br><br>
-    	<rpg-player_status>
-          <p id="rpg-player_status"style="border: groove white"></p>
-        </rpg-player_status>
+<rpg-player_status><p id="rpg-player_status2"style="border: groove white"></p></rpg-player_status>
+<br><br>
+  <input type="submit" value="経験値 +10 (デバッグ)" class="btn btn-primary" id="home-move-button" onClick="return test_enemy_death1();">
+ <br><br>
+  <input type="submit" value="経験値 +100 (デバッグ)" class="btn btn-primary" id="home-move-button" onClick="return test_enemy_death2();">
+ <br><br>
+  <input type="submit" value="経験値 +1000 (デバッグ)" class="btn btn-primary" id="home-move-button" onClick="return test_enemy_death3();">
+ <br><br>
+  <input type="submit" value="経験値 +9999 (デバッグ)" class="btn btn-primary" id="home-move-button" onClick="return test_enemy_death4();">
+ <br><br>
+ <rpg-player_status><p id="rpg-player_leveluplog"style="border: groove white">- - - -</p><rpg-player_status>
     <script>
-       function rpg_player_status_set(){
-       var player_status = JSON.parse(localStorage.getItem('player_status_key'));
-   	if(!player_status) {
-   	    player_status = JSON.stringify({
-   	        name : player_name,
-   	        level : 1,
-               exp : 0,
-               nextexp : 20,
-               hp : 20,
-               maxhp : 20,
-               atk : 1,
-               def : 0,
-               coin : 100         
-   	    });
-           localStorage.setItem('player_status_key', player_status);
-       }
-       document.getElementById("rpg-player_status").innerHTML = (`
-             <おなまえ> ${player_status.name}<br>
-             ・レベル: ${player_status.level}<br>
-             ・けいけんち: ${player_status.exp} | つぎのレベルまで: ${player_status.nextexp}<br><br>
-             	
-             ・たいりょく: ${player_status.hp} / ${player_status.maxhp}<br>
-             ・こうげきりょく: ${player_status.atk}<br>
-             ・ぼうぎょりょく: ${player_status.def}<br>
-             ・しょじきん: ${player_status.coin}
-        `)}
+//レベルアップって書いてあるけど敵倒した処理(クソコード)
+function levelup(){
+var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+var levelup_log = ``;
+if (player_status){
+	var enemy_exp = localStorage.getItem('enemy_exp');
+	player_status.exp = player_status.exp * 1 + enemy_exp * 1;
+	if (!(player_status.exp < player_status.nextexp || player_status.level >= 100)){
+    var now_lv = player_status.level * 1;
+    var now_hp = player_status.maxhp * 1;
+    var now_atk = player_status.atk * 1;
+    var now_def = player_status.def * 1;
+	while (player_status.exp >= player_status.nextexp && player_status.level < 100){
+    player_status.level = player_status.level * 1 + 1;
+    player_status.maxhp = player_status.maxhp * 1 + 10;
+    player_status.hp = player_status.maxhp;
+    player_status.atk = player_status.atk * 1 + 3;
+    player_status.def = player_status.def * 1 + 1;
+    var nownextexp = player_status.nextexp;
+    player_status.nextexp = Math.floor(nownextexp * 1 + (30 + (Math.floor(nownextexp * 0.12))));
+    }
+    var up_lv = player_status.level * 1;
+    var up_hp = player_status.maxhp * 1;
+    var up_atk = player_status.atk * 1;
+    var up_def = player_status.def * 1;
+    
+    var now_2_lv = up_lv * 1 - now_lv * 1;
+    var now_2_hp = up_hp * 1 - now_hp * 1;
+    var now_2_atk = up_atk * 1 - now_atk * 1
+    var now_2_def = up_def * 1 - now_def * 1;
+    if (player_status.level >= 100){
+    	player_status.nextexp = "-";
+    	player_status.exp = "-";
+    }
+    levelup_log = `${player_status.name} はレベルが上がった！<br> ・レベル ${now_lv} + ${now_2_lv}<br>・たいりょく: ${now_hp} + ${now_2_hp}<br> ・こうげきりょく: ${now_atk} + ${now_2_atk}<br>・ぼうぎょりょ:く ${now_def} + ${now_2_def}`;
+    }
+    player_status = JSON.stringify(player_status);
+    localStorage.setItem('player_status_key', player_status);
+    rpg_player_status_set();
+ } 
+  document.getElementById("rpg-player_leveluplog").innerHTML = `けいけんち ${enemy_exp} かくとく！<br>${levelup_log}`;
+}
+
+//テストエネミー
+function test_enemy_death1() {
+	localStorage.setItem('enemy_exp', 10);
+	levelup();
+}
+function test_enemy_death2() {
+	localStorage.setItem('enemy_exp', 100);
+	levelup();
+}
+function test_enemy_death3() {
+	localStorage.setItem('enemy_exp', 1000);
+	levelup();
+}
+function test_enemy_death4() {
+	localStorage.setItem('enemy_exp', 9999);
+	levelup();
+}
         rpg_player_status_set();
     </script>
 
    </rpg>
+
      
      
      <!-- ページ操作 -->
@@ -206,6 +294,7 @@
          }
          reset();
      	document.getElementById("home").style.display ="block";
+         rpg_player_status_set();
      
      	function rpg_move_button(){
         	reset();
