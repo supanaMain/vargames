@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
     <meta name="mobile-web-app-capable" content="yes">
 
     <title>げぇむどす( 'ω')</title>
@@ -56,7 +56,6 @@
            localStorage.setItem('player_status_key', player_status);
        }
        var rpg_player_status_view = (`
-             <おなまえ> ${player_status.name}<br>
              ・レベル: ${player_status.level}<br>
              ・けいけんち: ${player_status.exp} | つぎのレベルまで: ${player_status.nextexp}<br><br>
              	
@@ -66,7 +65,7 @@
              ・しょじきん: ${player_status.coin}
         `)
         document.getElementById("rpg-player_status1").innerHTML = rpg_player_status_view;
-        document.getElementById("rpg-player_status2").innerHTML = rpg_player_status_view;
+        document.getElementById("rpg-player_status2").innerHTML = `<strong>《おなまえ》</strong>${player_status.name}<br>${rpg_player_status_view}`;
     }
 
 
@@ -85,15 +84,17 @@
   <home id="home" name="home">
   	<p class="lead" style="color:white;" id = "home_tag">げぇむ HOME   </p>
       <script>document.getElementById("home_tag").innerHTML += `-- Ver ${now_version}`</script>
-      	<strong style="color:white;">《おなまえを入力》</strong>     <input type="text" placeholder="おなまえを入力してください" id= "player_name_txt" value="ななし"> <input type="submit" value="けってい！" onClick="return name_check();">
-      <br><br><br>
-      <input type="submit" value="RPGもどきをやる(開発段階)" class="btn btn-primary" id="rpg-move-button" onClick="return rpg_move_button();">
-      <br><br><br>
-      <input type="submit" value="スロットをやる" class="btn btn-primary" id="slot-move-button" onClick="return slot_move_button();">
-      <br><br><br><br>
 <rpg-player_status>
-    <p id="rpg-player_status1"style="border: groove white"></p>
+    <div style="border: groove white">
+	    <br><strong style="text-align: left; color:white; position:relative; top: 0px; left:5%;">《おなまえ》</strong>
+        <div style="text-align: left; width:80%; position:relative; top: 0px; left:7%;"><input type="text" style="color:black;" placeholder="おなまえを入力してください" id= "player_name_txt" value="ななし"> <input type="submit" style="color:black; width:8;font-size:90%;" value="けってい！" onClick="return name_check();"></div><br>
+    	<p id="rpg-player_status1" style="position:relative; top: 0px; left:5%;"></p>
+    </div>
 </rpg-player_status>
+      <br><br>
+      <input type="submit" style="color: white;" value="RPGもどきをやる(開発段階)" class="btn btn-primary" id="rpg-move-button" onClick="return rpg_move_button();">
+      <br><br>
+      <input type="submit" style="color: white;" value="スロットをやる" class="btn btn-primary" id="slot-move-button" onClick="return slot_move_button();">
     <br><br><br><br><br><br><br><br>
     <!-- <img class="img-responsive center-block" src = "https://cdn.discordapp.com/attachments/656126030062419998/704208453052137512/315.png"> -->
     <test class="btn btn-primary" id="delete-button">データを削除</test>
@@ -216,9 +217,11 @@
  <br><br>
   <input type="submit" value="経験値 +9999 (デバッグ)" class="btn btn-primary" id="home-move-button" onClick="return test_enemy_death4();">
  <br><br>
+  <input type="submit" value="経験値 +Infinity (デバッグ)" class="btn btn-primary" id="home-move-button" onClick="return test_enemy_death5();">
+ <br><br>
  <rpg-player_status><p id="rpg-player_leveluplog"style="border: groove white">- - - -</p><rpg-player_status>
     <script>
-//レベルアップって書いてあるけど敵倒した処理(クソコード)
+//levelupって書いてあるけど敵倒した処理(クソコード)
 function levelup(){
 var player_status = JSON.parse(localStorage.getItem('player_status_key'));
 var levelup_log = ``;
@@ -249,10 +252,10 @@ if (player_status){
     var now_2_atk = up_atk * 1 - now_atk * 1
     var now_2_def = up_def * 1 - now_def * 1;
     if (player_status.level >= 100){
-    	player_status.nextexp = "-";
     	player_status.exp = "-";
+    	player_status.nextexp = "-";
     }
-    levelup_log = `${player_status.name} はレベルが上がった！<br> ・レベル ${now_lv} + ${now_2_lv}<br>・たいりょく: ${now_hp} + ${now_2_hp}<br> ・こうげきりょく: ${now_atk} + ${now_2_atk}<br>・ぼうぎょりょく: ${now_def} + ${now_2_def}`;
+    levelup_log = `${player_status.name} はレベルが上がった！<br> ・レベル: ${now_lv} + ${now_2_lv}<br>・たいりょく: ${now_hp} + ${now_2_hp}<br> ・こうげきりょく: ${now_atk} + ${now_2_atk}<br>・ぼうぎょりょく: ${now_def} + ${now_2_def}`;
     }
     player_status = JSON.stringify(player_status);
     localStorage.setItem('player_status_key', player_status);
@@ -261,7 +264,7 @@ if (player_status){
   document.getElementById("rpg-player_leveluplog").innerHTML = `けいけんち ${enemy_exp} かくとく！<br>${levelup_log}`;
 }
 
-//テストエネミー
+//テスト
 function test_enemy_death1() {
 	localStorage.setItem('enemy_exp', 10);
 	levelup();
@@ -276,6 +279,10 @@ function test_enemy_death3() {
 }
 function test_enemy_death4() {
 	localStorage.setItem('enemy_exp', 9999);
+	levelup();
+}
+function test_enemy_death5() {
+	localStorage.setItem('enemy_exp', Infinity);
 	levelup();
 }
         rpg_player_status_set();
