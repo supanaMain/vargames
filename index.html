@@ -104,7 +104,7 @@
        player_name_txt.value = player_name;
        function name_check() {
        	var player_name_txt = document.getElementById("player_name_txt").value;
-       	if(player_name_txt) {
+       	if(player_name_txt && player_name_txt.length <= 14) {
               player_name = player_name_txt;
               localStorage.setItem('player_name_key', player_name);
               var player_status = JSON.parse(localStorage.getItem('player_status_key'));
@@ -115,7 +115,10 @@
                   rpg_player_status_set();
               }
           	alert(`${player_name}にしました( 'ω')`);
-           } else {
+           } else if(player_name_txt.length > 14) {
+       	   alert("おなまえの長さは14文字までです( 'ω')");
+       	   return;
+       	} else {
        	   alert("おなまえを入力してください( 'ω')");
        	   return;
        	}
