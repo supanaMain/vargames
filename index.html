@@ -252,7 +252,7 @@ if (player_status){
     	player_status.nextexp = "-";
     	player_status.exp = "-";
     }
-    levelup_log = `${player_status.name} はレベルが上がった！<br> ・レベル ${now_lv} + ${now_2_lv}<br>・たいりょく: ${now_hp} + ${now_2_hp}<br> ・こうげきりょく: ${now_atk} + ${now_2_atk}<br>・ぼうぎょりょ:く ${now_def} + ${now_2_def}`;
+    levelup_log = `${player_status.name} はレベルが上がった！<br> ・レベル ${now_lv} + ${now_2_lv}<br>・たいりょく: ${now_hp} + ${now_2_hp}<br> ・こうげきりょく: ${now_atk} + ${now_2_atk}<br>・ぼうぎょりょく: ${now_def} + ${now_2_def}`;
     }
     player_status = JSON.stringify(player_status);
     localStorage.setItem('player_status_key', player_status);
