@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -7,14 +6,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>雑多web( 'ω')</title>
+    <title>雑多げぇむweb( 'ω')</title>
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <style>
 
         test-text2 {
             padding: 0px;
+            border: groove gray;
             color: lime;
+            font-family: Georgia;
+            font-size: 100%;
+            text-align: center;
         }
         test-text3 {
             padding: 0px;
@@ -28,6 +31,9 @@
             padding: 30px;
             background-color: #222222;
         }
+        rpg-player_status {
+            color: white;
+        }
     </style>
     <script>
 //    	alert("テストログ( 'ω')");
@@ -39,17 +45,34 @@
 <body>
   <home id="home" name="home">
   	<p class="lead" style="color:white;">HOME</p>
-      	<strong style="color:white;">《おなまえを入力》</strong>     <input type="text" id= "player_name" value="ななし"> <input type="submit" value="けってい！" onClick="return name_check();">
+      	<strong style="color:white;">《おなまえを入力》</strong>     <input type="text" placeholder="おなまえを入力してください" id= "player_name_txt" value="ななし"> <input type="submit" value="けってい！" onClick="return name_check();">
       <br><br><br>
       <input type="submit" value="スロットをやる" class="btn btn-primary" id="slot-move-button" onClick="return slot_move_button();">
+      <br><br><br>
+      <input type="submit" value="RPGもどきをやる" class="btn btn-primary" id="rpg-move-button" onClick="return rpg_move_button();">
     <br><br><br><br><br><br><br><br>
-    
+    <img class="img-responsive center-block" src = "https://cdn.discordapp.com/attachments/656126030062419998/704208453052137512/315.png">
     <test class="btn btn-primary" id="delete-button">データを削除</test>
     <script>
-   	var player_name = `ななし`;
+       var player_name = localStorage.getItem('player_name_key');
+   	if(!player_name) player_name = `ななし`;
+       player_name_txt.value = player_name;
        function name_check() {
-           player_name = document.getElementById("player_name").value;
-       	alert(`${player_name}にしました( 'ω')`);
+       	var player_name_txt = document.getElementById("player_name_txt").value;
+       	if(player_name_txt) {
+              player_name = player_name_txt;
+              localStorage.setItem('player_name_key', player_name);
+              var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+          	if(player_status) {
+                  player_status.name = player_name;
+                  player_status = JSON.stringify(player_status);
+                  localStorage.setItem('player_status_key', player_status);
+              }
+          	alert(`${player_name}にしました( 'ω')`);
+           } else {
+       	   alert("おなまえを入力してください( 'ω')");
+       	   return;
+       	}
        }
        document.getElementById("delete-button").onclick = function() {
        	var result = window.confirm('削除しますか？');
@@ -62,7 +85,8 @@
                       if(result == true) {
                       	result = window.confirm('こうかいしませんね？');
                           if(result == true) {
-                            alert("まあ消さないけどね( 'ω')");
+                             localStorage.clear();
+                             alert('データを初期化しました。ページを更新してください。');
                           }
                       }
                   }
@@ -82,7 +106,7 @@
     <test-text2><h1 id="test-button-text2">- - - - -</h1></test-text2>
     <test-text3><h3 id="test-button-text3"></h3></test-text3>
     <br>
-    <test-text4><p id="test-button-text4"></p></test-text4>
+    <test-text4><p id="test-button-text4"style="border: groove white"></p></test-text4>
     <script>
     	var day = ``;
     	setInterval(() => {
@@ -132,6 +156,45 @@
     </script>
 
    </slot>
+  <rpg id="rpg-game">
+    <p class="lead" style="color:white;">RPGもどき</p>
+    <br>
+    <input type="submit" value="ホームに戻る" class="btn btn-primary" id="home-move-button" onClick="return home_move_button();">
+    <br><br><br><br>
+    	<rpg-player_status>
+          <p id="rpg-player_status"style="border: groove white"></p>
+        </rpg-player_status>
+    <script>
+       function rpg_player_status_set(){
+       var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+   	if(!player_status) {
+   	    player_status = JSON.stringify({
+   	        name : player_name,
+   	        level : 1,
+               exp : 0,
+               nextexp : 20,
+               hp : 20,
+               maxhp : 20,
+               atk : 1,
+               def : 0,
+               coin : 100         
+   	    });
+           localStorage.setItem('player_status_key', player_status);
+       }
+       document.getElementById("rpg-player_status").innerHTML = (`
+             <おなまえ> ${player_status.name}<br>
+             ・レベル: ${player_status.level}<br>
+             ・けいけんち: ${player_status.exp} | つぎのレベルまで: ${player_status.nextexp}<br><br>
+             	
+             ・たいりょく: ${player_status.hp} / ${player_status.maxhp}<br>
+             ・こうげきりょく: ${player_status.atk}<br>
+             ・ぼうぎょりょく: ${player_status.def}<br>
+             ・しょじきん: ${player_status.coin}
+        `)}
+        rpg_player_status_set();
+    </script>
+
+   </rpg>
      
      
      <!-- ページ操作 -->
@@ -139,10 +202,16 @@
          function reset(){
        	document.getElementById("home").style.display ="none";
        	document.getElementById("slot-game").style.display ="none";
+       	document.getElementById("rpg-game").style.display ="none";
          }
          reset();
      	document.getElementById("home").style.display ="block";
      
+     	function rpg_move_button(){
+        	reset();
+            rpg_player_status_set();
+        	document.getElementById("rpg-game").style.display ="block";
+         }
      	function slot_move_button(){
         	reset();
         	document.getElementById("slot-game").style.display ="block";
