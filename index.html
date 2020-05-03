@@ -148,8 +148,11 @@
     <p class="lead" style="color:white;">すろっと</p>
     <br>
     <input type="submit" value="ホームに戻る" class="btn btn-primary" id="home-move-button" onClick="return home_move_button();"><test class="btn btn-primary" id="logclear-button">ログをクリア</test>
-    <br><br><br><br>
+    <br><br><br>
     <test class="btn btn-primary" id="test-button">スロットをまわす</test>
+    	<div style= "border: groove white; width: 160px; position:relative; top: -32px; left: 55%;">
+           <p id="slot-shojikin" style="color: white; position:relative; top: 5px; left:8%;"></p>
+        </div>
     <br>
     <slot-pname><h4 id="slot-pname" style="color:white;">- - - - -</h4></slot-pname>
     <test-text2><h1 id="test-button-text2" style="border: groove gray;">- - - - -</h1></test-text2>
@@ -161,37 +164,56 @@
     	setInterval(() => {
           day = new Date().toLocaleString({ timeZone: 'Asia/Tokyo' });
         },1000);
+        var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+        if(player_status) document.getElementById("slot-shojikin").innerHTML = `しょじきん: ${player_status.coin} ｺｲﾝ`;
     	var slot_1 = ``;
         var slot_2 = ``;
         var slot_3 = ``;
         var result_txt = ``;
         var result = ``;
         var result_log = ``;
-       document.getElementById("test-button").onclick = function() {
+        var slot_get_coin = 0;
+       document.getElementById("test-button").onclick = function () {
 //            alert("クリックしました( 'ω')");
             result_log = `${result} ${result_txt}<br>${result_log}`;
             document.getElementById("test-button-text4").innerHTML = result_log;
             slot_1 = Math.floor(Math.random() * 9) + 1;
             slot_2 = Math.floor(Math.random() * 9) + 1;
-            slot_3 = Math.floor(Math.random() * 9) + 1;
+            slot_3 = Math.floor(Math.random() * 9) + 1;    
             if (slot_1 == slot_2 && slot_1 == slot_3 && slot_1 == 7) {
-                result_txt = "ラッキーセブン！ ";
+                slot_get_coin = 777;
+                result_txt = `ラッキーセブン！ ${Math.abs(slot_get_coin)} コイン 獲得した！`;
             } else if (slot_1 == slot_2 && slot_1 == slot_3 && slot_1 == 6) {
-                result_txt = "数字が不吉なのでおおはずれ！";
+            	slot_get_coin = -666;
+                result_txt = `数字が不吉なのでおおはずれ！${Math.abs(slot_get_coin)} コイン 失った！`;
             } else if (slot_1 == 3 && slot_2 == 3 && slot_3 == 4) {
-                result_txt = "なんでや！阪神関係無いやろ！ ";
+            	slot_get_coin = -100;
+                result_txt = `なんでや！阪神関係無いやろ！${Math.abs(slot_get_coin)} コイン 失った！ `;
             } else if (slot_1 == slot_2 && slot_1 == slot_3) {
-                result_txt = "おめでとう！ ";
+            	slot_get_coin = (150 + Math.floor(Math.random() * 101));
+                result_txt = `おめでとう！ ${Math.abs(slot_get_coin)} コイン 獲得した！`;
             } else if (slot_1 == 3 && slot_2 == 1 && slot_3 == 4) {
-                result_txt = "円周率かな？( \'ω\') ";
+            	slot_get_coin = (50 + Math.floor(Math.random() * 101));
+                result_txt = `円周率かな？( \'ω\') ${Math.abs(slot_get_coin)} コイン 獲得した！`;
             } else if ((slot_1 == 5 && slot_2 == 1 && slot_3 == 4) || (slot_1 == 1 && slot_2 == 1 && slot_3 == 4) || (slot_1 == 9 && slot_2 == 3 && slot_3 == 1)) {
-                result_txt = "ざんねん！ 数字がきたないで賞！ ";
+            	slot_get_coin = (-50 - Math.floor(Math.random() * 101));
+                result_txt = `ざんねん！ 数字がきたないで賞！${Math.abs(slot_get_coin)} コイン 失った！ `;
             } else if (slot_1 == slot_2 || slot_2 == slot_3 || slot_1 == slot_3) {
-                result_txt = "おしい！ ";
+                result_txt = `おしい！コインは失わなかった！ `;
             } else {
-                result_txt = "ざんねん！ ";
+                slot_get_coin = (-1 - Math.floor(Math.random() * 4));
+                result_txt = `ざんねん！ ${Math.abs(slot_get_coin)} コイン 失った！`;
             }
             result_txt = `${result_txt} -- ${day}`;
+            player_status = JSON.parse(localStorage.getItem('player_status_key'));
+            if (player_status){
+	           player_status.coin = player_status.coin * 1 + slot_get_coin * 1;
+	           player_status.coin = player_status.coin * 1 < 0 ? 0:player_status.coin;
+               document.getElementById("slot-shojikin").innerHTML = `しょじきん: ${player_status.coin} ｺｲﾝ`;
+               player_status = JSON.stringify(player_status);
+               localStorage.setItem('player_status_key', player_status);
+               rpg_player_status_set();
+            } 
             result = `| ${slot_1} : ${slot_2} : ${slot_3} |`;
             document.getElementById("slot-pname").innerHTML = `${player_name}の結果は...`;
             document.getElementById("test-button-text2").innerHTML = result;
