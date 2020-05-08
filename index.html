@@ -34,6 +34,12 @@
         rpg-player_status {
             color: white;
         }
+        #menu-status-button{
+        	background-image:url('https://cdn.discordapp.com/attachments/706660445519347763/708175629698334770/335-2.png');
+        }
+        #menu-status-button:active{
+        	background-image:url('https://cdn.discordapp.com/attachments/706660445519347763/708175629501202533/335-3.png');
+        }
     </style>
     <script>
        const now_version = "1.0.0";
@@ -63,9 +69,10 @@
              ・こうげきりょく: ${player_status.atk}<br>
              ・ぼうぎょりょく: ${player_status.def}<br>
              ・しょじきん: ${player_status.coin}
+             <br>
         `)
         document.getElementById("rpg-player_status1").innerHTML = rpg_player_status_view;
-        document.getElementById("rpg-player_status2").innerHTML = `<strong>《おなまえ》</strong>${player_status.name}<br>${rpg_player_status_view}`;
+ //       document.getElementById("rpg-player_status2").innerHTML = `<strong>《おなまえ》</strong>${player_status.name}<br>${rpg_player_status_view}`;
     }
 
 
@@ -81,16 +88,25 @@
 </head>
 
 <body>
-  <home id="home" name="home">
+<div style="z-index: 998;position: fixed;top: 0;left: 0;height: 120%;width: 60px;background-size: 100% 100%;background-position: 0% 0px;background-image:url('https://cdn.discordapp.com/attachments/706660445519347763/708140663698620456/333-1.png');" id="menu_bar">
+   <label id="menu-status-button"style="z-index: 999;position: relative;top: 1px;left: 1px;height: 54px;width: 54px;background-size: 100% 100%;background-position: 0% 0px;">
+       <input type="button" id="menu-status-button-b" onClick="return player_status_main_button();"style="display:none;">
+   </label>
+</div>
+<div style="z-index: 999;position: fixed;top: 0;right: 0;height: 310px;width: 300px;background-size: 100% 100%;background-position: 0% 0px;background-image:url('https://cdn.discordapp.com/attachments/706660445519347763/706851683602268201/331-2.png');" id="player_status_main">
+<rpg-player_status >
+   <!-- <img style="position:relative; top: 400px; left:0%;" class="img-responsive center-block" src = "https://cdn.discordapp.com/attachments/706660445519347763/706660466859966570/331.png"> -->
+	  <div style="position:relative; top: 20px; left:0px;">
+        <br><strong style="text-align: left; color:white; position:relative; top: 0px; left:10%;">《おなまえ》</strong>
+        <div style="text-align: left; width:80%; position:relative; top: 0px; left:12%;"><input type="text" style="color:black;" placeholder="おなまえを入力してください" id= "player_name_txt" value="ななし"> <input type="submit" style="color:black; width:8;font-size:90%;" value="けってい！" onClick="return name_check();"></div><br>
+    	<p id="rpg-player_status1" style="position:relative; top: 0px; left:10%;"></p>
+      </div>
+</rpg-player_status>
+</div>
+
+  <home id="home" name="home" style="padding-left: 40px;">
   	<p class="lead" style="color:white;" id = "home_tag">げぇむ HOME   </p>
       <script>document.getElementById("home_tag").innerHTML += `-- Ver ${now_version}`</script>
-<rpg-player_status>
-    <div style="border: groove white">
-	    <br><strong style="text-align: left; color:white; position:relative; top: 0px; left:5%;">《おなまえ》</strong>
-        <div style="text-align: left; width:80%; position:relative; top: 0px; left:7%;"><input type="text" style="color:black;" placeholder="おなまえを入力してください" id= "player_name_txt" value="ななし"> <input type="submit" style="color:black; width:8;font-size:90%;" value="けってい！" onClick="return name_check();"></div><br>
-    	<p id="rpg-player_status1" style="position:relative; top: 0px; left:5%;"></p>
-    </div>
-</rpg-player_status>
       <br><br>
       <input type="submit" style="color: white;" value="RPGもどきをやる(開発段階)" class="btn btn-primary" id="rpg-move-button" onClick="return rpg_move_button();">
       <br><br>
@@ -144,7 +160,7 @@
        }
     </script>
   </home>
-  <slot id="slot-game">
+  <slot id="slot-game" style="padding-left: 40px;">
     <p class="lead" style="color:white;">すろっと</p>
     <br>
     <input type="submit" value="ホームに戻る" class="btn btn-primary" id="home-move-button" onClick="return home_move_button();"><test class="btn btn-primary" id="logclear-button">ログをクリア</test>
@@ -227,13 +243,12 @@
     </script>
 
    </slot>
-  <rpg id="rpg-game">
-    <p class="lead" style="color:white;">RPGもどき</p>
-    <br>
-    <input type="submit" value="ホームに戻る" class="btn btn-primary" id="home-move-button" onClick="return home_move_button();">
+  <rpg id="rpg-game" style="padding-left: 40px;">
+    <p class="lead" style="color:white;">RPGもどき</p> <input type="submit" value="ホームに戻る" class="btn btn-primary" id="home-move-button" onClick="return home_move_button();">
     <br><br><br><br>
-<rpg-player_status><p id="rpg-player_status2"style="border: groove white"></p></rpg-player_status>
-<br><br>
+      <rpg-player_status><p id="rpg-player_leveluplog"style="border: groove white">- - - -</p><rpg-player_status>
+      <rpg-player_status><p id="rpg-player_status2"style="border: groove white;"></p></rpg-player_status>
+  <br><br>	
   <input type="submit" value="経験値 +10 (デバッグ)" class="btn btn-primary" id="home-move-button" onClick="return test_enemy_death1();">
  <br><br>
   <input type="submit" value="経験値 +100 (デバッグ)" class="btn btn-primary" id="home-move-button" onClick="return test_enemy_death2();">
@@ -243,8 +258,6 @@
   <input type="submit" value="経験値 +9999 (デバッグ)" class="btn btn-primary" id="home-move-button" onClick="return test_enemy_death4();">
  <br><br>
   <input type="submit" value="経験値 +Infinity (デバッグ)" class="btn btn-primary" id="home-move-button" onClick="return test_enemy_death5();">
- <br><br>
- <rpg-player_status><p id="rpg-player_leveluplog"style="border: groove white">- - - -</p><rpg-player_status>
     <script>
 //levelupって書いてあるけど敵倒した処理(クソコード)
 function levelup(){
@@ -319,6 +332,15 @@ function test_enemy_death5() {
      
      <!-- ページ操作 -->
      <script>
+     	function player_status_main_button(){
+        	var status_display = document.getElementById("player_status_main");
+        	if(status_display.style.display == "none") {
+               status_display.style.display ="block";
+            } else {
+               status_display.style.display ="none";
+            }
+         }
+
          function reset(){
        	document.getElementById("home").style.display ="none";
        	document.getElementById("slot-game").style.display ="none";
@@ -326,6 +348,7 @@ function test_enemy_death5() {
          }
          reset();
      	document.getElementById("home").style.display ="block";
+         document.getElementById("player_status_main").style.display ="none";
          rpg_player_status_set();
      
      	function rpg_move_button(){
@@ -335,6 +358,8 @@ function test_enemy_death5() {
          }
      	function slot_move_button(){
         	reset();
+            var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+            if(player_status) document.getElementById("slot-shojikin").innerHTML = `しょじきん: ${player_status.coin} ｺｲﾝ`;
         	document.getElementById("slot-game").style.display ="block";
          }
      	function home_move_button(){
