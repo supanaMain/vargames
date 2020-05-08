@@ -58,6 +58,24 @@
         .playerhealthbar_back_m::-webkit-progress-value {
         	background-color: #2f4f4f;
         }
+
+        #enemyhealthbar::-webkit-progress-bar {
+            background: none;
+        }
+        #enemyhealthbar::-webkit-progress-value {
+        	background-color: #ff2658;
+        }
+
+        #enemyhealthbar_back::-webkit-progress-bar {
+        	background-color: black;
+        }
+
+        .enemyhealthbar_back_p::-webkit-progress-value {
+        	background-color: #ff8c00;
+        }
+        .enemyhealthbar_back_m::-webkit-progress-value {
+        	background-color: #af0000;
+        }
     </style>
     <script>
        const now_version = "1.0.0";
@@ -107,12 +125,12 @@
 </head>
 
 <body>
-<div style="z-index: 998;position: fixed;top: 0;left: 0;height: 120%;width: 60px;background-size: 100% 100%;background-position: 0% 0px;background-image:url('https://cdn.discordapp.com/attachments/706660445519347763/708140663698620456/333-1.png');" id="menu_bar">
-   <label id="menu-status-button"style="z-index: 999;position: relative;top: 1px;left: 1px;height: 54px;width: 54px;background-size: 100% 100%;background-position: 0% 0px;">
+<div style="z-index: 499;position: fixed;top: 0;left: 0;height: 120%;width: 60px;background-size: 100% 100%;background-position: 0% 0px;background-image:url('https://cdn.discordapp.com/attachments/706660445519347763/708140663698620456/333-1.png');" id="menu_bar">
+   <label id="menu-status-button"style="z-index: 500;position: relative;top: 1px;left: 1px;height: 54px;width: 54px;background-size: 100% 100%;background-position: 0% 0px;">
        <input type="button" id="menu-status-button-b" onClick="player_status_main_button();"style="display:none;">
    </label>
 </div>
-<div style="z-index: 999;position: fixed;top: 0;right: 0px;height: 310px;width: 300px;background-size: 100% 100%;background-position: 0% 0px;background-image:url('https://cdn.discordapp.com/attachments/706660445519347763/706851683602268201/331-2.png');" id="player_status_main">
+<div style="display:none;z-index: 500;position: fixed;top: 0;right: 0px;height: 310px;width: 300px;background-size: 100% 100%;background-position: 0% 0px;background-image:url('https://cdn.discordapp.com/attachments/706660445519347763/706851683602268201/331-2.png');" id="player_status_main">
 <rpg-player_status >
    <!-- <img style="position:relative; top: 400px; left:0%;" class="img-responsive center-block" src = "https://cdn.discordapp.com/attachments/706660445519347763/706660466859966570/331.png"> -->
 	  <div style="position:relative; top: 20px; left:0px;">
@@ -262,15 +280,24 @@
     </script>
 
    </slot>
-  <rpg id="rpg-game" style="padding-left: 40px;">
+  <rpg id="rpg-game" style="padding-left: 40px;position:static;">
     <p class="lead" style="color:white;">RPGもどき</p> <input type="submit" value="ホームに戻る" class="btn btn-primary" id="home-move-button" onClick="return home_move_button();">
       <br><br><br><br>
-    <div style="position:relative; top: -30px; left:0px;">
-	    <div style="position:relative; top: -20px; left:0px;"><strong style="color:white">HP SET (デバッグ) - </strong><input type="text" id="hp" value="100"> <input type="submit" style="color: black;" value="SET" id="hp_button" onClick="return test_click();"></div>
-	    <a style="color:white"><strong>HP - </strong></a>
+	    <div style="position:relative; top: -20px; left:0px;"><strong style="color:white">HP SET (デバッグ) - </strong><input type="text" id="hp" value="100"> <input type="submit" style="color: black;" value="SET" id="hp_button" onClick="return test_click();"></div> 
+    <div id="enemyhealthbar_core"style="position:relative; top: 0px; right:0px;"align="right">
+        <nobr>
+	    <a style="color:white;position:relative; top: 0px; left:303.5px;-"><strong id="enemyhealth_name">エネミー - </strong></a>
+	    <progress id="enemyhealthbar_back" max="100" value="0" align="left" style="width:300px;position:relative; top: 0px; left:303.5px;-webkit-appearance: none;appearance: none;" class=""></progress>
+        <progress id="enemyhealthbar" max="100" value="0" align="left" style="width:300px;position:relative; top: 0px; left:0px;-webkit-appearance: none;appearance: none;"></progress>
+        </nobr>
+    </div><br><br>
+    <div id="playerhealthbar_core"style="position:relative;top: 0;left: 0px">
+	    <nobr>
+	    <a style="color:white"><strong id="playerhealth_name"></strong></a>
 	    <progress id="playerhealthbar_back" max="100" value="0" style="position:relative; top: 0px; left:0px;-webkit-appearance: none;appearance: none;" class=""></progress>
         <progress id="playerhealthbar" max="100" value="0" style="position:relative; top: 0px; left:-143.5px;-webkit-appearance: none;appearance: none;"></progress>
-    </div>
+        </nobr>
+    </div><br>
       <rpg-player_status><p id="rpg-player_leveluplog"style="border: groove white">- - - -</p><rpg-player_status>
       <rpg-player_status><p id="rpg-player_status2"style="border: groove white;"></p></rpg-player_status>
       <br><br>	
@@ -287,23 +314,53 @@
 -->
 
     <script>
-    //HPデバッグ
+      setInterval(()=>{
+         if(document.getElementById("rpg-game").style.display == "block"){
+            var orientation = window.orientation;
+            if (orientation === 0) { 
+                document.getElementById("rpg_game_blocker").style.display = "block";
+            } else { 
+                document.getElementById("rpg_game_blocker").style.display = "none";
+            }
+            
+
+         }
+      }, 20);
+      
+      //プレイヤーヘルス
     	var health = 100;
+  	  var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+  	  if(player_status) {
+            document.getElementById("playerhealth_name").innerHTML = `${player_status.name} - `;
+            health = (player_status.hp / player_status.maxhp) * 100;
+        }
     	var healthbarback = health;
         
         var progress_anim = 0;
-    	function test_click(){
-    	   var health_test_txt = document.getElementById("hp");
-    	   health = health_test_txt.value > 100 ? 100: health_test_txt.value;
-    	   health_test_txt.value = health_test_txt.value > 100 ? 100: health_test_txt.value;
-           progress_anim = Math.abs(health - healthbarback) / 50.0;
-    	}
 
         let playerhealthbar = document.getElementById("playerhealthbar");
         let playerhealthbar_back = document.getElementById("playerhealthbar_back");
         playerhealthbar.value = health;
         playerhealthbar_back.value = health;
+        
+	//エネミーヘルス
+    	var enemy_health = 100;
+    	var enemy_healthbarback = enemy_health;
+
+        var progress_anim_2 = 0;
+
+        let enemyhealthbar = document.getElementById("enemyhealthbar");
+        let enemyhealthbar_back = document.getElementById("enemyhealthbar_back");
+        enemyhealthbar.value = enemy_health;
+        enemyhealthbar_back.value = enemy_health;
+
     	setInterval(()=>{
+//プレイヤー
+    	  var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+    	  if(player_status) {
+              document.getElementById("playerhealth_name").innerHTML = `${player_status.name} - `;
+              health = (player_status.hp / player_status.maxhp) * 100;
+          }
     	  if(health <= 0) {
             playerhealthbar.value = 0;
             playerhealthbar_back.value = 0;
@@ -326,10 +383,54 @@
              playerhealthbar_back.classList.remove("playerhealthbar_back_p");
             }
           }
+//エネミー
+    	  var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
+    	  if(enemy_status) {
+              document.getElementById("enemyhealth_name").innerHTML = `${enemy_status.name} - `;
+              enemy_health = (enemy_status.hp / enemy_status.maxhp) * 100;
+          }
+    	  if(enemy_health <= 0) {
+            enemyhealthbar.value = 0;
+            enemyhealthbar_back.value = 0;
+          }
+      	if(enemy_health != enemy_healthbarback) {
+      	  if(enemy_health > enemy_healthbarback) {
+             enemy_healthbarback += progress_anim_2;
+             enemyhealthbar.value = enemy_healthbarback;
+             enemyhealthbar_back.value = enemy_health;
+             
+             enemyhealthbar_back.classList.add("enemyhealthbar_back_p");
+             enemyhealthbar_back.classList.remove("enemyhealthbar_back_m");
+            }
+      	  if(enemy_health < enemy_healthbarback) {
+             enemy_healthbarback -= progress_anim_2;
+             enemyhealthbar.value = enemy_health;
+             enemyhealthbar_back.value = enemy_healthbarback;
+             
+             enemyhealthbar_back.classList.add("enemyhealthbar_back_m");
+             enemyhealthbar_back.classList.remove("enemyhealthbar_back_p");
+            }
+          }
     	},20);
-	
-    
-    
+      
+        //デバッグ用
+    	function test_click(){
+    	   var health_test_txt = document.getElementById("hp");
+    	   health_test_txt.value = health_test_txt.value > 100 ? 100: health_test_txt.value;
+
+    	   
+     	  var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+           player_status.hp = Math.floor(player_status.maxhp * (health_test_txt.value / 100));
+           health = (player_status.hp / player_status.maxhp) * 100;
+           player_status = JSON.stringify(player_status);
+           localStorage.setItem('player_status_key', player_status);
+           rpg_player_status_set();
+           progress_anim = Math.abs(health - healthbarback) / 50.0;
+           
+    	   enemy_health = health_test_txt.value;
+           progress_anim_2 = Math.abs(enemy_health - enemy_healthbarback) / 50.0;
+    	}
+
     
     
 //levelupって書いてあるけど敵倒した処理(クソコード)
@@ -375,6 +476,10 @@ if (player_status){
   document.getElementById("rpg-player_leveluplog").innerHTML = `けいけんち ${enemy_exp} かくとく！<br>${levelup_log}`;
 }
 //エネミー
+function battle_start(){
+   var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
+	
+}
 
 //てすてす
 function enemy_testes(){
@@ -388,7 +493,8 @@ function enemy_testes(){
       exp : 10,
       coin : 100         
    });
-   localStorage.setItem('enemy_key', enemy_status);
+   localStorage.setItem('enemy_status_key', enemy_status);
+   battle_start();
 }
 
 
@@ -415,7 +521,10 @@ function test_enemy_death5() {
 }
         rpg_player_status_set();
     </script>
-
+  <div id="rpg_game_blocker" style="padding-left: 40px;position:fixed;width:120%;height:120%;">
+  	<h2 style="position:fixed;z-index: 600;">このゲームは画面横向き専用です。</h2>
+  	<img style="position:fixed;top:0px;left:0px;z-index: 599;width:110%;height:110%;"class="img-responsive center-block" src = "https://cdn.discordapp.com/attachments/706660445519347763/708266741398241310/333-2.png">
+  </div>
    </rpg>
 
      
