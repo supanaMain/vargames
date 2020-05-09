@@ -295,9 +295,10 @@
 	    <!-- <div style="position:relative; top: -20px; left:0px;"><strong style="color:white">HP SET (デバッグ) - </strong><input type="text" id="hp" value="100"> <input type="submit" style="color: black;" value="SET" id="hp_button" onClick="return test_click();"></div> -->
     <div id="enemyhealthbar_core"style="position:relative; top: 0px; right:0px;display:none;"align="right">
         <nobr>
+    	<a style="color:white;position:relative; top: 0px; left:303.5px;text-align:left;" ><strong id="enemyhealth_value"></strong></a>
 	    <progress id="enemyhealthbar_back" max="100" value="0" align="left" style="width:300px;position:relative; top: 0px; left:303.5px;-webkit-appearance: none;appearance: none;" class=""></progress>
         <progress id="enemyhealthbar" max="100" value="0" align="left" style="width:300px;position:relative; top: 0px; left:0px;-webkit-appearance: none;appearance: none;"></progress>
-	    <br><a style="color:white;position:relative; top: 0px; left:0px;-"><strong id="enemyhealth_name">エネミー</strong></a>
+	    <br><a style="color:white;position:relative; top: 0px; left:0px;"><strong id="enemyhealth_name">エネミー</strong></a>
         </nobr>
     </div><br><br>
     <div id="playerhealthbar_core"style="position:relative;top: 0;left: 0px">
@@ -313,6 +314,7 @@
       <div id="player_battle_commands" style="display:none;">
         <div id="player_battle_commands2" style="display:block;">
          <input type="submit" value="こうげき" class="btn btn-primary" id="attack-button" onClick="return player_attack_command();">
+         <input type="submit" value="ぼうぎょ" class="btn btn-primary" id="attack-button" onClick="return player_guard_command();">
          <input type="submit" value="なにもしない" class="btn btn-primary" id="holding-button" onClick="return player_holding_command();">
          <input type="submit" value="にげる" class="btn btn-primary" id="escape-button" onClick="return player_escape_command();">
         </div>
@@ -386,7 +388,7 @@
 
     	setInterval(()=>{
 //プレイヤー
-          progress_anim = Math.abs(health - healthbarback) / 50.0;
+          progress_anim = Math.abs(health - healthbarback) / 20.0;
           
     	  var player_status = JSON.parse(localStorage.getItem('player_status_key'));
     	  if(player_status) {
@@ -419,6 +421,7 @@
     	  var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
     	  if(enemy_status) {
               document.getElementById("enemyhealth_name").innerHTML = `- ${enemy_status.name} -`;
+              document.getElementById("enemyhealth_value").innerHTML = `${enemy_status.hp} / ${enemy_status.maxhp} - `;
               enemy_health = (enemy_status.hp / enemy_status.maxhp) * 100;
           }
     	  if(enemy_health <= 0) {
@@ -544,7 +547,8 @@ function player_attack_command(){
    var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
    var player_status = JSON.parse(localStorage.getItem('player_status_key'));
 
-   var player_attack_damage = (player_status.atk * 1);
+   var player_attack_damage = Math.floor((player_status.atk * 1.5 - enemy_status.def * 1.2) + (Math.random() * 6));
+   player_attack_damage = player_attack_damage < 1 ? 1:player_attack_damage;
    enemy_status.hp = (enemy_status.hp * 1) - player_attack_damage;
 
    document.getElementById("rpg-player_leveluplog").innerHTML = `${player_status.name}のこうげき！<br>${enemy_status.name}は${player_attack_damage}ダメージうけた！`;
@@ -560,6 +564,16 @@ function player_attack_command(){
    enemy_status = JSON.stringify(enemy_status);
    localStorage.setItem('enemy_status_key', enemy_status);
     
+   enemy_pattern();
+}
+let player_guard_value = 1.0;
+function player_guard_command(){
+   var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
+   var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+   
+   player_guard_value = 0.5;
+   document.getElementById("rpg-player_leveluplog").innerHTML = `${player_status.name}はぼうぎょした！`;
+  
    enemy_pattern();
 }
 function player_holding_command(){
@@ -591,7 +605,8 @@ function enemy_pattern(){
 
      //パターンてすてす
      if(enemy_status.id == 'enm_testes'){
-        var enemy_attack_damage = (enemy_status.atk * 1);
+        var enemy_attack_damage = Math.floor(((enemy_status.atk * 1.5 - player_status.def * 1.2) + (Math.random() * 5)) * player_guard_value);
+        enemy_attack_damage = enemy_attack_damage < 1 ? 1:enemy_attack_damage;
         player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
         document.getElementById("rpg-player_leveluplog").innerHTML = `${enemy_status.name}のこうげき！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！`;
      }
@@ -600,12 +615,14 @@ function enemy_pattern(){
      else if(enemy_status.id == 'enm_strong_skeleton'){
      	var enemy_randomize = Math.floor(Math.random() * 1000);
      	if(enemy_randomize - 300 <= 0){
-            var enemy_attack_damage = Math.floor(enemy_status.atk * 1.5);
+            var enemy_attack_damage = Math.floor(((enemy_status.atk * 2.2 - player_status.def * 1.2) + (Math.random() * 5)) * player_guard_value);
+            enemy_attack_damage = enemy_attack_damage < 1 ? 1:enemy_attack_damage;
             player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
             document.getElementById("rpg-player_leveluplog").innerHTML = `${enemy_status.name}のきっく！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！`;
          }
          else {
-            var enemy_attack_damage = (enemy_status.atk * 1);
+            var enemy_attack_damage = Math.floor(((enemy_status.atk * 1.5 - player_status.def * 1.2) + (Math.random() * 5)) * player_guard_value);
+            enemy_attack_damage = enemy_attack_damage < 1 ? 1:enemy_attack_damage;
             player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
             document.getElementById("rpg-player_leveluplog").innerHTML = `${enemy_status.name}のこうげき！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！`;
          }
@@ -616,7 +633,7 @@ function enemy_pattern(){
     
      if(player_status.hp <= 0){
          localStorage.setItem('enemy_exp', enemy_status.exp);
-     	document.getElementById("rpg-player_leveluplog").innerHTML = `${player_status.name}はちからつきてしまった...`;
+     	document.getElementById("rpg-player_leveluplog").innerHTML += `<br>${player_status.name}はちからつきてしまった...`;
          player_status.hp = player_status.maxhp;
          player_status = JSON.stringify(player_status);
          localStorage.setItem('player_status_key', player_status);
@@ -629,6 +646,7 @@ function enemy_pattern(){
       rpg_player_status_set();
       setTimeout(()=>{
          document.getElementById("player_battle_commands2").style.display = "block";
+         player_guard_value = 1.0;
       },800);
     }
 }
@@ -657,8 +675,8 @@ function enemy_strong_skeleton(){
       name : "つよいがいこつ",
       hp : 300,
       maxhp : 300,
-      atk : 6,
-      def : 0,
+      atk : 18,
+      def : 10,
       exp : 100,
       coin : 500         
    });
