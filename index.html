@@ -100,6 +100,7 @@
            localStorage.setItem('player_status_key', player_status);
        }
        var rpg_player_status_view = (`
+             《おなまえ》${player_status.name} <br>
              ・レベル: ${player_status.level}<br>
              ・けいけんち: ${player_status.exp}<br>
                   - - -  つぎのレベルまで: ${player_status.nextexp}<br><br>
@@ -113,7 +114,33 @@
         document.getElementById("rpg-player_status1").innerHTML = rpg_player_status_view;
  //       document.getElementById("rpg-player_status2").innerHTML = `<strong>《おなまえ》</strong>${player_status.name}<br>${rpg_player_status_view}`;
     }
+    function status_edit_out(){
+    	document.getElementById("status_edit").style.display = "none";
+    }
+//アイコンの指定
+function status_icon_set(){
+	// フォームで選択された全ファイルを取得
+	var fileList = document.getElementById( "player_icon_target" ).files ;
 
+	// 個数分の画像を表示する
+	for( var i=0,l=fileList.length; l>i; i++ ) {
+		// FileReaderオブジェクトを作成
+		var fileReader = new FileReader() ;
+
+		// 読み込み後の処理を決めておく
+		fileReader.onload = function() {
+			// Data URIを取得
+			var dataUri = this.result ;
+			localStorage.setItem('player_icon_uri_key', dataUri);
+
+			// HTMLに書き出し (src属性にData URIを指定)
+			document.getElementById("player_icon").src = dataUri;
+		}
+
+		// ファイルをData URIとして読み込む
+		fileReader.readAsDataURL( fileList[i] ) ;
+	}
+}
 
  //バージョンが違う場合ステータスを初期化するコード(多分初期しか使わない)
     var player_status = JSON.parse(localStorage.getItem('player_status_key'));
@@ -127,6 +154,31 @@
 </head>
 
 <body>
+<div align="left" style="display:none;z-index: 600;position: fixed;top: 0;left: 0;height: 120%;width: 100%;background-size: 400px 400px;background-position: 0% 0px;background-image:url('https://cdn.discordapp.com/attachments/706660445519347763/708633819103756308/333-3.png');" id="status_edit">
+	    <input align="left" type="submit" style="color:black; width:8;font-size:100%;" value="閉じる" onClick="return status_edit_out();">
+        <br><strong style="text-align: left; color:white; position:relative; top: 50px; left:50px;">《おなまえ》</strong>
+        <div style="text-align: left; width:80%; position:relative; top: 50px; left:50px;"><input type="text" style="color:black;" placeholder="おなまえを入力してください" id= "player_name_txt" value="ななし"> <input type="submit" style="color:black; width:8;font-size:90%;" value="けってい！" onClick="return name_check();"></div><br><br><br><br>
+        	
+        <div style="position: relative;top: 0;left: 50px;">
+            <input type="submit" style="color:black; width:8;font-size:90%;" value="けってい！" onClick="return status_icon_set();"><br>
+            <input type="file" id="player_icon_target" >
+        </div>
+        <img id="player_icon_preview" src="https://cdn.discordapp.com/attachments/656126030062419998/704208453052137512/315.png" style="position: relative;top: 0;left: 50px;width:120px;height:120px;">
+        <script>
+document.getElementById( "player_icon_target" ).addEventListener( "change", function() {
+	var fileList = this.files ;
+	for( var i=0,l=fileList.length; l>i; i++ ) {
+		var fileReader = new FileReader() ;
+		fileReader.onload = function() {
+			var dataUri = this.result ;
+			document.getElementById("player_icon_preview").src = dataUri;
+		}
+		fileReader.readAsDataURL( fileList[i] ) ;
+	}
+} ) ;
+        </script>
+</div>
+
 <div style="z-index: 499;position: fixed;top: 0;left: 0;height: 120%;width: 60px;background-size: 100% 100%;background-position: 0% 0px;background-image:url('https://cdn.discordapp.com/attachments/706660445519347763/708634331517681664/333-4.png');" id="menu_bar">
    <label id="menu-status-button"style="z-index: 500;position: relative;top: 1px;left: 1px;height: 54px;width: 54px;background-size: 100% 100%;background-position: 0% 0px;">
        <input type="button" id="menu-status-button-b" onClick="player_status_main_button();"style="display:none;">
@@ -135,11 +187,18 @@
 <div style="display:none;z-index: 500;position: fixed;top: 0;right: 0px;height: 310px;width: 300px;background-size: 100% 100%;background-position: 0% 0px;background-image:url('https://cdn.discordapp.com/attachments/706660445519347763/706851683602268201/331-2.png');" id="player_status_main">
 <rpg-player_status >
    <!-- <img style="position:relative; top: 400px; left:0%;" class="img-responsive center-block" src = "https://cdn.discordapp.com/attachments/706660445519347763/706660466859966570/331.png"> -->
+   <img id="player_icon" src="https://cdn.discordapp.com/attachments/656126030062419998/704208453052137512/315.png" style="position:relative; top: 30px; left: 200px;width:60px;height:60px;">
+   <script>
+       var player_icon_uri = localStorage.getItem('player_icon_uri_key');
+       if(player_icon_uri) {
+          document.getElementById("player_icon").src = player_icon_uri;
+          document.getElementById("player_icon_preview").src = player_icon_uri;
+       }
+   </script>
 	  <div style="position:relative; top: 20px; left:0px;">
-        <br><strong style="text-align: left; color:white; position:relative; top: 0px; left:10%;">《おなまえ》</strong>
-        <div style="text-align: left; width:80%; position:relative; top: 0px; left:12%;"><input type="text" style="color:black;" placeholder="おなまえを入力してください" id= "player_name_txt" value="ななし"> <input type="submit" style="color:black; width:8;font-size:90%;" value="けってい！" onClick="return name_check();"></div><br>
     	<p id="rpg-player_status1" style="position:relative; top: 0px; left:10%;"></p>
       </div>
+   <input type="button" style="position:relative; top: 0px; left: 210px;color:black; width:8;font-size:100%;" value="編集" onClick="return document.getElementById('status_edit').style.display = 'block';">
 </rpg-player_status>
 </div>
 
@@ -189,8 +248,15 @@
                       if(result == true) {
                       	result = window.confirm('こうかいしませんね？');
                           if(result == true) {
+                             var player_icon_uri = localStorage.getItem('player_icon_uri_key');
+                             var player_name = localStorage.getItem('player_name_key');
+                             
                              localStorage.clear();
-                             alert('データを初期化しました。ページを更新してください。');
+                             if(player_icon_uri) localStorage.setItem('player_icon_uri_key', player_icon_uri);
+                             if(player_name) localStorage.setItem('player_name_key', player_name);
+       
+                             alert('データを初期化しました。webを更新してください。');
+                             rpg_player_status_set();
                           }
                       }
                   }
@@ -289,7 +355,8 @@
       	<!-- 敵召喚デバッグ -->
                <div id="battle_start_debug_button">
                    <input type="submit" value="戦闘開始(てすてす)"  id="testes-button" onClick="return enemy_testes();"><br><br>
-                   <input type="submit" value="戦闘開始(つよいがいこつ)"  id="testes-button" onClick="return enemy_strong_skeleton();">
+                   <input type="submit" value="戦闘開始(つよいがいこつ)"  id="testes-button" onClick="return enemy_strong_skeleton();"><br><br>
+                   <input type="submit" value="戦闘開始(メタルなんとか)"  id="testes-button" onClick="return enemy_metal_nan();">
                </div>
                
 	    <!-- <div style="position:relative; top: -20px; left:0px;"><strong style="color:white">HP SET (デバッグ) - </strong><input type="text" id="hp" value="100"> <input type="submit" style="color: black;" value="SET" id="hp_button" onClick="return test_click();"></div> -->
@@ -678,6 +745,21 @@ function enemy_strong_skeleton(){
       atk : 18,
       def : 10,
       exp : 100,
+      coin : 500         
+   });
+   localStorage.setItem('enemy_status_key', enemy_status);
+   battle_start();
+}
+//メタルなんとか
+function enemy_metal_nan(){
+  var enemy_status = JSON.stringify({
+  	id : "enm_metal_nan",
+      name : "メタルなんとか",
+      hp : 20,
+      maxhp : 20,
+      atk : 30,
+      def : "Infinity",
+      exp : 999,
       coin : 500         
    });
    localStorage.setItem('enemy_status_key', enemy_status);
