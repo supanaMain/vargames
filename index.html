@@ -766,6 +766,22 @@ function enemy_metal_nan(){
    battle_start();
 }
 
+//あああ
+function enemy_aaa(){
+var enemy_status = JSON.stringify({
+id : "enm_metal_nan",
+name : "あああ",
+hp : 1,
+maxhp : 1,
+atk : "Infinity",
+def : "Infinity",
+exp : 1,
+coin : 1
+});
+localStorage.setItem('enemy_status_key', enemy_status);
+battle_start();
+}
+
 
 //テスト
 function test_enemy_death1() {
