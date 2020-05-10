@@ -376,6 +376,7 @@
   <div id="battle_start_debug_button">
    <input type="submit" value="戦闘開始(てすてす)" id="testes-button" onClick="return enemy_testes();"><br><br>
    <input type="submit" value="戦闘開始(てすてす x3)" id="testes-button" onClick="return enemy_testes_2();"><br><br>
+   <input type="submit" value="戦闘開始(てすてす キング)" id="testes-button" onClick="return enemy_testes_3();"><br><br>
    <input type="submit" value="戦闘開始(メタルなんとかフェスティバル)" id="testes-button" onClick="return enemy_metal_nan_0();">
   </div>
   <div id="player_battle_window" style="display:none;bottom: 20px;">
@@ -408,7 +409,8 @@
      <br>
      <div id="player_battle_commands2" style="display:block;position:fixed;bottom:30px;">
       <input type="submit" value="こうげき" class="btn btn-primary" id="attack-button" onClick="return player_attack_command();">
-      <input type="submit" value="ぼうぎょ" class="btn btn-primary" id="attack-button" onClick="return player_guard_command();">
+      <input type="submit" value="ぼうぎょ" class="btn btn-primary" id="guard-button" onClick="return player_guard_command();">
+      <input type="submit" value="かいふく" class="btn btn-primary" id="item-button" onClick="return player_item_command();">
       <input type="submit" value="なにもしない" class="btn btn-primary" id="holding-button" onClick="return player_holding_command();">
       <input type="submit" value="にげる" class="btn btn-primary" id="escape-button" onClick="return player_escape_command();">
      </div>
@@ -585,7 +587,9 @@
     var levelup_log = ``;
     if (player_status) {
      var enemy_exp = localStorage.getItem('enemy_exp');
+     var enemy_coin = localStorage.getItem('enemy_coin');
      player_status.exp = player_status.exp * 1 + enemy_exp * 1;
+     player_status.coin = player_status.coin * 1 + enemy_coin * 1;
      if (!(player_status.exp < player_status.nextexp || player_status.level >= 100)) {
       var now_lv = player_status.level * 1;
       var now_hp = player_status.maxhp * 1;
@@ -619,8 +623,9 @@
      localStorage.setItem('player_status_key', player_status);
      rpg_player_status_set();
     }
-    document.getElementById("rpg-player_battlelog").innerHTML = `\nけいけんち ${enemy_exp} かくとく！<br>${levelup_log}`;
+    document.getElementById("rpg-player_battlelog").innerHTML = `\nコイン ${enemy_coin} , けいけんち ${enemy_exp} かくとく！<br>${levelup_log}`;
     localStorage.removeItem('enemy_exp');
+    localStorage.removeItem('enemy_coin');
    }
    //エネミー
    function battle_start() {
@@ -680,13 +685,22 @@
     var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
     var player_status = JSON.parse(localStorage.getItem('player_status_key'));
 
-    document.getElementById('player_battle_commands2').style.display = 'none';
-    //敵の数だけボタンを生成
-    document.getElementById('player_attack_enemy_select_2').innerHTML = "";
-    for (index in enemy_status.enemies) {
-     document.getElementById('player_attack_enemy_select_2').innerHTML += `<div style="height:40px;"><input type=\"submit\" value=\"${enemy_status.enemies[index].name}\"  id=\"testes-button\" class="btn btn-primary" style=\"opacity:100%;font-size:12px;height:30px;\"onClick=\"player_attack_command_select_enemy_index = ${index}\;player_attack_command_selected()\;\"></div>`;
+    //敵が複数の時だけ動くやつ
+    if (enemy_status.enemies.length > 1) {
+     document.getElementById('player_battle_commands2').style.display = 'none';
+     //敵の数だけボタンを生成
+     document.getElementById('player_attack_enemy_select_2').innerHTML = "";
+     for (index in enemy_status.enemies) {
+      document.getElementById('player_attack_enemy_select_2').innerHTML += `<div style="height:40px;"><input type=\"submit\" value=\"${enemy_status.enemies[index].name}\"  id=\"testes-button\" class="btn btn-primary" style=\"opacity:100%;font-size:12px;height:30px;\"onClick=\"player_attack_command_select_enemy_index = ${index}\;player_attack_command_selected()\;\"></div>`;
+     }
+     document.getElementById('player_attack_enemy_select').style.display = 'block';
     }
-    document.getElementById('player_attack_enemy_select').style.display = 'block';
+    //敵が一体だけの時即実行
+    else {
+     player_attack_command_select_enemy_index = 0;
+     player_attack_command_selected();
+    }
+
    }
    //選択後
    function player_attack_command_selected() {
@@ -711,6 +725,11 @@
      if (!enemy_exp) enemy_exp = 0;
      enemy_exp = enemy_exp * 1 + enemy_status.enemies[enemy_index].exp * 1;
      localStorage.setItem('enemy_exp', enemy_exp);
+
+     var enemy_coin = localStorage.getItem('enemy_coin');
+     if (!enemy_coin) enemy_coin = 0;
+     enemy_coin = enemy_coin * 1 + enemy_status.enemies[enemy_index].coin * 1;
+     localStorage.setItem('enemy_coin', enemy_coin);
 
      new_battlelog = `${player_status.name}は${enemy_status.enemies[enemy_index].name}をたおした！`;
      enemy_status.enemies.splice(enemy_index, 1);
@@ -737,6 +756,29 @@
     enemy_pattern();
    }
 
+   function player_item_command() {
+    var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
+    var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+
+    var command_result = window.confirm('100コイン消費して回復しますか？(現在即席システム)');
+    if (command_result == true) {
+     if (player_status.coin >= 100) {
+      player_status.coin = player_status.coin * 1 - 100;
+      var player_heal = Math.floor(player_status.maxhp * 0.5);
+      player_status.hp = player_status.hp * 1 + player_heal * 1;
+
+      new_battlelog = `${player_status.name}はアイテムをつかった！<br>${player_status.name}は${player_heal} 回復した！`;
+
+      var player_status_result = JSON.stringify(player_status);
+      localStorage.setItem('player_status_key', player_status_result);
+
+      enemy_pattern();
+     } else {
+      alert("コインが足りません( 'ω')");
+     }
+    }
+   }
+
    function player_holding_command() {
     var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
     var player_status = JSON.parse(localStorage.getItem('player_status_key'));
@@ -744,6 +786,7 @@
     new_battlelog = `${player_status.name}はなにもしなかった！`;
 
     enemy_pattern();
+
    }
 
    function player_escape_command() {
@@ -926,6 +969,48 @@
     localStorage.setItem('enemy_status_key', enemy_status);
     battle_start();
    }
+   //てすてす3
+   function enemy_testes_3() {
+    var enemy_status = JSON.parse('{"enemies":[]}');
+
+    var enemy_data = JSON.stringify({
+     id: "enm_testes",
+     name: "エリートてすてす A",
+     hp: 100,
+     maxhp: 100,
+     atk: 15,
+     def: 30,
+     exp: 200,
+     coin: 300
+    });
+    enemy_status.enemies.push(JSON.parse(enemy_data));
+    var enemy_data = JSON.stringify({
+     id: "enm_testes",
+     name: "エリートてすてす B",
+     hp: 60,
+     maxhp: 60,
+     atk: 26,
+     def: 10,
+     exp: 300,
+     coin: 200
+    });
+    enemy_status.enemies.push(JSON.parse(enemy_data));
+    var enemy_data = JSON.stringify({
+     id: "enm_testes",
+     name: "てすてすキング",
+     hp: 250,
+     maxhp: 250,
+     atk: 25,
+     def: 25,
+     exp: 1000,
+     coin: 1000
+    });
+    enemy_status.enemies.push(JSON.parse(enemy_data));
+
+    enemy_status = JSON.stringify(enemy_status);
+    localStorage.setItem('enemy_status_key', enemy_status);
+    battle_start();
+   }
 
    //メタルなんとか
    function enemy_metal_nan_0() {
@@ -951,8 +1036,8 @@
      maxhp: 35,
      atk: 35,
      def: "Infinity",
-     exp: 5000,
-     coin: 1000
+     exp: 9999,
+     coin: 999
     });
     enemy_status.enemies.push(JSON.parse(enemy_data));
 
