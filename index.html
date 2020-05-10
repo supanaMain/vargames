@@ -2,104 +2,112 @@
 <html lang="ja">
 
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, user-scalable=no">
-    <meta name="mobile-web-app-capable" content="yes">
+ <meta charset="utf-8">
+ <meta http-equiv="X-UA-Compatible" content="IE=edge">
+ <meta name="viewport" content="width=device-width, user-scalable=no">
+ <meta name="mobile-web-app-capable" content="yes">
+ <title>げぇむどす( 'ω')</title>
+ <!-- Bootstrap -->
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+ <style>
+  test-text2 {
+   padding: 0px;
+   color: lime;
+   font-family: Georgia;
+   font-size: 100%;
+   text-align: center;
+  }
 
-    <title>げぇむどす( 'ω')</title>
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <style>
+  test-text3 {
+   padding: 0px;
+   color: white;
+  }
 
-        test-text2 {
-            padding: 0px;
-            color: lime;
-            font-family: Georgia;
-            font-size: 100%;
-            text-align: center;
-        }
-        test-text3 {
-            padding: 0px;
-            color: white;
-        }
-        test-text4 {
-            padding: 0px;
-            color: gray;
-        }
-        body {
-            padding: 30px;
-            background-color: #222222;
-        }
-        rpg-player_status {
-            color: white;
-        }
-        #menu-status-button{
-        	background-image:url('https://cdn.discordapp.com/attachments/706660445519347763/708180256972079104/336.png');
-        }
-        #menu-status-button:active{
-        	background-image:url('https://cdn.discordapp.com/attachments/706660445519347763/708180257173405696/336-1.png');
-        }
+  test-text4 {
+   padding: 0px;
+   color: gray;
+  }
 
-        #playerhealthbar::-webkit-progress-bar {
-            background: none;
-        }
-        #playerhealthbar::-webkit-progress-value {
-        	background-color: #32cd32;
-        }
+  body {
+   padding: 30px;
+   background-color: #222222;
+  }
 
-        #playerhealthbar_back::-webkit-progress-bar {
-        	background-color: black;
-        }
+  rpg-player_status {
+   color: white;
+  }
 
-        .playerhealthbar_back_p::-webkit-progress-value {
-        	background-color: #90ff7f;
-        }
-        .playerhealthbar_back_m::-webkit-progress-value {
-        	background-color: #2f4f4f;
-        }
+  #menu-status-button {
+   background-image: url('https://cdn.discordapp.com/attachments/706660445519347763/708180256972079104/336.png');
+  }
 
-        #enemyhealthbar::-webkit-progress-bar {
-            background: none;
-        }
-        #enemyhealthbar::-webkit-progress-value {
-        	background-color: #ff2658;
-        }
+  #menu-status-button:active {
+   background-image: url('https://cdn.discordapp.com/attachments/706660445519347763/708180257173405696/336-1.png');
+  }
 
-        #enemyhealthbar_back::-webkit-progress-bar {
-        	background-color: black;
-        }
+  #playerhealthbar::-webkit-progress-bar {
+   background: none;
+  }
 
-        .enemyhealthbar_back_p::-webkit-progress-value {
-        	background-color: #ff8c00;
-        }
-        .enemyhealthbar_back_m::-webkit-progress-value {
-        	background-color: #af0000;
-        }
-    </style>
-    <script>
-       const now_version = "1.0.0";
-       
-       let player_battle = false;
-       
-       function rpg_player_status_set(){
-       var player_status = JSON.parse(localStorage.getItem('player_status_key'));
-   	if(!player_status) {
-   	    player_status = JSON.stringify({
-   	        version : now_version,
-   	        name : player_name,
-   	        level : 1,
-               exp : 0,
-               nextexp : 20,
-               hp : 20,
-               maxhp : 20,
-               atk : 1,
-               def : 0,
-               coin : 100         
-   	    });
-           localStorage.setItem('player_status_key', player_status);
-       }
-       var rpg_player_status_view = (`
+  #playerhealthbar::-webkit-progress-value {
+   background-color: #32cd32;
+  }
+
+  #playerhealthbar_back::-webkit-progress-bar {
+   background-color: black;
+  }
+
+  .playerhealthbar_back_p::-webkit-progress-value {
+   background-color: #90ff7f;
+  }
+
+  .playerhealthbar_back_m::-webkit-progress-value {
+   background-color: #2f4f4f;
+  }
+
+  #enemyhealthbar::-webkit-progress-bar {
+   background: none;
+  }
+
+  #enemyhealthbar::-webkit-progress-value {
+   background-color: #ff2658;
+  }
+
+  #enemyhealthbar_back::-webkit-progress-bar {
+   background-color: black;
+  }
+
+  .enemyhealthbar_back_p::-webkit-progress-value {
+   background-color: #ff8c00;
+  }
+
+  .enemyhealthbar_back_m::-webkit-progress-value {
+   background-color: #af0000;
+  }
+ </style>
+ <script>
+  const now_version = "1.0.0";
+
+  let player_battle = false;
+
+  function rpg_player_status_set() {
+   var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+   if (!player_status) {
+    player_status = JSON.stringify({
+     version: now_version,
+     name: player_name,
+     level: 1,
+     exp: 0,
+     nextexp: 20,
+     hp: 20,
+     maxhp: 20,
+     atk: 1,
+     def: 0,
+     coin: 100
+    });
+    localStorage.setItem('player_status_key', player_status);
+   }
+   var rpg_player_status_view = (`
              《おなまえ》${player_status.name} <br>
              ・レベル: ${player_status.level}<br>
              ・けいけんち: ${player_status.exp}<br>
@@ -111,283 +119,293 @@
              ・しょじきん: ${player_status.coin}
              <br>
         `)
-        document.getElementById("rpg-player_status1").innerHTML = rpg_player_status_view;
- //       document.getElementById("rpg-player_status2").innerHTML = `<strong>《おなまえ》</strong>${player_status.name}<br>${rpg_player_status_view}`;
+   document.getElementById("rpg-player_status1").innerHTML = rpg_player_status_view;
+   //       document.getElementById("rpg-player_status2").innerHTML = `<strong>《おなまえ》</strong>${player_status.name}<br>${rpg_player_status_view}`;
+  }
+
+  function status_edit_out() {
+   document.getElementById("status_edit").style.display = "none";
+  }
+  //アイコンの指定
+  function status_icon_set() {
+   // フォームで選択された全ファイルを取得
+   var fileList = document.getElementById("player_icon_target").files;
+
+   // 個数分の画像を表示する
+   for (var i = 0, l = fileList.length; l > i; i++) {
+    // FileReaderオブジェクトを作成
+    var fileReader = new FileReader();
+
+    // 読み込み後の処理を決めておく
+    fileReader.onload = function() {
+     // Data URIを取得
+     var dataUri = this.result;
+     localStorage.setItem('player_icon_uri_key', dataUri);
+
+     // HTMLに書き出し (src属性にData URIを指定)
+     document.getElementById("player_icon").src = dataUri;
     }
-    function status_edit_out(){
-    	document.getElementById("status_edit").style.display = "none";
-    }
-//アイコンの指定
-function status_icon_set(){
-	// フォームで選択された全ファイルを取得
-	var fileList = document.getElementById( "player_icon_target" ).files ;
 
-	// 個数分の画像を表示する
-	for( var i=0,l=fileList.length; l>i; i++ ) {
-		// FileReaderオブジェクトを作成
-		var fileReader = new FileReader() ;
+    // ファイルをData URIとして読み込む
+    fileReader.readAsDataURL(fileList[i]);
+   }
+  }
 
-		// 読み込み後の処理を決めておく
-		fileReader.onload = function() {
-			// Data URIを取得
-			var dataUri = this.result ;
-			localStorage.setItem('player_icon_uri_key', dataUri);
-
-			// HTMLに書き出し (src属性にData URIを指定)
-			document.getElementById("player_icon").src = dataUri;
-		}
-
-		// ファイルをData URIとして読み込む
-		fileReader.readAsDataURL( fileList[i] ) ;
-	}
-}
-
- //バージョンが違う場合ステータスを初期化するコード(多分初期しか使わない)
-    var player_status = JSON.parse(localStorage.getItem('player_status_key'));
-   	if(player_status && player_status.version != now_version) {
-          localStorage.removeItem('player_status_key');
-          rpg_player_status_set();
-          alert("バージョンが違うため ステータスを初期化しました。");
-   	}
-    </script>
-
+  //バージョンが違う場合ステータスを初期化するコード(多分初期しか使わない)
+  var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+  if (player_status && player_status.version != now_version) {
+   localStorage.removeItem('player_status_key');
+   rpg_player_status_set();
+   alert("バージョンが違うため ステータスを初期化しました。");
+  }
+ </script>
 </head>
 
 <body>
-<div align="left" style="display:none;z-index: 600;position: fixed;top: 0;left: 0;height: 120%;width: 100%;background-size: 400px 400px;background-position: 0% 0px;background-image:url('https://cdn.discordapp.com/attachments/706660445519347763/708633819103756308/333-3.png');" id="status_edit">
-	    <input align="left" type="submit" style="color:black; width:8;font-size:100%;" value="閉じる" onClick="return status_edit_out();">
-        <br><strong style="text-align: left; color:white; position:relative; top: 50px; left:50px;">《おなまえ》</strong>
-        <div style="text-align: left; width:80%; position:relative; top: 50px; left:50px;"><input type="text" style="color:black;" placeholder="おなまえを入力してください" id= "player_name_txt" value="ななし"> <input type="submit" style="color:black; width:8;font-size:90%;" value="けってい！" onClick="return name_check();"></div><br><br><br><br>
-        	
-        <div style="position: relative;top: 0;left: 50px;">
-            <input type="submit" style="color:black; width:8;font-size:90%;" value="けってい！" onClick="return status_icon_set();"><br>
-            <input type="file" id="player_icon_target" >
-        </div>
-        <img id="player_icon_preview" src="https://cdn.discordapp.com/attachments/656126030062419998/704208453052137512/315.png" style="position: relative;top: 0;left: 50px;width:120px;height:120px;">
-        <script>
-document.getElementById( "player_icon_target" ).addEventListener( "change", function() {
-	var fileList = this.files ;
-	for( var i=0,l=fileList.length; l>i; i++ ) {
-		var fileReader = new FileReader() ;
-		fileReader.onload = function() {
-			var dataUri = this.result ;
-			document.getElementById("player_icon_preview").src = dataUri;
-		}
-		fileReader.readAsDataURL( fileList[i] ) ;
-	}
-} ) ;
-        </script>
-</div>
-
-<div style="z-index: 499;position: fixed;top: 0;left: 0;height: 120%;width: 60px;background-size: 100% 100%;background-position: 0% 0px;background-image:url('https://cdn.discordapp.com/attachments/706660445519347763/708634331517681664/333-4.png');" id="menu_bar">
-   <label id="menu-status-button"style="z-index: 500;position: relative;top: 1px;left: 1px;height: 54px;width: 54px;background-size: 100% 100%;background-position: 0% 0px;">
-       <input type="button" id="menu-status-button-b" onClick="player_status_main_button();"style="display:none;">
-   </label>
-</div>
-<div style="display:none;z-index: 500;position: fixed;top: 0;right: 0px;height: 310px;width: 300px;background-size: 100% 100%;background-position: 0% 0px;background-image:url('https://cdn.discordapp.com/attachments/706660445519347763/706851683602268201/331-2.png');" id="player_status_main">
-<rpg-player_status >
+ <div align="left" style="display:none;z-index: 600;position: fixed;top: 0;left: 0;height: 120%;width: 100%;background-size: 400px 400px;background-position: 0% 0px;background-image:url('https://cdn.discordapp.com/attachments/706660445519347763/708633819103756308/333-3.png');" id="status_edit">
+  <input align="left" type="submit" style="color:black; width:8;font-size:100%;" value="閉じる" onClick="return status_edit_out();">
+  <br><strong style="text-align: left; color:white; position:relative; top: 50px; left:50px;">《おなまえ》</strong>
+  <div style="text-align: left; width:80%; position:relative; top: 50px; left:50px;"><input type="text" style="color:black;" placeholder="おなまえを入力してください" id="player_name_txt" value="ななし"> <input type="submit" style="color:black; width:8;font-size:90%;" value="けってい！" onClick="return name_check();"></div><br><br><br><br>
+  <div style="position: relative;top: 0;left: 50px;">
+   <input type="submit" style="color:black; width:8;font-size:90%;" value="けってい！" onClick="return status_icon_set();"><br>
+   <input type="file" id="player_icon_target">
+  </div>
+  <img id="player_icon_preview" src="https://cdn.discordapp.com/attachments/656126030062419998/704208453052137512/315.png" style="position: relative;top: 0;left: 50px;width:120px;height:120px;">
+  <script>
+   document.getElementById("player_icon_target").addEventListener("change", function() {
+    var fileList = this.files;
+    for (var i = 0, l = fileList.length; l > i; i++) {
+     var fileReader = new FileReader();
+     fileReader.onload = function() {
+      var dataUri = this.result;
+      document.getElementById("player_icon_preview").src = dataUri;
+     }
+     fileReader.readAsDataURL(fileList[i]);
+    }
+   });
+  </script>
+ </div>
+ <div style="z-index: 499;position: fixed;top: 0;left: 0;height: 120%;width: 60px;background-size: 100% 100%;background-position: 0% 0px;background-image:url('https://cdn.discordapp.com/attachments/706660445519347763/708634331517681664/333-4.png');" id="menu_bar">
+  <label id="menu-status-button" style="z-index: 500;position: relative;top: 1px;left: 1px;height: 54px;width: 54px;background-size: 100% 100%;background-position: 0% 0px;">
+   <input type="button" id="menu-status-button-b" onClick="player_status_main_button();" style="display:none;">
+  </label>
+ </div>
+ <div style="display:none;z-index: 500;position: fixed;top: 0;right: 0px;height: 310px;width: 300px;background-size: 100% 100%;background-position: 0% 0px;background-image:url('https://cdn.discordapp.com/attachments/706660445519347763/706851683602268201/331-2.png');" id="player_status_main">
+  <rpg-player_status>
    <!-- <img style="position:relative; top: 400px; left:0%;" class="img-responsive center-block" src = "https://cdn.discordapp.com/attachments/706660445519347763/706660466859966570/331.png"> -->
    <img id="player_icon" src="https://cdn.discordapp.com/attachments/656126030062419998/704208453052137512/315.png" style="position:relative; top: 30px; left: 200px;width:60px;height:60px;">
    <script>
-       var player_icon_uri = localStorage.getItem('player_icon_uri_key');
-       if(player_icon_uri) {
-          document.getElementById("player_icon").src = player_icon_uri;
-          document.getElementById("player_icon_preview").src = player_icon_uri;
-       }
+    var player_icon_uri = localStorage.getItem('player_icon_uri_key');
+    if (player_icon_uri) {
+     document.getElementById("player_icon").src = player_icon_uri;
+     document.getElementById("player_icon_preview").src = player_icon_uri;
+    }
    </script>
-	  <div style="position:relative; top: 20px; left:0px;">
-    	<p id="rpg-player_status1" style="position:relative; top: 0px; left:10%;"></p>
-      </div>
+   <div style="position:relative; top: 20px; left:0px;">
+    <p id="rpg-player_status1" style="position:relative; top: 0px; left:10%;"></p>
+   </div>
    <input type="button" style="position:relative; top: 0px; left: 210px;color:black; width:8;font-size:100%;" value="編集" onClick="return document.getElementById('status_edit').style.display = 'block';">
-</rpg-player_status>
-</div>
+  </rpg-player_status>
+ </div>
+ <home id="home" name="home" style="padding-left: 40px;">
+  <p class="lead" style="color:white;" id="home_tag">げぇむ HOME </p>
+  <script>
+   document.getElementById("home_tag").innerHTML += `-- Ver ${now_version}`
+  </script>
+  <br><br>
+  <input type="submit" style="color: white;" value="RPGもどきをやる(開発段階)" class="btn btn-primary" id="rpg-move-button" onClick="return rpg_move_button();">
+  <br><br>
+  <input type="submit" style="color: white;" value="スロットをやる" class="btn btn-primary" id="slot-move-button" onClick="return slot_move_button();">
+  <br><br><br><br><br><br><br><br>
+  <!-- <img class="img-responsive center-block" src = "https://cdn.discordapp.com/attachments/656126030062419998/704208453052137512/315.png"> -->
+  <test class="btn btn-primary" id="delete-button">データを削除</test>
+  <script>
+   var player_name = localStorage.getItem('player_name_key');
+   if (!player_name) player_name = `ななし`;
+   player_name_txt.value = player_name;
 
-  <home id="home" name="home" style="padding-left: 40px;">
-  	<p class="lead" style="color:white;" id = "home_tag">げぇむ HOME   </p>
-      <script>document.getElementById("home_tag").innerHTML += `-- Ver ${now_version}`</script>
-      <br><br>
-      <input type="submit" style="color: white;" value="RPGもどきをやる(開発段階)" class="btn btn-primary" id="rpg-move-button" onClick="return rpg_move_button();">
-      <br><br>
-      <input type="submit" style="color: white;" value="スロットをやる" class="btn btn-primary" id="slot-move-button" onClick="return slot_move_button();">
-    <br><br><br><br><br><br><br><br>
-    <!-- <img class="img-responsive center-block" src = "https://cdn.discordapp.com/attachments/656126030062419998/704208453052137512/315.png"> -->
-    <test class="btn btn-primary" id="delete-button">データを削除</test>
-    <script>
-       var player_name = localStorage.getItem('player_name_key');
-   	if(!player_name) player_name = `ななし`;
-       player_name_txt.value = player_name;
-       function name_check() {
-       	var player_name_txt = document.getElementById("player_name_txt").value;
-       	if(player_name_txt && player_name_txt.length <= 14) {
-              player_name = player_name_txt;
-              localStorage.setItem('player_name_key', player_name);
-              var player_status = JSON.parse(localStorage.getItem('player_status_key'));
-          	if(player_status) {
-                  player_status.name = player_name;
-                  player_status = JSON.stringify(player_status);
-                  localStorage.setItem('player_status_key', player_status);
-                  rpg_player_status_set();
-              }
-          	alert(`${player_name}にしました( 'ω')`);
-           } else if(player_name_txt.length > 14) {
-       	   alert("おなまえの長さは14文字までです( 'ω')");
-       	   return;
-       	} else {
-       	   alert("おなまえを入力してください( 'ω')");
-       	   return;
-       	}
-       }
-       document.getElementById("delete-button").onclick = function() {
-       	var result = window.confirm('削除しますか？');
-           if(result == true) {
-           	result = window.confirm('本当に削除しますか？');
-               if(result == true) {
-              	result = window.confirm('消したデータは返ってきません。それでも削除しますか？');
-                  if(result == true) {
-                  	result = window.confirm('本当に消したデータは返ってきません。それでも削除しますか？');
-                      if(result == true) {
-                      	result = window.confirm('こうかいしませんね？');
-                          if(result == true) {
-                             var player_icon_uri = localStorage.getItem('player_icon_uri_key');
-                             var player_name = localStorage.getItem('player_name_key');
-                             
-                             localStorage.clear();
-                             if(player_icon_uri) localStorage.setItem('player_icon_uri_key', player_icon_uri);
-                             if(player_name) localStorage.setItem('player_name_key', player_name);
-       
-                             alert('データを初期化しました。webを更新してください。');
-                             rpg_player_status_set();
-                          }
-                      }
-                  }
-               }
-           }
-       }
-    </script>
-  </home>
-  <slot id="slot-game" style="padding-left: 40px;">
-    <p class="lead" style="color:white;">すろっと</p>
-    <br>
-    <input type="submit" value="ホームに戻る" class="btn btn-primary" id="home-move-button" onClick="return home_move_button();"><test class="btn btn-primary" id="logclear-button">ログをクリア</test>
-    <br><br><br>
-    <test class="btn btn-primary" id="test-button">スロットをまわす</test>
-    	<div style= "border: groove white; width: 160px; position:relative; top: -32px; left: 55%;">
-           <p id="slot-shojikin" style="color: white; position:relative; top: 5px; left:8%;"></p>
-        </div>
-    <br>
-    <slot-pname><h4 id="slot-pname" style="color:white;">- - - - -</h4></slot-pname>
-    <test-text2><h1 id="test-button-text2" style="border: groove gray;">- - - - -</h1></test-text2>
-    <test-text3><h3 id="test-button-text3"></h3></test-text3>
-    <br>
-    <test-text4><p id="test-button-text4"style="border: groove white"></p></test-text4>
-    <script>
-    	var day = ``;
-    	setInterval(() => {
-          day = new Date().toLocaleString({ timeZone: 'Asia/Tokyo' });
-        },1000);
-        var player_status = JSON.parse(localStorage.getItem('player_status_key'));
-        if(player_status) document.getElementById("slot-shojikin").innerHTML = `しょじきん: ${player_status.coin} ｺｲﾝ`;
-    	var slot_1 = ``;
-        var slot_2 = ``;
-        var slot_3 = ``;
-        var result_txt = ``;
-        var result = ``;
-        var result_log = ``;
-        var slot_get_coin = 0;
-       document.getElementById("test-button").onclick = function () {
-//            alert("クリックしました( 'ω')");
-            result_log = `${result} ${result_txt}<br>${result_log}`;
-            document.getElementById("test-button-text4").innerHTML = result_log;
-            slot_1 = Math.floor(Math.random() * 9) + 1;
-            slot_2 = Math.floor(Math.random() * 9) + 1;
-            slot_3 = Math.floor(Math.random() * 9) + 1;    
-            if (slot_1 == slot_2 && slot_1 == slot_3 && slot_1 == 7) {
-                slot_get_coin = 777;
-                result_txt = `ラッキーセブン！ ${Math.abs(slot_get_coin)} コイン 獲得した！`;
-            } else if (slot_1 == slot_2 && slot_1 == slot_3 && slot_1 == 6) {
-            	slot_get_coin = -666;
-                result_txt = `数字が不吉なのでおおはずれ！${Math.abs(slot_get_coin)} コイン 失った！`;
-            } else if (slot_1 == 3 && slot_2 == 3 && slot_3 == 4) {
-            	slot_get_coin = -100;
-                result_txt = `なんでや！阪神関係無いやろ！${Math.abs(slot_get_coin)} コイン 失った！ `;
-            } else if (slot_1 == slot_2 && slot_1 == slot_3) {
-            	slot_get_coin = (150 + Math.floor(Math.random() * 101));
-                result_txt = `おめでとう！ ${Math.abs(slot_get_coin)} コイン 獲得した！`;
-            } else if (slot_1 == 3 && slot_2 == 1 && slot_3 == 4) {
-            	slot_get_coin = (50 + Math.floor(Math.random() * 101));
-                result_txt = `円周率かな？( \'ω\') ${Math.abs(slot_get_coin)} コイン 獲得した！`;
-            } else if ((slot_1 == 5 && slot_2 == 1 && slot_3 == 4) || (slot_1 == 1 && slot_2 == 1 && slot_3 == 4) || (slot_1 == 9 && slot_2 == 3 && slot_3 == 1)) {
-            	slot_get_coin = (-50 - Math.floor(Math.random() * 101));
-                result_txt = `ざんねん！ 数字がきたないで賞！${Math.abs(slot_get_coin)} コイン 失った！ `;
-            } else if (slot_1 == slot_2 || slot_2 == slot_3 || slot_1 == slot_3) {
-            	slot_get_coin = 0;
-                result_txt = `おしい！コインは失わなかった！ `;
-            } else {
-                slot_get_coin = (-1 - Math.floor(Math.random() * 4));
-                result_txt = `ざんねん！ ${Math.abs(slot_get_coin)} コイン 失った！`;
-            }
-            result_txt = `${result_txt} -- ${day}`;
-            player_status = JSON.parse(localStorage.getItem('player_status_key'));
-            if (player_status){
-	           player_status.coin = player_status.coin * 1 + slot_get_coin * 1;
-	           player_status.coin = player_status.coin * 1 < 0 ? 0:player_status.coin;
-               document.getElementById("slot-shojikin").innerHTML = `しょじきん: ${player_status.coin} ｺｲﾝ`;
-               player_status = JSON.stringify(player_status);
-               localStorage.setItem('player_status_key', player_status);
-               rpg_player_status_set();
-            } 
-            result = `| ${slot_1} : ${slot_2} : ${slot_3} |`;
-            document.getElementById("slot-pname").innerHTML = `${player_name}の結果は...`;
-            document.getElementById("test-button-text2").innerHTML = result;
-            document.getElementById("test-button-text3").innerHTML = result_txt;
-        };
-        
-       document.getElementById("logclear-button").onclick = function() {
-           var logclear = window.confirm('ログを削除しますか？');
-           if(logclear == true) document.getElementById("test-button-text4").innerHTML = ``;
-       }
-    </script>
+   function name_check() {
+    var player_name_txt = document.getElementById("player_name_txt").value;
+    if (player_name_txt && player_name_txt.length <= 14) {
+     player_name = player_name_txt;
+     localStorage.setItem('player_name_key', player_name);
+     var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+     if (player_status) {
+      player_status.name = player_name;
+      player_status = JSON.stringify(player_status);
+      localStorage.setItem('player_status_key', player_status);
+      rpg_player_status_set();
+     }
+     alert(`${player_name}にしました( 'ω')`);
+    } else if (player_name_txt.length > 14) {
+     alert("おなまえの長さは14文字までです( 'ω')");
+     return;
+    } else {
+     alert("おなまえを入力してください( 'ω')");
+     return;
+    }
+   }
+   document.getElementById("delete-button").onclick = function() {
+    var result = window.confirm('削除しますか？');
+    if (result == true) {
+     result = window.confirm('本当に削除しますか？');
+     if (result == true) {
+      result = window.confirm('消したデータは返ってきません。それでも削除しますか？');
+      if (result == true) {
+       result = window.confirm('本当に消したデータは返ってきません。それでも削除しますか？');
+       if (result == true) {
+        result = window.confirm('こうかいしませんね？');
+        if (result == true) {
+         var player_icon_uri = localStorage.getItem('player_icon_uri_key');
+         var player_name = localStorage.getItem('player_name_key');
 
-   </slot>
-  <rpg id="rpg-game" style="padding-left: 40px;position:static;">
-    <p class="lead" style="color:white;">RPGもどき</p> <input type="submit" value="ホームに戻る" class="btn btn-primary" id="rpg_home_move_button" onClick="return home_move_button();">
-      <br><br><br><br>
-      	<!-- 敵召喚デバッグ -->
-               <div id="battle_start_debug_button">
-                   <input type="submit" value="戦闘開始(てすてす)"  id="testes-button" onClick="return enemy_testes();"><br><br>
-                   <input type="submit" value="戦闘開始(つよいがいこつ)"  id="testes-button" onClick="return enemy_strong_skeleton();"><br><br>
-                   <input type="submit" value="戦闘開始(メタルなんとか)"  id="testes-button" onClick="return enemy_metal_nan();">
-               </div>
-               
-	    <!-- <div style="position:relative; top: -20px; left:0px;"><strong style="color:white">HP SET (デバッグ) - </strong><input type="text" id="hp" value="100"> <input type="submit" style="color: black;" value="SET" id="hp_button" onClick="return test_click();"></div> -->
-    <div id="enemyhealthbar_core"style="position:relative; top: 0px; right:0px;display:none;"align="right">
-        <nobr>
-    	<a style="color:white;position:relative; top: 0px; left:303.5px;text-align:left;" ><strong id="enemyhealth_value"></strong></a>
-	    <progress id="enemyhealthbar_back" max="100" value="0" align="left" style="width:300px;position:relative; top: 0px; left:303.5px;-webkit-appearance: none;appearance: none;" class=""></progress>
-        <progress id="enemyhealthbar" max="100" value="0" align="left" style="width:300px;position:relative; top: 0px; left:0px;-webkit-appearance: none;appearance: none;"></progress>
-	    <br><a style="color:white;position:relative; top: 0px; left:0px;"><strong id="enemyhealth_name">エネミー</strong></a>
-        </nobr>
-    </div><br><br>
-    <div id="playerhealthbar_core"style="position:relative;top: 0;left: 0px">
-	    <nobr>
-	    <a style="color:white"><strong id="playerhealth_name"></strong></a>
-	    <progress id="playerhealthbar_back" max="100" value="0" style="position:relative; top: 0px; left:0px;-webkit-appearance: none;appearance: none;" class=""></progress>
-        <progress id="playerhealthbar" max="100" value="0" style="position:relative; top: 0px; left:-143.5px;-webkit-appearance: none;appearance: none;"></progress>
-        </nobr>
-    </div><br>
-      <rpg-player_status><p id="rpg-player_leveluplog"style="border: groove white">- - - -</p><rpg-player_status>
-      <!-- <rpg-player_status><p id="rpg-player_status2"style="border: groove white;"></p></rpg-player_status> -->
-      <br>
-      <div id="player_battle_commands" style="display:none;">
-        <div id="player_battle_commands2" style="display:block;">
-         <input type="submit" value="こうげき" class="btn btn-primary" id="attack-button" onClick="return player_attack_command();">
-         <input type="submit" value="ぼうぎょ" class="btn btn-primary" id="attack-button" onClick="return player_guard_command();">
-         <input type="submit" value="なにもしない" class="btn btn-primary" id="holding-button" onClick="return player_holding_command();">
-         <input type="submit" value="にげる" class="btn btn-primary" id="escape-button" onClick="return player_escape_command();">
-        </div>
-      </div>
-      <br><br>	
-<!--
+         localStorage.clear();
+         if (player_icon_uri) localStorage.setItem('player_icon_uri_key', player_icon_uri);
+         if (player_name) localStorage.setItem('player_name_key', player_name);
+
+         alert('データを初期化しました。webを更新してください。');
+         rpg_player_status_set();
+        }
+       }
+      }
+     }
+    }
+   }
+  </script>
+ </home>
+ <slot id="slot-game" style="padding-left: 40px;">
+  <p class="lead" style="color:white;">すろっと</p>
+  <br>
+  <input type="submit" value="ホームに戻る" class="btn btn-primary" id="home-move-button" onClick="return home_move_button();">
+  <test class="btn btn-primary" id="logclear-button">ログをクリア</test>
+  <br><br><br>
+  <test class="btn btn-primary" id="test-button">スロットをまわす</test>
+  <div style="border: groove white; width: 160px; position:relative; top: -32px; left: 55%;">
+   <p id="slot-shojikin" style="color: white; position:relative; top: 5px; left:8%;"></p>
+  </div>
+  <br>
+  <slot-pname>
+   <h4 id="slot-pname" style="color:white;">- - - - -</h4>
+  </slot-pname>
+  <test-text2>
+   <h1 id="test-button-text2" style="border: groove gray;">- - - - -</h1>
+  </test-text2>
+  <test-text3>
+   <h3 id="test-button-text3"></h3>
+  </test-text3>
+  <br>
+  <test-text4>
+   <p id="test-button-text4" style="border: groove white"></p>
+  </test-text4>
+  <script>
+   var day = ``;
+   setInterval(() => {
+    day = new Date().toLocaleString({ timeZone: 'Asia/Tokyo' });
+   }, 1000);
+   var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+   if (player_status) document.getElementById("slot-shojikin").innerHTML = `しょじきん: ${player_status.coin} ｺｲﾝ`;
+   var slot_1 = ``;
+   var slot_2 = ``;
+   var slot_3 = ``;
+   var result_txt = ``;
+   var result = ``;
+   var result_log = ``;
+   var slot_get_coin = 0;
+   document.getElementById("test-button").onclick = function() {
+    //            alert("クリックしました( 'ω')");
+    result_log = `${result} ${result_txt}<br>${result_log}`;
+    document.getElementById("test-button-text4").innerHTML = result_log;
+    slot_1 = Math.floor(Math.random() * 9) + 1;
+    slot_2 = Math.floor(Math.random() * 9) + 1;
+    slot_3 = Math.floor(Math.random() * 9) + 1;
+    if (slot_1 == slot_2 && slot_1 == slot_3 && slot_1 == 7) {
+     slot_get_coin = 777;
+     result_txt = `ラッキーセブン！ ${Math.abs(slot_get_coin)} コイン 獲得した！`;
+    } else if (slot_1 == slot_2 && slot_1 == slot_3 && slot_1 == 6) {
+     slot_get_coin = -666;
+     result_txt = `数字が不吉なのでおおはずれ！${Math.abs(slot_get_coin)} コイン 失った！`;
+    } else if (slot_1 == 3 && slot_2 == 3 && slot_3 == 4) {
+     slot_get_coin = -100;
+     result_txt = `なんでや！阪神関係無いやろ！${Math.abs(slot_get_coin)} コイン 失った！ `;
+    } else if (slot_1 == slot_2 && slot_1 == slot_3) {
+     slot_get_coin = (150 + Math.floor(Math.random() * 101));
+     result_txt = `おめでとう！ ${Math.abs(slot_get_coin)} コイン 獲得した！`;
+    } else if (slot_1 == 3 && slot_2 == 1 && slot_3 == 4) {
+     slot_get_coin = (50 + Math.floor(Math.random() * 101));
+     result_txt = `円周率かな？( \'ω\') ${Math.abs(slot_get_coin)} コイン 獲得した！`;
+    } else if ((slot_1 == 5 && slot_2 == 1 && slot_3 == 4) || (slot_1 == 1 && slot_2 == 1 && slot_3 == 4) || (slot_1 == 9 && slot_2 == 3 && slot_3 == 1)) {
+     slot_get_coin = (-50 - Math.floor(Math.random() * 101));
+     result_txt = `ざんねん！ 数字がきたないで賞！${Math.abs(slot_get_coin)} コイン 失った！ `;
+    } else if (slot_1 == slot_2 || slot_2 == slot_3 || slot_1 == slot_3) {
+     slot_get_coin = 0;
+     result_txt = `おしい！コインは失わなかった！ `;
+    } else {
+     slot_get_coin = (-1 - Math.floor(Math.random() * 4));
+     result_txt = `ざんねん！ ${Math.abs(slot_get_coin)} コイン 失った！`;
+    }
+    result_txt = `${result_txt} -- ${day}`;
+    player_status = JSON.parse(localStorage.getItem('player_status_key'));
+    if (player_status) {
+     player_status.coin = player_status.coin * 1 + slot_get_coin * 1;
+     player_status.coin = player_status.coin * 1 < 0 ? 0 : player_status.coin;
+     document.getElementById("slot-shojikin").innerHTML = `しょじきん: ${player_status.coin} ｺｲﾝ`;
+     player_status = JSON.stringify(player_status);
+     localStorage.setItem('player_status_key', player_status);
+     rpg_player_status_set();
+    }
+    result = `| ${slot_1} : ${slot_2} : ${slot_3} |`;
+    document.getElementById("slot-pname").innerHTML = `${player_name}の結果は...`;
+    document.getElementById("test-button-text2").innerHTML = result;
+    document.getElementById("test-button-text3").innerHTML = result_txt;
+   };
+
+   document.getElementById("logclear-button").onclick = function() {
+    var logclear = window.confirm('ログを削除しますか？');
+    if (logclear == true) document.getElementById("test-button-text4").innerHTML = ``;
+   }
+  </script>
+ </slot>
+ <rpg id="rpg-game" style="padding-left: 40px;position:static;">
+  <p class="lead" style="color:white;">RPGもどき</p> <input type="submit" value="ホームに戻る" class="btn btn-primary" id="rpg_home_move_button" onClick="return home_move_button();">
+  <br><br><br><br>
+  <!-- 敵召喚デバッグ -->
+  <div id="battle_start_debug_button">
+   <input type="submit" value="戦闘開始(てすてす)" id="testes-button" onClick="return enemy_testes();"><br><br>
+   <input type="submit" value="戦闘開始(つよいがいこつ)" id="testes-button" onClick="return enemy_strong_skeleton();"><br><br>
+   <input type="submit" value="戦闘開始(メタルなんとか)" id="testes-button" onClick="return enemy_metal_nan();"><br><br>
+   <input type="submit" value="戦闘開始(あああ)" id="testes-button" onClick="return enemy_aaa();">
+  </div>
+  <!-- <div style="position:relative; top: -20px; left:0px;"><strong style="color:white">HP SET (デバッグ) - </strong><input type="text" id="hp" value="100"> <input type="submit" style="color: black;" value="SET" id="hp_button" onClick="return test_click();"></div> -->
+  <div id="enemyhealthbar_core" style="position:relative; top: 0px; right:0px;display:none;" align="right">
+   <nobr>
+    <a style="color:white;position:relative; top: 0px; left:303.5px;text-align:left;"><strong id="enemyhealth_value"></strong></a>
+    <progress id="enemyhealthbar_back" max="100" value="0" align="left" style="width:300px;position:relative; top: 0px; left:303.5px;-webkit-appearance: none;appearance: none;" class=""></progress>
+    <progress id="enemyhealthbar" max="100" value="0" align="left" style="width:300px;position:relative; top: 0px; left:0px;-webkit-appearance: none;appearance: none;"></progress>
+    <br><a style="color:white;position:relative; top: 0px; left:0px;"><strong id="enemyhealth_name">エネミー</strong></a>
+   </nobr>
+  </div><br><br>
+  <div id="playerhealthbar_core" style="position:relative;top: 0;left: 0px">
+   <nobr>
+    <a style="color:white"><strong id="playerhealth_name"></strong></a>
+    <progress id="playerhealthbar_back" max="100" value="0" style="position:relative; top: 0px; left:0px;-webkit-appearance: none;appearance: none;" class=""></progress>
+    <progress id="playerhealthbar" max="100" value="0" style="position:relative; top: 0px; left:-143.5px;-webkit-appearance: none;appearance: none;"></progress>
+   </nobr>
+  </div><br>
+  <rpg-player_status>
+   <p id="rpg-player_leveluplog" style="border: groove white">- - - -</p>
+   <rpg-player_status>
+    <!-- <rpg-player_status><p id="rpg-player_status2"style="border: groove white;"></p></rpg-player_status> -->
+    <br>
+    <div id="player_battle_commands" style="display:none;">
+     <div id="player_battle_commands2" style="display:block;">
+      <input type="submit" value="こうげき" class="btn btn-primary" id="attack-button" onClick="return player_attack_command();">
+      <input type="submit" value="ぼうぎょ" class="btn btn-primary" id="attack-button" onClick="return player_guard_command();">
+      <input type="submit" value="なにもしない" class="btn btn-primary" id="holding-button" onClick="return player_holding_command();">
+      <input type="submit" value="にげる" class="btn btn-primary" id="escape-button" onClick="return player_escape_command();">
+     </div>
+    </div>
+    <br><br>
+    <!--
   <input type="submit" value="経験値 +10 (デバッグ)" class="btn btn-primary" id="home-move-button" onClick="return test_enemy_death1();">
  <br><br>
   <input type="submit" value="経験値 +100 (デバッグ)" class="btn btn-primary" id="home-move-button" onClick="return test_enemy_death2();">
@@ -398,491 +416,507 @@ document.getElementById( "player_icon_target" ).addEventListener( "change", func
  <br><br>
   <input type="submit" value="経験値 +Infinity (デバッグ)" class="btn btn-primary" id="home-move-button" onClick="return test_enemy_death5();">
 -->
-
     <script>
-      setInterval(()=>{
-         if(document.getElementById("rpg-game").style.display == "block"){
-            var orientation = window.orientation;
-            if (orientation === 0) { 
-                document.getElementById("rpg_game_blocker").style.display = "block";
-            } else { 
-                document.getElementById("rpg_game_blocker").style.display = "none";
-            }
-            
-            if(player_battle == true){
-            	document.getElementById("player_battle_commands").style.display = "block";
-            	document.getElementById("enemyhealthbar_core").style.display = "block";
-            	document.getElementById("rpg_home_move_button").style.display = "none";
-            
-            	document.getElementById("battle_start_debug_button").style.display = "none";
-            } else {
-            	document.getElementById("player_battle_commands").style.display = "none";
-            	document.getElementById("enemyhealthbar_core").style.display = "none";
-            	document.getElementById("rpg_home_move_button").style.display = "block";
-            
-            	document.getElementById("battle_start_debug_button").style.display = "block";
-            }
+     setInterval(() => {
+      if (document.getElementById("rpg-game").style.display == "block") {
+       var orientation = window.orientation;
+       if (orientation === 0) {
+        document.getElementById("rpg_game_blocker").style.display = "block";
+       } else {
+        document.getElementById("rpg_game_blocker").style.display = "none";
+       }
 
-         }
-      }, 20);
-      
-      //プレイヤーヘルス
-    	var health = 100;
-  	  var player_status = JSON.parse(localStorage.getItem('player_status_key'));
-  	  if(player_status) {
-            document.getElementById("playerhealth_name").innerHTML = `${player_status.name} - `;
-            health = (player_status.hp / player_status.maxhp) * 100;
-        }
-    	var healthbarback = health;
-        
-        var progress_anim = 0;
+       if (player_battle == true) {
+        document.getElementById("player_battle_commands").style.display = "block";
+        document.getElementById("enemyhealthbar_core").style.display = "block";
+        document.getElementById("rpg_home_move_button").style.display = "none";
 
-        let playerhealthbar = document.getElementById("playerhealthbar");
-        let playerhealthbar_back = document.getElementById("playerhealthbar_back");
-        playerhealthbar.value = health;
+        document.getElementById("battle_start_debug_button").style.display = "none";
+       } else {
+        document.getElementById("player_battle_commands").style.display = "none";
+        document.getElementById("enemyhealthbar_core").style.display = "none";
+        document.getElementById("rpg_home_move_button").style.display = "block";
+
+        document.getElementById("battle_start_debug_button").style.display = "block";
+       }
+
+      }
+     }, 20);
+
+     //プレイヤーヘルス
+     var health = 100;
+     var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+     if (player_status) {
+      document.getElementById("playerhealth_name").innerHTML = `${player_status.name} - `;
+      health = (player_status.hp / player_status.maxhp) * 100;
+     }
+     var healthbarback = health;
+
+     var progress_anim = 0;
+
+     let playerhealthbar = document.getElementById("playerhealthbar");
+     let playerhealthbar_back = document.getElementById("playerhealthbar_back");
+     playerhealthbar.value = health;
+     playerhealthbar_back.value = health;
+
+     //エネミーヘルス
+     var enemy_health = 100;
+     var enemy_healthbarback = enemy_health;
+
+     var progress_anim_2 = 0;
+
+     let enemyhealthbar = document.getElementById("enemyhealthbar");
+     let enemyhealthbar_back = document.getElementById("enemyhealthbar_back");
+     enemyhealthbar.value = enemy_health;
+     enemyhealthbar_back.value = enemy_health;
+
+     setInterval(() => {
+      //プレイヤー
+      progress_anim = Math.abs(health - healthbarback) / 20.0;
+
+      var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+      if (player_status) {
+       document.getElementById("playerhealth_name").innerHTML = `${player_status.name} - `;
+       health = (player_status.hp / player_status.maxhp) * 100;
+      }
+      if (health <= 0) {
+       playerhealthbar.value = 0;
+       playerhealthbar_back.value = 0;
+      }
+      if (health != healthbarback) {
+       if (health > healthbarback) {
+        healthbarback += progress_anim;
+        playerhealthbar.value = healthbarback;
         playerhealthbar_back.value = health;
-        
-	//エネミーヘルス
-    	var enemy_health = 100;
-    	var enemy_healthbarback = enemy_health;
 
-        var progress_anim_2 = 0;
+        playerhealthbar_back.classList.add("playerhealthbar_back_p");
+        playerhealthbar_back.classList.remove("playerhealthbar_back_m");
+       }
+       if (health < healthbarback) {
+        healthbarback -= progress_anim;
+        playerhealthbar.value = health;
+        playerhealthbar_back.value = healthbarback;
 
-        let enemyhealthbar = document.getElementById("enemyhealthbar");
-        let enemyhealthbar_back = document.getElementById("enemyhealthbar_back");
-        enemyhealthbar.value = enemy_health;
+        playerhealthbar_back.classList.add("playerhealthbar_back_m");
+        playerhealthbar_back.classList.remove("playerhealthbar_back_p");
+       }
+      }
+      //エネミー
+      var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
+      if (enemy_status) {
+       document.getElementById("enemyhealth_name").innerHTML = `- ${enemy_status.name} -`;
+       document.getElementById("enemyhealth_value").innerHTML = `${enemy_status.hp} / ${enemy_status.maxhp} - `;
+       enemy_health = (enemy_status.hp / enemy_status.maxhp) * 100;
+      }
+      if (enemy_health <= 0) {
+       enemyhealthbar.value = 0;
+       enemyhealthbar_back.value = 0;
+      }
+      if (enemy_health != enemy_healthbarback) {
+       if (enemy_health > enemy_healthbarback) {
+        enemy_healthbarback += 1.0;
+        if (enemy_health < enemy_healthbarback) enemy_healthbarback = enemy_health;
+        enemyhealthbar.value = enemy_healthbarback;
         enemyhealthbar_back.value = enemy_health;
 
-    	setInterval(()=>{
-//プレイヤー
-          progress_anim = Math.abs(health - healthbarback) / 20.0;
-          
-    	  var player_status = JSON.parse(localStorage.getItem('player_status_key'));
-    	  if(player_status) {
-              document.getElementById("playerhealth_name").innerHTML = `${player_status.name} - `;
-              health = (player_status.hp / player_status.maxhp) * 100;
-          }
-    	  if(health <= 0) {
-            playerhealthbar.value = 0;
-            playerhealthbar_back.value = 0;
-          }
-      	if(health != healthbarback) {
-      	  if(health > healthbarback) {
-             healthbarback += progress_anim;
-             playerhealthbar.value = healthbarback;
-             playerhealthbar_back.value = health;
-             
-             playerhealthbar_back.classList.add("playerhealthbar_back_p");
-             playerhealthbar_back.classList.remove("playerhealthbar_back_m");
-            }
-      	  if(health < healthbarback) {
-             healthbarback -= progress_anim;
-             playerhealthbar.value = health;
-             playerhealthbar_back.value = healthbarback;
-             
-             playerhealthbar_back.classList.add("playerhealthbar_back_m");
-             playerhealthbar_back.classList.remove("playerhealthbar_back_p");
-            }
-          }
-//エネミー
-    	  var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
-    	  if(enemy_status) {
-              document.getElementById("enemyhealth_name").innerHTML = `- ${enemy_status.name} -`;
-              document.getElementById("enemyhealth_value").innerHTML = `${enemy_status.hp} / ${enemy_status.maxhp} - `;
-              enemy_health = (enemy_status.hp / enemy_status.maxhp) * 100;
-          }
-    	  if(enemy_health <= 0) {
-            enemyhealthbar.value = 0;
-            enemyhealthbar_back.value = 0;
-          }
-      	if(enemy_health != enemy_healthbarback) {
-      	  if(enemy_health > enemy_healthbarback) {
-             enemy_healthbarback += 1.0;
-             if(enemy_health < enemy_healthbarback) enemy_healthbarback = enemy_health;
-             enemyhealthbar.value = enemy_healthbarback;
-             enemyhealthbar_back.value = enemy_health;
-             
-             enemyhealthbar_back.classList.add("enemyhealthbar_back_p");
-             enemyhealthbar_back.classList.remove("enemyhealthbar_back_m");
-            }
-      	  if(enemy_health < enemy_healthbarback) {
-             enemy_healthbarback -= 0.5;
-             if(enemy_health > enemy_healthbarback) enemy_healthbarback = enemy_health;
-             enemyhealthbar.value = enemy_health;
-             enemyhealthbar_back.value = enemy_healthbarback;
-             
-             enemyhealthbar_back.classList.add("enemyhealthbar_back_m");
-             enemyhealthbar_back.classList.remove("enemyhealthbar_back_p");
-            }
-          }
-    	},20);
-      
-        //デバッグ用
-    	function test_click(){
-    	   var health_test_txt = document.getElementById("hp");
-    	   health_test_txt.value = health_test_txt.value > 100 ? 100: health_test_txt.value;
+        enemyhealthbar_back.classList.add("enemyhealthbar_back_p");
+        enemyhealthbar_back.classList.remove("enemyhealthbar_back_m");
+       }
+       if (enemy_health < enemy_healthbarback) {
+        enemy_healthbarback -= 0.5;
+        if (enemy_health > enemy_healthbarback) enemy_healthbarback = enemy_health;
+        enemyhealthbar.value = enemy_health;
+        enemyhealthbar_back.value = enemy_healthbarback;
 
-    	   
-     	  var player_status = JSON.parse(localStorage.getItem('player_status_key'));
-           player_status.hp = Math.round(player_status.maxhp * (health_test_txt.value / 100));
-           health = (player_status.hp / player_status.maxhp) * 100;
-           player_status = JSON.stringify(player_status);
-           localStorage.setItem('player_status_key', player_status);
-           rpg_player_status_set();
-           progress_anim = Math.abs(health - healthbarback) / 50.0;
-           
-    	   enemy_health = health_test_txt.value;
-           progress_anim_2 = Math.abs(enemy_health - enemy_healthbarback) / 50.0;
-    	}
-
-    
-    
-//levelupって書いてあるけど敵倒した処理(クソコード)
-function levelup(){
-var player_status = JSON.parse(localStorage.getItem('player_status_key'));
-var levelup_log = ``;
-if (player_status){
-	var enemy_exp = localStorage.getItem('enemy_exp');
-	player_status.exp = player_status.exp * 1 + enemy_exp * 1;
-	if (!(player_status.exp < player_status.nextexp || player_status.level >= 100)){
-    var now_lv = player_status.level * 1;
-    var now_hp = player_status.maxhp * 1;
-    var now_atk = player_status.atk * 1;
-    var now_def = player_status.def * 1;
-	while (player_status.exp >= player_status.nextexp && player_status.level < 100){
-    player_status.level = player_status.level * 1 + 1;
-    player_status.maxhp = player_status.maxhp * 1 + 10;
-    player_status.hp = player_status.maxhp;
-    player_status.atk = player_status.atk * 1 + 3;
-    player_status.def = player_status.def * 1 + 1;
-    var nownextexp = player_status.nextexp;
-    player_status.nextexp = Math.floor(nownextexp * 1 + (30 + (Math.floor(nownextexp * 0.12))));
-    }
-    var up_lv = player_status.level * 1;
-    var up_hp = player_status.maxhp * 1;
-    var up_atk = player_status.atk * 1;
-    var up_def = player_status.def * 1;
-    
-    var now_2_lv = up_lv * 1 - now_lv * 1;
-    var now_2_hp = up_hp * 1 - now_hp * 1;
-    var now_2_atk = up_atk * 1 - now_atk * 1
-    var now_2_def = up_def * 1 - now_def * 1;
-    if (player_status.level >= 100){
-    	player_status.exp = "-";
-    	player_status.nextexp = "-";
-    }
-    levelup_log = `${player_status.name} はレベルが上がった！<br> ・レベル: ${now_lv} + ${now_2_lv}<br>・たいりょく: ${now_hp} + ${now_2_hp}<br> ・こうげきりょく: ${now_atk} + ${now_2_atk}<br>・ぼうぎょりょく: ${now_def} + ${now_2_def}`;
-    }
-    player_status = JSON.stringify(player_status);
-    localStorage.setItem('player_status_key', player_status);
-    rpg_player_status_set();
- } 
-  document.getElementById("rpg-player_leveluplog").innerHTML += `\nけいけんち ${enemy_exp} かくとく！<br>${levelup_log}`;
-}
-//エネミー
-function battle_start(){
-   player_battle = true;
-   enemy_healthbarback = 0;
-   document.getElementById("player_battle_commands2").style.display = "none";
-   var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
-   var player_status = JSON.parse(localStorage.getItem('player_status_key'));
-   
-   document.getElementById("rpg-player_leveluplog").innerHTML = `${enemy_status.name}が現れた！`;
-   
-   player_status.hp = player_status.maxhp;
-   player_status = JSON.stringify(player_status);
-   localStorage.setItem('player_status_key', player_status);
-   rpg_player_status_set();
-   setTimeout(()=>{
-      document.getElementById("player_battle_commands2").style.display = "block";
-   },1500);
-}
-function battle_end(){
-   player_battle = false;
-   localStorage.removeItem('enemy_status_key');
-   rpg_player_status_set();
-}
-
-let function_player_damage = (`
-   progress_anim = Math.abs(health - healthbarback) / 50.0;
-`);
-let function_enemy_damage = (`
-   progress_anim_2 = Math.abs(enemy_health - enemy_healthbarback) / 50.0;
-`);
-
-function player_attack_command(){
-   var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
-   var player_status = JSON.parse(localStorage.getItem('player_status_key'));
-
-   var player_attack_damage = Math.floor((player_status.atk * 1.5 - enemy_status.def * 1.2) + (Math.random() * 6));
-   player_attack_damage = player_attack_damage < 1 ? 1:player_attack_damage;
-   enemy_status.hp = (enemy_status.hp * 1) - player_attack_damage;
-
-   document.getElementById("rpg-player_leveluplog").innerHTML = `${player_status.name}のこうげき！<br>${enemy_status.name}は${player_attack_damage}ダメージうけた！`;
-   
-   if(enemy_status.hp <= 0){
-       localStorage.setItem('enemy_exp', enemy_status.exp);
-   	document.getElementById("rpg-player_leveluplog").innerHTML = `${player_status.name}は${enemy_status.name}をたおした！`;
-       levelup();
-   	battle_end();
-       return;
-   }
-
-   enemy_status = JSON.stringify(enemy_status);
-   localStorage.setItem('enemy_status_key', enemy_status);
-    
-   enemy_pattern();
-}
-let player_guard_value = 1.0;
-function player_guard_command(){
-   var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
-   var player_status = JSON.parse(localStorage.getItem('player_status_key'));
-   
-   player_guard_value = 0.5;
-   document.getElementById("rpg-player_leveluplog").innerHTML = `${player_status.name}はぼうぎょした！`;
-  
-   enemy_pattern();
-}
-function player_holding_command(){
-   var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
-   var player_status = JSON.parse(localStorage.getItem('player_status_key'));
-
-   document.getElementById("rpg-player_leveluplog").innerHTML = `${player_status.name}はなにもしなかった！`;
-  
-   enemy_pattern();
-}
-function player_escape_command(){
-    var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
-    var player_status = JSON.parse(localStorage.getItem('player_status_key'));
-	document.getElementById("rpg-player_leveluplog").innerHTML = `${player_status.name}は${enemy_status.name}からにげた！`;
-	battle_end();
-}
-
-//敵の行動パターン
-function enemy_pattern(){
-    document.getElementById("player_battle_commands2").style.display = "none";
-    var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
-    var player_status = JSON.parse(localStorage.getItem('player_status_key'));
-    
-    setTimeout(()=>{
-    	enemy_pattern_0();
-    },1000);
-    
-    function enemy_pattern_0(){
-
-     //パターンてすてす
-     if(enemy_status.id == 'enm_testes'){
-        var enemy_attack_damage = Math.floor(((enemy_status.atk * 1.5 - player_status.def * 1.2) + (Math.random() * 5)) * player_guard_value);
-        enemy_attack_damage = enemy_attack_damage < 1 ? 1:enemy_attack_damage;
-        player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
-        document.getElementById("rpg-player_leveluplog").innerHTML = `${enemy_status.name}のこうげき！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！`;
-     }
-     
-     //パターンつよいがいこつ
-     else if(enemy_status.id == 'enm_strong_skeleton'){
-     	var enemy_randomize = Math.floor(Math.random() * 1000);
-     	if(enemy_randomize - 300 <= 0){
-            var enemy_attack_damage = Math.floor(((enemy_status.atk * 2.2 - player_status.def * 1.2) + (Math.random() * 5)) * player_guard_value);
-            enemy_attack_damage = enemy_attack_damage < 1 ? 1:enemy_attack_damage;
-            player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
-            document.getElementById("rpg-player_leveluplog").innerHTML = `${enemy_status.name}のきっく！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！`;
-         }
-         else {
-            var enemy_attack_damage = Math.floor(((enemy_status.atk * 1.5 - player_status.def * 1.2) + (Math.random() * 5)) * player_guard_value);
-            enemy_attack_damage = enemy_attack_damage < 1 ? 1:enemy_attack_damage;
-            player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
-            document.getElementById("rpg-player_leveluplog").innerHTML = `${enemy_status.name}のこうげき！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！`;
-         }
-     }
-     else {
-        document.getElementById("rpg-player_leveluplog").innerHTML = `${enemy_status.name}はなにもしなかった！`;
-     }
-    
-     if(player_status.hp <= 0){
-         localStorage.setItem('enemy_exp', enemy_status.exp);
-     	document.getElementById("rpg-player_leveluplog").innerHTML += `<br>${player_status.name}はちからつきてしまった...`;
-         player_status.hp = player_status.maxhp;
-         player_status = JSON.stringify(player_status);
-         localStorage.setItem('player_status_key', player_status);
-         rpg_player_status_set();
-     	battle_end();
-         return;
+        enemyhealthbar_back.classList.add("enemyhealthbar_back_m");
+        enemyhealthbar_back.classList.remove("enemyhealthbar_back_p");
+       }
       }
+     }, 20);
+
+     //デバッグ用
+     function test_click() {
+      var health_test_txt = document.getElementById("hp");
+      health_test_txt.value = health_test_txt.value > 100 ? 100 : health_test_txt.value;
+
+
+      var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+      player_status.hp = Math.round(player_status.maxhp * (health_test_txt.value / 100));
+      health = (player_status.hp / player_status.maxhp) * 100;
       player_status = JSON.stringify(player_status);
       localStorage.setItem('player_status_key', player_status);
       rpg_player_status_set();
-      setTimeout(()=>{
-         document.getElementById("player_battle_commands2").style.display = "block";
-         player_guard_value = 1.0;
-      },800);
-    }
-}
+      progress_anim = Math.abs(health - healthbarback) / 50.0;
+
+      enemy_health = health_test_txt.value;
+      progress_anim_2 = Math.abs(enemy_health - enemy_healthbarback) / 50.0;
+     }
 
 
-//てすてす
-function enemy_testes(){
-  var enemy_status = JSON.stringify({
-  	id : "enm_testes",
-      name : "てすてす",
-      hp : 20,
-      maxhp : 20,
-      atk : 1,
-      def : 0,
-      exp : 10,
-      coin : 100         
-   });
-   localStorage.setItem('enemy_status_key', enemy_status);
-   battle_start();
-}
 
-//つよいがいこつ
-function enemy_strong_skeleton(){
-  var enemy_status = JSON.stringify({
-  	id : "enm_strong_skeleton",
-      name : "つよいがいこつ",
-      hp : 300,
-      maxhp : 300,
-      atk : 18,
-      def : 10,
-      exp : 100,
-      coin : 500         
-   });
-   localStorage.setItem('enemy_status_key', enemy_status);
-   battle_start();
-}
-//メタルなんとか
-function enemy_metal_nan(){
-  var enemy_status = JSON.stringify({
-  	id : "enm_metal_nan",
-      name : "メタルなんとか",
-      hp : 20,
-      maxhp : 20,
-      atk : 30,
-      def : "Infinity",
-      exp : 999,
-      coin : 500         
-   });
-   localStorage.setItem('enemy_status_key', enemy_status);
-   battle_start();
-}
+     //levelupって書いてあるけど敵倒した処理(クソコード)
+     function levelup() {
+      var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+      var levelup_log = ``;
+      if (player_status) {
+       var enemy_exp = localStorage.getItem('enemy_exp');
+       player_status.exp = player_status.exp * 1 + enemy_exp * 1;
+       if (!(player_status.exp < player_status.nextexp || player_status.level >= 100)) {
+        var now_lv = player_status.level * 1;
+        var now_hp = player_status.maxhp * 1;
+        var now_atk = player_status.atk * 1;
+        var now_def = player_status.def * 1;
+        while (player_status.exp >= player_status.nextexp && player_status.level < 100) {
+         player_status.level = player_status.level * 1 + 1;
+         player_status.maxhp = player_status.maxhp * 1 + 10;
+         player_status.hp = player_status.maxhp;
+         player_status.atk = player_status.atk * 1 + 3;
+         player_status.def = player_status.def * 1 + 1;
+         var nownextexp = player_status.nextexp;
+         player_status.nextexp = Math.floor(nownextexp * 1 + (30 + (Math.floor(nownextexp * 0.12))));
+        }
+        var up_lv = player_status.level * 1;
+        var up_hp = player_status.maxhp * 1;
+        var up_atk = player_status.atk * 1;
+        var up_def = player_status.def * 1;
 
-//あああ
-function enemy_aaa(){
-var enemy_status = JSON.stringify({
-id : "enm_metal_nan",
-name : "あああ",
-hp : 1,
-maxhp : 1,
-atk : "Infinity",
-def : "Infinity",
-exp : 1,
-coin : 1
-});
-localStorage.setItem('enemy_status_key', enemy_status);
-battle_start();
-}
+        var now_2_lv = up_lv * 1 - now_lv * 1;
+        var now_2_hp = up_hp * 1 - now_hp * 1;
+        var now_2_atk = up_atk * 1 - now_atk * 1
+        var now_2_def = up_def * 1 - now_def * 1;
+        if (player_status.level >= 100) {
+         player_status.exp = "-";
+         player_status.nextexp = "-";
+        }
+        levelup_log = `${player_status.name} はレベルが上がった！<br> ・レベル: ${now_lv} + ${now_2_lv}<br>・たいりょく: ${now_hp} + ${now_2_hp}<br> ・こうげきりょく: ${now_atk} + ${now_2_atk}<br>・ぼうぎょりょく: ${now_def} + ${now_2_def}`;
+       }
+       player_status = JSON.stringify(player_status);
+       localStorage.setItem('player_status_key', player_status);
+       rpg_player_status_set();
+      }
+      document.getElementById("rpg-player_leveluplog").innerHTML += `\nけいけんち ${enemy_exp} かくとく！<br>${levelup_log}`;
+     }
+     //エネミー
+     function battle_start() {
+      player_battle = true;
+      enemy_healthbarback = 0;
+      document.getElementById("player_battle_commands2").style.display = "none";
+      var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
+      var player_status = JSON.parse(localStorage.getItem('player_status_key'));
 
+      document.getElementById("rpg-player_leveluplog").innerHTML = `${enemy_status.name}が現れた！`;
 
-//テスト
-function test_enemy_death1() {
-	localStorage.setItem('enemy_exp', 10);
-	levelup();
-}
-function test_enemy_death2() {
-	localStorage.setItem('enemy_exp', 100);
-	levelup();
-}
-function test_enemy_death3() {
-	localStorage.setItem('enemy_exp', 1000);
-	levelup();
-}
-function test_enemy_death4() {
-	localStorage.setItem('enemy_exp', 9999);
-	levelup();
-}
-function test_enemy_death5() {
-	localStorage.setItem('enemy_exp', Infinity);
-	levelup();
-}
+      player_status.hp = player_status.maxhp;
+      player_status = JSON.stringify(player_status);
+      localStorage.setItem('player_status_key', player_status);
+      rpg_player_status_set();
+      setTimeout(() => {
+       document.getElementById("player_battle_commands2").style.display = "block";
+      }, 1500);
+     }
+
+     function battle_end() {
+      player_battle = false;
+      localStorage.removeItem('enemy_status_key');
+      rpg_player_status_set();
+     }
+
+     let function_player_damage = (`
+   progress_anim = Math.abs(health - healthbarback) / 50.0;
+`);
+     let function_enemy_damage = (`
+   progress_anim_2 = Math.abs(enemy_health - enemy_healthbarback) / 50.0;
+`);
+
+     function player_attack_command() {
+      var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
+      var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+
+      var player_attack_damage = Math.floor((player_status.atk * 1.5 - enemy_status.def * 1.2) + (Math.random() * 6));
+      player_attack_damage = player_attack_damage < 1 ? 1 : player_attack_damage;
+      enemy_status.hp = (enemy_status.hp * 1) - player_attack_damage;
+
+      document.getElementById("rpg-player_leveluplog").innerHTML = `${player_status.name}のこうげき！<br>${enemy_status.name}は${player_attack_damage}ダメージうけた！`;
+
+      if (enemy_status.hp <= 0) {
+       localStorage.setItem('enemy_exp', enemy_status.exp);
+       document.getElementById("rpg-player_leveluplog").innerHTML = `${player_status.name}は${enemy_status.name}をたおした！`;
+       levelup();
+       battle_end();
+       return;
+      }
+
+      enemy_status = JSON.stringify(enemy_status);
+      localStorage.setItem('enemy_status_key', enemy_status);
+
+      enemy_pattern();
+     }
+     let player_guard_value = 1.0;
+
+     function player_guard_command() {
+      var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
+      var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+
+      player_guard_value = 0.5;
+      document.getElementById("rpg-player_leveluplog").innerHTML = `${player_status.name}はぼうぎょした！`;
+
+      enemy_pattern();
+     }
+
+     function player_holding_command() {
+      var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
+      var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+
+      document.getElementById("rpg-player_leveluplog").innerHTML = `${player_status.name}はなにもしなかった！`;
+
+      enemy_pattern();
+     }
+
+     function player_escape_command() {
+      var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
+      var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+      document.getElementById("rpg-player_leveluplog").innerHTML = `${player_status.name}は${enemy_status.name}からにげた！`;
+      battle_end();
+     }
+
+     //敵の行動パターン
+     function enemy_pattern() {
+      document.getElementById("player_battle_commands2").style.display = "none";
+      var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
+      var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+
+      setTimeout(() => {
+       enemy_pattern_0();
+      }, 1000);
+
+      function enemy_pattern_0() {
+
+       //パターンてすてす
+       if (enemy_status.id == 'enm_testes') {
+        var enemy_attack_damage = Math.floor(((enemy_status.atk * 1.5 - player_status.def * 1.2) + (Math.random() * 5)) * player_guard_value);
+        enemy_attack_damage = enemy_attack_damage < 1 ? 1 : enemy_attack_damage;
+        player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
+        document.getElementById("rpg-player_leveluplog").innerHTML = `${enemy_status.name}のこうげき！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！`;
+       }
+
+       //パターンつよいがいこつ
+       else if (enemy_status.id == 'enm_strong_skeleton') {
+        var enemy_randomize = Math.floor(Math.random() * 1000);
+        if (enemy_randomize - 300 <= 0) {
+         var enemy_attack_damage = Math.floor(((enemy_status.atk * 2.2 - player_status.def * 1.2) + (Math.random() * 5)) * player_guard_value);
+         enemy_attack_damage = enemy_attack_damage < 1 ? 1 : enemy_attack_damage;
+         player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
+         document.getElementById("rpg-player_leveluplog").innerHTML = `${enemy_status.name}のきっく！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！`;
+        }
+        else {
+         var enemy_attack_damage = Math.floor(((enemy_status.atk * 1.5 - player_status.def * 1.2) + (Math.random() * 5)) * player_guard_value);
+         enemy_attack_damage = enemy_attack_damage < 1 ? 1 : enemy_attack_damage;
+         player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
+         document.getElementById("rpg-player_leveluplog").innerHTML = `${enemy_status.name}のこうげき！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！`;
+        }
+       }
+       //パターンあああ
+       else if (enemy_status.id == 'enm_aaa') {
+        var enemy_attack_damage = Math.floor(((enemy_status.atk * 1.5 - player_status.def * 1.2) + (Math.random() * 5)) * player_guard_value);
+        enemy_attack_damage = enemy_attack_damage < 1 ? 1 : enemy_attack_damage;
+        player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
+        document.getElementById("rpg-player_leveluplog").innerHTML = `${enemy_status.name}のこうげき！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！`;
+       }
+       else {
+        document.getElementById("rpg-player_leveluplog").innerHTML = `${enemy_status.name}はなにもしなかった！`;
+       }
+
+       if (player_status.hp <= 0) {
+        localStorage.setItem('enemy_exp', enemy_status.exp);
+        document.getElementById("rpg-player_leveluplog").innerHTML += `<br>${player_status.name}はちからつきてしまった...`;
+        player_status.hp = player_status.maxhp;
+        player_status = JSON.stringify(player_status);
+        localStorage.setItem('player_status_key', player_status);
         rpg_player_status_set();
+        battle_end();
+        return;
+       }
+       player_status = JSON.stringify(player_status);
+       localStorage.setItem('player_status_key', player_status);
+       rpg_player_status_set();
+       setTimeout(() => {
+        document.getElementById("player_battle_commands2").style.display = "block";
+        player_guard_value = 1.0;
+       }, 800);
+      }
+     }
+
+
+     //てすてす
+     function enemy_testes() {
+      var enemy_status = JSON.stringify({
+       id: "enm_testes",
+       name: "てすてす",
+       hp: 20,
+       maxhp: 20,
+       atk: 1,
+       def: 0,
+       exp: 10,
+       coin: 100
+      });
+      localStorage.setItem('enemy_status_key', enemy_status);
+      battle_start();
+     }
+
+     //つよいがいこつ
+     function enemy_strong_skeleton() {
+      var enemy_status = JSON.stringify({
+       id: "enm_strong_skeleton",
+       name: "つよいがいこつ",
+       hp: 300,
+       maxhp: 300,
+       atk: 18,
+       def: 10,
+       exp: 100,
+       coin: 500
+      });
+      localStorage.setItem('enemy_status_key', enemy_status);
+      battle_start();
+     }
+     //メタルなんとか
+     function enemy_metal_nan() {
+      var enemy_status = JSON.stringify({
+       id: "enm_metal_nan",
+       name: "メタルなんとか",
+       hp: 20,
+       maxhp: 20,
+       atk: 30,
+       def: "Infinity",
+       exp: 999,
+       coin: 500
+      });
+      localStorage.setItem('enemy_status_key', enemy_status);
+      battle_start();
+     }
+
+     //あああ
+     function enemy_aaa() {
+      var enemy_status = JSON.stringify({
+       id: "enm_aaa",
+       name: "あああ",
+       hp: 1,
+       maxhp: 1,
+       atk: 9999,
+       def: "Infinity",
+       exp: 1,
+       coin: 1
+      });
+      localStorage.setItem('enemy_status_key', enemy_status);
+      battle_start();
+     }
+
+
+     //テスト
+     function test_enemy_death1() {
+      localStorage.setItem('enemy_exp', 10);
+      levelup();
+     }
+
+     function test_enemy_death2() {
+      localStorage.setItem('enemy_exp', 100);
+      levelup();
+     }
+
+     function test_enemy_death3() {
+      localStorage.setItem('enemy_exp', 1000);
+      levelup();
+     }
+
+     function test_enemy_death4() {
+      localStorage.setItem('enemy_exp', 9999);
+      levelup();
+     }
+
+     function test_enemy_death5() {
+      localStorage.setItem('enemy_exp', Infinity);
+      levelup();
+     }
+     rpg_player_status_set();
     </script>
-  <div id="rpg_game_blocker" style="padding-left: 40px;position:fixed;width:120%;height:120%;">
-  	<h2 style="position:fixed;z-index: 600;">このゲームは画面横向き専用です。</h2>
-  	<img style="position:fixed;top:0px;left:0px;z-index: 599;width:110%;height:110%;"class="img-responsive center-block" src = "https://cdn.discordapp.com/attachments/706660445519347763/708266741398241310/333-2.png">
-  </div>
-   </rpg>
+    <div id="rpg_game_blocker" style="padding-left: 40px;position:fixed;width:120%;height:120%;">
+     <h2 style="position:fixed;z-index: 600;">このゲームは画面横向き専用です。</h2>
+     <img style="position:fixed;top:0px;left:0px;z-index: 599;width:110%;height:110%;" class="img-responsive center-block" src="https://cdn.discordapp.com/attachments/706660445519347763/708266741398241310/333-2.png">
+    </div>
+ </rpg>
+ <!-- ページ操作 -->
+ <script>
+  let psmb_anim = true;
 
-     
-     
-     <!-- ページ操作 -->
-     <script>
-         let psmb_anim = true;
-     	function player_status_main_button(){
-             let status_display = document.getElementById("player_status_main");
-         	function player_status_in_anim(){
-         	    psmb_anim = false;
-                 var psmb_in_anim = -300;
-             	status_display.style.right = `${psmb_in_anim}px`;
-                 status_display.style.display = "block";
-                 var psmb_in_anim_interval = setInterval(()=>{
-                 	status_display.style.right = `${psmb_in_anim}px`;
-                 	psmb_in_anim += 20;
-                     if(psmb_in_anim >= 0){
-                     	status_display.style.right = `0px`;
-                         psmb_anim = true;
-                         clearInterval(psmb_in_anim_interval);
-                     }
-                 },20);
-                 return;
-             }
-         	function player_status_out_anim(){
-         	    psmb_anim = false;
-                 var psmb_out_anim = 0;
-             	status_display.style.right = `${psmb_out_anim}px`;
-                 var psmb_out_anim_interval = setInterval(()=>{
-                 	status_display.style.right = `${psmb_out_anim}px`;
-                 	psmb_out_anim -= 20;
-                     if(psmb_out_anim <= -300){
-                     	status_display.style.right = `-300px`;
-                         status_display.style.display = "none";
-                         psmb_anim = true;
-                         clearInterval(psmb_out_anim_interval);
-                     }
-                 },20);
-                 return;
-             }
-             if(psmb_anim == true && status_display.style.display == "none") player_status_in_anim();
-             if(psmb_anim == true && status_display.style.display == "block") player_status_out_anim();
-         }
+  function player_status_main_button() {
+   let status_display = document.getElementById("player_status_main");
 
-         function reset(){
-       	document.getElementById("home").style.display ="none";
-       	document.getElementById("slot-game").style.display ="none";
-       	document.getElementById("rpg-game").style.display ="none";
-         }
-         reset();
-     	document.getElementById("home").style.display ="block";
-         document.getElementById("player_status_main").style.display ="none";
-         rpg_player_status_set();
-     
-     	function rpg_move_button(){
-        	reset();
-            rpg_player_status_set();
-        	document.getElementById("rpg-game").style.display ="block";
-         }
-     	function slot_move_button(){
-        	reset();
-            var player_status = JSON.parse(localStorage.getItem('player_status_key'));
-            if(player_status) document.getElementById("slot-shojikin").innerHTML = `しょじきん: ${player_status.coin} ｺｲﾝ`;
-        	document.getElementById("slot-game").style.display ="block";
-         }
-     	function home_move_button(){
-        	reset();
-        	document.getElementById("home").style.display ="block";
-         }
-     </script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+   function player_status_in_anim() {
+    psmb_anim = false;
+    var psmb_in_anim = -300;
+    status_display.style.right = `${psmb_in_anim}px`;
+    status_display.style.display = "block";
+    var psmb_in_anim_interval = setInterval(() => {
+     status_display.style.right = `${psmb_in_anim}px`;
+     psmb_in_anim += 20;
+     if (psmb_in_anim >= 0) {
+      status_display.style.right = `0px`;
+      psmb_anim = true;
+      clearInterval(psmb_in_anim_interval);
+     }
+    }, 20);
+    return;
+   }
+
+   function player_status_out_anim() {
+    psmb_anim = false;
+    var psmb_out_anim = 0;
+    status_display.style.right = `${psmb_out_anim}px`;
+    var psmb_out_anim_interval = setInterval(() => {
+     status_display.style.right = `${psmb_out_anim}px`;
+     psmb_out_anim -= 20;
+     if (psmb_out_anim <= -300) {
+      status_display.style.right = `-300px`;
+      status_display.style.display = "none";
+      psmb_anim = true;
+      clearInterval(psmb_out_anim_interval);
+     }
+    }, 20);
+    return;
+   }
+   if (psmb_anim == true && status_display.style.display == "none") player_status_in_anim();
+   if (psmb_anim == true && status_display.style.display == "block") player_status_out_anim();
+  }
+
+  function reset() {
+   document.getElementById("home").style.display = "none";
+   document.getElementById("slot-game").style.display = "none";
+   document.getElementById("rpg-game").style.display = "none";
+  }
+  reset();
+  document.getElementById("home").style.display = "block";
+  document.getElementById("player_status_main").style.display = "none";
+  rpg_player_status_set();
+
+  function rpg_move_button() {
+   reset();
+   rpg_player_status_set();
+   document.getElementById("rpg-game").style.display = "block";
+  }
+
+  function slot_move_button() {
+   reset();
+   var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+   if (player_status) document.getElementById("slot-shojikin").innerHTML = `しょじきん: ${player_status.coin} ｺｲﾝ`;
+   document.getElementById("slot-game").style.display = "block";
+  }
+
+  function home_move_button() {
+   reset();
+   document.getElementById("home").style.display = "block";
+  }
+ </script>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+ <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 </body>
 
 </html>
