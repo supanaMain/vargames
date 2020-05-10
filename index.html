@@ -228,7 +228,7 @@
 
    function name_check() {
     var player_name_txt = document.getElementById("player_name_txt").value;
-    if (player_name_txt && player_name_txt.length <= 14) {
+    if (player_name_txt && player_name_txt.length <= 5) {
      player_name = player_name_txt;
      localStorage.setItem('player_name_key', player_name);
      var player_status = JSON.parse(localStorage.getItem('player_status_key'));
@@ -239,8 +239,8 @@
       rpg_player_status_set();
      }
      alert(`${player_name}にしました( 'ω')`);
-    } else if (player_name_txt.length > 14) {
-     alert("おなまえの長さは14文字までです( 'ω')");
+    } else if (player_name_txt.length > 5) {
+     alert("おなまえの長さは5文字までです( 'ω')");
      return;
     } else {
      alert("おなまえを入力してください( 'ω')");
@@ -368,44 +368,53 @@
   </script>
  </slot>
  <rpg id="rpg-game" style="padding-left: 40px;position:static;">
-  <p class="lead" style="color:white;">RPGもどき</p> <input type="submit" value="ホームに戻る" class="btn btn-primary" id="rpg_home_move_button" onClick="return home_move_button();">
-  <br><br><br><br>
+  <div id="rpg_header">
+   <p class="lead" style="color:white;">RPGもどき</p> <input type="submit" value="ホームに戻る" class="btn btn-primary" id="rpg_home_move_button" onClick="return home_move_button();">
+   <br><br><br><br>
+  </div>
   <!-- 敵召喚デバッグ -->
   <div id="battle_start_debug_button">
    <input type="submit" value="戦闘開始(てすてす)" id="testes-button" onClick="return enemy_testes();"><br><br>
-   <input type="submit" value="戦闘開始(てすてす x3)" id="testes-button" onClick="return enemy_testes_2();">
+   <input type="submit" value="戦闘開始(てすてす x3)" id="testes-button" onClick="return enemy_testes_2();"><br><br>
+   <input type="submit" value="戦闘開始(メタルなんとかフェスティバル)" id="testes-button" onClick="return enemy_metal_nan_0();">
   </div>
-  <!-- <div style="position:relative; top: -20px; left:0px;"><strong style="color:white">HP SET (デバッグ) - </strong><input type="text" id="hp" value="100"> <input type="submit" style="color: black;" value="SET" id="hp_button" onClick="return test_click();"></div> -->
-  <div id="enemyhealthbar_core" style="position:relative; top: 0px; right:0px;display:none;" align="right">
-   <nobr>
-    <a style="color:white;position:relative; top: 0px; left:303.5px;text-align:left;"><strong id="enemyhealth_value"></strong></a>
-    <progress id="enemyhealthbar_back" max="100" value="0" align="left" style="width:300px;position:relative; top: 0px; left:303.5px;-webkit-appearance: none;appearance: none;" class=""></progress>
-    <progress id="enemyhealthbar" max="100" value="0" align="left" style="width:300px;position:relative; top: 0px; left:0px;-webkit-appearance: none;appearance: none;"></progress>
-    <br><a style="color:white;position:relative; top: 0px; left:0px;"><strong id="enemyhealth_name">エネミー</strong></a>
-   </nobr>
-  </div><br><br>
-  <div id="playerhealthbar_core" style="position:relative;top: 0;left: 0px">
-   <nobr>
-    <a style="color:white"><strong id="playerhealth_name"></strong></a>
-    <progress id="playerhealthbar_back" max="100" value="0" style="position:relative; top: 0px; left:0px;-webkit-appearance: none;appearance: none;" class=""></progress>
-    <progress id="playerhealthbar" max="100" value="0" style="position:relative; top: 0px; left:-143.5px;-webkit-appearance: none;appearance: none;"></progress>
-   </nobr>
-  </div><br>
-  <rpg-player_status>
-   <p id="rpg-player_battlelog" style="border: groove white">- - - -</p>
+  <div id="player_battle_window" style="display:none;bottom: 20px;">
+   <!-- <div style="position:relative; top: -20px; left:0px;"><strong style="color:white">HP SET (デバッグ) - </strong><input type="text" id="hp" value="100"> <input type="submit" style="color: black;" value="SET" id="hp_button" onClick="return test_click();"></div> -->
+   <div id="enemyhealthbar_core" style="position:fixed; top: 12px; right:20px;display:block;" align="right">
+    <nobr>
+     <a style="color:white;position:relative; top: 0px; left:303.5px;text-align:left;"><strong id="enemyhealth_value"></strong></a>
+     <progress id="enemyhealthbar_back" max="100" value="0" align="left" style="width:300px;position:relative; top: 0px; left:303.5px;-webkit-appearance: none;appearance: none;" class=""></progress>
+     <progress id="enemyhealthbar" max="100" value="0" align="left" style="width:300px;position:relative; top: 0px; left:0px;-webkit-appearance: none;appearance: none;"></progress>
+     <br><a style="color:white;position:relative; top: 0px; left:0px;"><strong id="enemyhealth_name">エネミー</strong></a>
+    </nobr>
+   </div><br><br>
+   <div id="playerhealthbar_core" style="position:fixed;top: 20px;left: 72px">
+    <nobr>
+     <progress id="playerhealthbar_back" max="100" value="0" style="position:relative; top: 0px; left:0px;-webkit-appearance: none;appearance: none;" class=""></progress>
+     <progress id="playerhealthbar" max="100" value="0" style="position:relative; top: 0px; left:-143.5px;-webkit-appearance: none;appearance: none;"></progress>
+     <a style="color:white;position:relative; top: 0px; left:-143.5px;text-align:left;"><strong id="playerhealth_value"></strong></a>
+     <br><a style="color:white"><strong id="playerhealth_name"></strong></a>
+    </nobr>
+   </div><br>
+   <div id="player_attack_enemy_select" style="z-index: 50;display:none;position:fixed;bottom:30px;right:10px;width:260px;height:85%;border: groove white;background-color: #141c29;opacity:100%;">
+    <div id="player_attack_enemy_select_2" style="position:relative;top: 12px;left:20px;">
+    </div>
+    <div style="font-size:12px;position:fixed;bottom:35px;right:20px;"><input type="submit" value="キャンセル" id="" onClick="document.getElementById('player_attack_enemy_select').style.display = 'none';document.getElementById('player_battle_commands2').style.display = 'block';"></div>
+   </div>
    <rpg-player_status>
-    <!-- <rpg-player_status><p id="rpg-player_status2"style="border: groove white;"></p></rpg-player_status> -->
-    <br>
-    <div id="player_battle_commands" style="display:none;position:fixed;bottom: 20px;">
-     <div id="player_battle_commands2" style="display:block;">
+    <p id="rpg-player_battlelog" style="font-size:13px;display:block;position:fixed;width:90%;bottom:70px;border: groove white;background-color: #141c29;"></p>
+    <rpg-player_status>
+     <!-- <rpg-player_status><p id="rpg-player_status2"style="border: groove white;"></p></rpg-player_status> -->
+     <br>
+     <div id="player_battle_commands2" style="display:block;position:fixed;bottom:30px;">
       <input type="submit" value="こうげき" class="btn btn-primary" id="attack-button" onClick="return player_attack_command();">
       <input type="submit" value="ぼうぎょ" class="btn btn-primary" id="attack-button" onClick="return player_guard_command();">
       <input type="submit" value="なにもしない" class="btn btn-primary" id="holding-button" onClick="return player_holding_command();">
       <input type="submit" value="にげる" class="btn btn-primary" id="escape-button" onClick="return player_escape_command();">
      </div>
-    </div>
-    <br><br>
-    <!--
+  </div>
+  <br><br>
+  <!--
   <input type="submit" value="経験値 +10 (デバッグ)" class="btn btn-primary" id="home-move-button" onClick="return test_enemy_death1();">
  <br><br>
   <input type="submit" value="経験値 +100 (デバッグ)" class="btn btn-primary" id="home-move-button" onClick="return test_enemy_death2();">
@@ -416,481 +425,572 @@
  <br><br>
   <input type="submit" value="経験値 +Infinity (デバッグ)" class="btn btn-primary" id="home-move-button" onClick="return test_enemy_death5();">
 -->
-    <script>
-     setInterval(() => {
-      if (document.getElementById("rpg-game").style.display == "block") {
-       var orientation = window.orientation;
-       if (orientation === 0) {
-        document.getElementById("rpg_game_blocker").style.display = "block";
-       } else {
-        document.getElementById("rpg_game_blocker").style.display = "none";
-       }
-
-       if (player_battle == true) {
-        document.getElementById("player_battle_commands").style.display = "block";
-        document.getElementById("enemyhealthbar_core").style.display = "block";
-        document.getElementById("rpg_home_move_button").style.display = "none";
-
-        document.getElementById("battle_start_debug_button").style.display = "none";
-       } else {
-        document.getElementById("player_battle_commands").style.display = "none";
-        document.getElementById("enemyhealthbar_core").style.display = "none";
-        document.getElementById("rpg_home_move_button").style.display = "block";
-
-        document.getElementById("battle_start_debug_button").style.display = "block";
-       }
-
-      }
-     }, 20);
-
-     //プレイヤーヘルス
-     var health = 100;
-     var player_status = JSON.parse(localStorage.getItem('player_status_key'));
-     if (player_status) {
-      document.getElementById("playerhealth_name").innerHTML = `${player_status.name} - `;
-      health = (player_status.hp / player_status.maxhp) * 100;
-     }
-     var healthbarback = health;
-
-     var progress_anim = 0;
-
-     let playerhealthbar = document.getElementById("playerhealthbar");
-     let playerhealthbar_back = document.getElementById("playerhealthbar_back");
-     playerhealthbar.value = health;
-     playerhealthbar_back.value = health;
-
-     //エネミーヘルス
-     var enemy_health = 100;
-     var enemy_healthbarback = enemy_health;
-
-     var progress_anim_2 = 0;
-
-     let enemyhealthbar = document.getElementById("enemyhealthbar");
-     let enemyhealthbar_back = document.getElementById("enemyhealthbar_back");
-     enemyhealthbar.value = enemy_health;
-     enemyhealthbar_back.value = enemy_health;
-
-     let total_hp = 0;
-     let total_maxhp = 0;
-
-     setInterval(() => {
-      //プレイヤー
-      progress_anim = Math.abs(health - healthbarback) / 20.0;
-
-      var player_status = JSON.parse(localStorage.getItem('player_status_key'));
-      if (player_status) {
-       document.getElementById("playerhealth_name").innerHTML = `${player_status.name} - `;
-       health = (player_status.hp / player_status.maxhp) * 100;
-      }
-      if (health <= 0) {
-       playerhealthbar.value = 0;
-       playerhealthbar_back.value = 0;
-      }
-      if (health != healthbarback) {
-       if (health > healthbarback) {
-        healthbarback += progress_anim;
-        playerhealthbar.value = healthbarback;
-        playerhealthbar_back.value = health;
-
-        playerhealthbar_back.classList.add("playerhealthbar_back_p");
-        playerhealthbar_back.classList.remove("playerhealthbar_back_m");
-       }
-       if (health < healthbarback) {
-        healthbarback -= progress_anim;
-        playerhealthbar.value = health;
-        playerhealthbar_back.value = healthbarback;
-
-        playerhealthbar_back.classList.add("playerhealthbar_back_m");
-        playerhealthbar_back.classList.remove("playerhealthbar_back_p");
-       }
-      }
-      //エネミー
-      progress_anim_2 = Math.abs(enemy_health - enemy_healthbarback) / 20.0;
-      var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
-      if (enemy_status) {
-       total_hp = 0;
-       enemy_status.enemies.forEach(enemy => total_hp += enemy.hp);
-       if (isNaN(total_hp)) total_hp = 0;
-       document.getElementById("enemyhealth_value").innerHTML = `${total_hp} / ${total_maxhp} - `;
-       var total_name = ``;
-       enemy_status.enemies.forEach(enemy => total_name += `- ${enemy.name} -<br>`);
-       document.getElementById("enemyhealth_name").innerHTML = total_name;
-
-       enemy_health = (total_hp / total_maxhp) * 100;
-      }
-      if (enemy_health <= 0) {
-       enemyhealthbar.value = 0;
-       enemyhealthbar_back.value = 0;
-      }
-      if (enemy_health != enemy_healthbarback) {
-       if (enemy_health > enemy_healthbarback) {
-        enemy_healthbarback += progress_anim_2;
-        if (enemy_health < enemy_healthbarback) enemy_healthbarback = enemy_health;
-        enemyhealthbar.value = enemy_healthbarback;
-        enemyhealthbar_back.value = enemy_health;
-
-        enemyhealthbar_back.classList.add("enemyhealthbar_back_p");
-        enemyhealthbar_back.classList.remove("enemyhealthbar_back_m");
-       }
-       if (enemy_health < enemy_healthbarback) {
-        enemy_healthbarback -= progress_anim_2;
-        if (enemy_health > enemy_healthbarback) enemy_healthbarback = enemy_health;
-        enemyhealthbar.value = enemy_health;
-        enemyhealthbar_back.value = enemy_healthbarback;
-
-        enemyhealthbar_back.classList.add("enemyhealthbar_back_m");
-        enemyhealthbar_back.classList.remove("enemyhealthbar_back_p");
-       }
-      }
-     }, 20);
-
-     //デバッグ用
-     function test_click() {
-      var health_test_txt = document.getElementById("hp");
-      health_test_txt.value = health_test_txt.value > 100 ? 100 : health_test_txt.value;
+  <script>
+   var new_battlelog = ``;
+   setInterval(() => {
+    if (document.getElementById("rpg-game").style.display == "block") {
+     var battlelog = document.getElementById("rpg-player_battlelog").innerHTML;
+     if (new_battlelog) battlelog = (`${battlelog}<br><br>${new_battlelog}`).split("<br>").slice(-5).join("<br>");
+     document.getElementById("rpg-player_battlelog").innerHTML = battlelog;
+     new_battlelog = ``;
 
 
-      var player_status = JSON.parse(localStorage.getItem('player_status_key'));
-      player_status.hp = Math.round(player_status.maxhp * (health_test_txt.value / 100));
-      health = (player_status.hp / player_status.maxhp) * 100;
-      player_status = JSON.stringify(player_status);
-      localStorage.setItem('player_status_key', player_status);
-      rpg_player_status_set();
-      progress_anim = Math.abs(health - healthbarback) / 50.0;
-
-      enemy_health = health_test_txt.value;
-      progress_anim_2 = Math.abs(enemy_health - enemy_healthbarback) / 50.0;
+     var orientation = window.orientation;
+     if (orientation === 0) {
+      document.getElementById("rpg_game_blocker").style.display = "block";
+     } else {
+      document.getElementById("rpg_game_blocker").style.display = "none";
      }
 
+     if (player_battle == true) {
+      document.getElementById("player_battle_window").style.display = "block";
+      document.getElementById("rpg_header").style.display = "none";
 
+      document.getElementById("battle_start_debug_button").style.display = "none";
+     } else {
+      document.getElementById("player_battle_window").style.display = "none";
+      document.getElementById("rpg_header").style.display = "block";
 
-     //levelupって書いてあるけど敵倒した処理(クソコード)
-     function levelup() {
-      var player_status = JSON.parse(localStorage.getItem('player_status_key'));
-      var levelup_log = ``;
-      if (player_status) {
-       var enemy_exp = localStorage.getItem('enemy_exp');
-       player_status.exp = player_status.exp * 1 + enemy_exp * 1;
-       if (!(player_status.exp < player_status.nextexp || player_status.level >= 100)) {
-        var now_lv = player_status.level * 1;
-        var now_hp = player_status.maxhp * 1;
-        var now_atk = player_status.atk * 1;
-        var now_def = player_status.def * 1;
-        while (player_status.exp >= player_status.nextexp && player_status.level < 100) {
-         player_status.level = player_status.level * 1 + 1;
-         player_status.maxhp = player_status.maxhp * 1 + 10;
-         player_status.hp = player_status.maxhp;
-         player_status.atk = player_status.atk * 1 + 3;
-         player_status.def = player_status.def * 1 + 1;
-         var nownextexp = player_status.nextexp;
-         player_status.nextexp = Math.floor(nownextexp * 1 + (30 + (Math.floor(nownextexp * 0.12))));
-        }
-        var up_lv = player_status.level * 1;
-        var up_hp = player_status.maxhp * 1;
-        var up_atk = player_status.atk * 1;
-        var up_def = player_status.def * 1;
-
-        var now_2_lv = up_lv * 1 - now_lv * 1;
-        var now_2_hp = up_hp * 1 - now_hp * 1;
-        var now_2_atk = up_atk * 1 - now_atk * 1
-        var now_2_def = up_def * 1 - now_def * 1;
-        if (player_status.level >= 100) {
-         player_status.exp = "-";
-         player_status.nextexp = "-";
-        }
-        levelup_log = `${player_status.name} はレベルが上がった！<br> ・レベル: ${now_lv} + ${now_2_lv}<br>・たいりょく: ${now_hp} + ${now_2_hp}<br> ・こうげきりょく: ${now_atk} + ${now_2_atk}<br>・ぼうぎょりょく: ${now_def} + ${now_2_def}`;
-       }
-       player_status = JSON.stringify(player_status);
-       localStorage.setItem('player_status_key', player_status);
-       rpg_player_status_set();
-      }
-      document.getElementById("rpg-player_battlelog").innerHTML += `\nけいけんち ${enemy_exp} かくとく！<br>${levelup_log}`;
-      localStorage.removeItem('enemy_exp');
-     }
-     //エネミー
-     function battle_start() {
-      total_maxhp = 0;
-      var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
-      enemy_status.enemies.forEach(enemy => total_maxhp += enemy.maxhp);
-      if (isNaN(total_maxhp)) total_maxhp = 1;
-
-      player_battle = true;
-      enemy_healthbarback = 0;
-      document.getElementById("player_battle_commands2").style.display = "none";
-      var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
-      var player_status = JSON.parse(localStorage.getItem('player_status_key'));
-
-      document.getElementById("rpg-player_battlelog").innerHTML = ``;
-      for (index in enemy_status.enemies) document.getElementById("rpg-player_battlelog").innerHTML += `${enemy_status.enemies[index].name} <br>`;
-      document.getElementById("rpg-player_battlelog").innerHTML += `が現れた！ <br>`;
-
-      player_status.hp = player_status.maxhp;
-      player_status = JSON.stringify(player_status);
-      localStorage.setItem('player_status_key', player_status);
-      rpg_player_status_set();
-      setTimeout(() => {
-       document.getElementById("player_battle_commands2").style.display = "block";
-      }, 1500);
+      document.getElementById("battle_start_debug_button").style.display = "block";
      }
 
-     function battle_end() {
-      document.getElementById("player_battle_commands2").style.display = "none";
-      setTimeout(() => {
-       battle_end_2();
-      }, 1800);
-     }
+    }
+   }, 20);
 
-     function battle_end_2() {
-      player_battle = false;
-      localStorage.removeItem('enemy_status_key');
-      var player_status = JSON.parse(localStorage.getItem('player_status_key'));
-      if (player_status.hp <= 0) {
+   //プレイヤーヘルス
+   var health = 100;
+   var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+   if (player_status) {
+    document.getElementById("playerhealth_name").innerHTML = `${player_status.name} - `;
+    health = (player_status.hp / player_status.maxhp) * 100;
+   }
+   var healthbarback = health;
+
+   var progress_anim = 0;
+
+   let playerhealthbar = document.getElementById("playerhealthbar");
+   let playerhealthbar_back = document.getElementById("playerhealthbar_back");
+   playerhealthbar.value = health;
+   playerhealthbar_back.value = health;
+
+   //エネミーヘルス
+   var enemy_health = 100;
+   var enemy_healthbarback = enemy_health;
+
+   var progress_anim_2 = 0;
+
+   let enemyhealthbar = document.getElementById("enemyhealthbar");
+   let enemyhealthbar_back = document.getElementById("enemyhealthbar_back");
+   enemyhealthbar.value = enemy_health;
+   enemyhealthbar_back.value = enemy_health;
+
+   let total_hp = 0;
+   let total_maxhp = 0;
+
+   setInterval(() => {
+    //プレイヤー
+    progress_anim = Math.abs(health - healthbarback) / 20.0;
+
+    var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+    if (player_status) {
+     document.getElementById("playerhealth_value").innerHTML = ` - ${player_status.hp} / ${player_status.maxhp}`;
+     document.getElementById("playerhealth_name").innerHTML = ` - ${player_status.name} - `;
+     health = (player_status.hp / player_status.maxhp) * 100;
+    }
+    if (health <= 0) {
+     playerhealthbar.value = 0;
+     playerhealthbar_back.value = 0;
+    }
+    if (health != healthbarback) {
+     if (health > healthbarback) {
+      healthbarback += progress_anim;
+      playerhealthbar.value = healthbarback;
+      playerhealthbar_back.value = health;
+
+      playerhealthbar_back.classList.add("playerhealthbar_back_p");
+      playerhealthbar_back.classList.remove("playerhealthbar_back_m");
+     }
+     if (health < healthbarback) {
+      healthbarback -= progress_anim;
+      playerhealthbar.value = health;
+      playerhealthbar_back.value = healthbarback;
+
+      playerhealthbar_back.classList.add("playerhealthbar_back_m");
+      playerhealthbar_back.classList.remove("playerhealthbar_back_p");
+     }
+    }
+    //エネミー
+    progress_anim_2 = Math.abs(enemy_health - enemy_healthbarback) / 20.0;
+    var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
+    if (enemy_status) {
+     total_hp = 0;
+     enemy_status.enemies.forEach(enemy => total_hp += enemy.hp);
+     if (isNaN(total_hp)) total_hp = 0;
+     document.getElementById("enemyhealth_value").innerHTML = `${total_hp} / ${total_maxhp} - `;
+     var total_name = ``;
+     enemy_status.enemies.forEach(enemy => total_name += `- ${enemy.name} -<br>`);
+     document.getElementById("enemyhealth_name").innerHTML = total_name;
+
+     enemy_health = (total_hp / total_maxhp) * 100;
+    }
+    if (enemy_health <= 0) {
+     enemyhealthbar.value = 0;
+     enemyhealthbar_back.value = 0;
+    }
+    if (enemy_health != enemy_healthbarback) {
+     if (enemy_health > enemy_healthbarback) {
+      enemy_healthbarback += progress_anim_2;
+      if (enemy_health < enemy_healthbarback) enemy_healthbarback = enemy_health;
+      enemyhealthbar.value = enemy_healthbarback;
+      enemyhealthbar_back.value = enemy_health;
+
+      enemyhealthbar_back.classList.add("enemyhealthbar_back_p");
+      enemyhealthbar_back.classList.remove("enemyhealthbar_back_m");
+     }
+     if (enemy_health < enemy_healthbarback) {
+      enemy_healthbarback -= progress_anim_2;
+      if (enemy_health > enemy_healthbarback) enemy_healthbarback = enemy_health;
+      enemyhealthbar.value = enemy_health;
+      enemyhealthbar_back.value = enemy_healthbarback;
+
+      enemyhealthbar_back.classList.add("enemyhealthbar_back_m");
+      enemyhealthbar_back.classList.remove("enemyhealthbar_back_p");
+     }
+    }
+   }, 20);
+
+   //デバッグ用
+   function test_click() {
+    var health_test_txt = document.getElementById("hp");
+    health_test_txt.value = health_test_txt.value > 100 ? 100 : health_test_txt.value;
+
+
+    var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+    player_status.hp = Math.round(player_status.maxhp * (health_test_txt.value / 100));
+    health = (player_status.hp / player_status.maxhp) * 100;
+    player_status = JSON.stringify(player_status);
+    localStorage.setItem('player_status_key', player_status);
+    rpg_player_status_set();
+    progress_anim = Math.abs(health - healthbarback) / 50.0;
+
+    enemy_health = health_test_txt.value;
+    progress_anim_2 = Math.abs(enemy_health - enemy_healthbarback) / 50.0;
+   }
+
+
+
+   //levelupって書いてあるけど敵倒した処理(クソコード)
+   function levelup() {
+    var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+    var levelup_log = ``;
+    if (player_status) {
+     var enemy_exp = localStorage.getItem('enemy_exp');
+     player_status.exp = player_status.exp * 1 + enemy_exp * 1;
+     if (!(player_status.exp < player_status.nextexp || player_status.level >= 100)) {
+      var now_lv = player_status.level * 1;
+      var now_hp = player_status.maxhp * 1;
+      var now_atk = player_status.atk * 1;
+      var now_def = player_status.def * 1;
+      while (player_status.exp >= player_status.nextexp && player_status.level < 100) {
+       player_status.level = player_status.level * 1 + 1;
+       player_status.maxhp = player_status.maxhp * 1 + 10;
        player_status.hp = player_status.maxhp;
-       var player_status_result = JSON.stringify(player_status);
-       localStorage.setItem('player_status_key', player_status_result);
+       player_status.atk = player_status.atk * 1 + 3;
+       player_status.def = player_status.def * 1 + 1;
+       var nownextexp = player_status.nextexp;
+       player_status.nextexp = Math.floor(nownextexp * 1 + (30 + (Math.floor(nownextexp * 0.12))));
       }
-      rpg_player_status_set();
-     }
+      var up_lv = player_status.level * 1;
+      var up_hp = player_status.maxhp * 1;
+      var up_atk = player_status.atk * 1;
+      var up_def = player_status.def * 1;
 
-     let function_player_damage = (`
+      var now_2_lv = up_lv * 1 - now_lv * 1;
+      var now_2_hp = up_hp * 1 - now_hp * 1;
+      var now_2_atk = up_atk * 1 - now_atk * 1
+      var now_2_def = up_def * 1 - now_def * 1;
+      if (player_status.level >= 100) {
+       player_status.exp = "-";
+       player_status.nextexp = "-";
+      }
+      levelup_log = `${player_status.name} はレベルが上がった！<br> ・レベル: ${now_lv} + ${now_2_lv}<br>・たいりょく: ${now_hp} + ${now_2_hp}<br> ・こうげきりょく: ${now_atk} + ${now_2_atk}<br>・ぼうぎょりょく: ${now_def} + ${now_2_def}`;
+     }
+     player_status = JSON.stringify(player_status);
+     localStorage.setItem('player_status_key', player_status);
+     rpg_player_status_set();
+    }
+    document.getElementById("rpg-player_battlelog").innerHTML = `\nけいけんち ${enemy_exp} かくとく！<br>${levelup_log}`;
+    localStorage.removeItem('enemy_exp');
+   }
+   //エネミー
+   function battle_start() {
+    total_maxhp = 0;
+    var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
+    enemy_status.enemies.forEach(enemy => total_maxhp += enemy.maxhp);
+    if (isNaN(total_maxhp)) total_maxhp = 1;
+
+    player_battle = true;
+    enemy_healthbarback = 0;
+    document.getElementById("player_battle_commands2").style.display = "none";
+    var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
+    var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+
+    document.getElementById("rpg-player_battlelog").innerHTML = ``;
+    for (index in enemy_status.enemies) document.getElementById("rpg-player_battlelog").innerHTML += ` <strong>${enemy_status.enemies[index].name}</strong> - `;
+    document.getElementById("rpg-player_battlelog").innerHTML += `  が現れた！ `;
+
+    player_status.hp = player_status.maxhp;
+    player_status = JSON.stringify(player_status);
+    localStorage.setItem('player_status_key', player_status);
+    rpg_player_status_set();
+    setTimeout(() => {
+     document.getElementById("player_battle_commands2").style.display = "block";
+    }, 1500);
+   }
+
+   function battle_end() {
+    document.getElementById("player_battle_commands2").style.display = "none";
+    setTimeout(() => {
+     battle_end_2();
+    }, 2600);
+   }
+
+   function battle_end_2() {
+    player_battle = false;
+    localStorage.removeItem('enemy_status_key');
+    var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+    if (player_status.hp <= 0) {
+     player_status.hp = player_status.maxhp;
+     var player_status_result = JSON.stringify(player_status);
+     localStorage.setItem('player_status_key', player_status_result);
+    }
+    rpg_player_status_set();
+   }
+
+   let function_player_damage = (`
    progress_anim = Math.abs(health - healthbarback) / 50.0;
 `);
-     let function_enemy_damage = (`
+   let function_enemy_damage = (`
    progress_anim_2 = Math.abs(enemy_health - enemy_healthbarback) / 50.0;
 `);
 
-     function player_attack_command() {
-      var enemy_index = 0;
+   let player_attack_command_select_enemy_index = 0;
 
-      var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
-      var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+   function player_attack_command() {
+    var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
+    var player_status = JSON.parse(localStorage.getItem('player_status_key'));
 
-      var player_attack_damage = Math.floor((player_status.atk * 1.5 - enemy_status.enemies[enemy_index].def * 1.2) + (Math.random() * 6));
-      player_attack_damage = player_attack_damage < 1 ? 1 : player_attack_damage;
-      enemy_status.enemies[enemy_index].hp = (enemy_status.enemies[enemy_index].hp * 1) - player_attack_damage;
-      enemy_status.enemies[enemy_index].hp = enemy_status.enemies[enemy_index].hp * 1 < 0 ? 0 : enemy_status.enemies[enemy_index].hp * 1;
+    document.getElementById('player_battle_commands2').style.display = 'none';
+    //敵の数だけボタンを生成
+    document.getElementById('player_attack_enemy_select_2').innerHTML = "";
+    for (index in enemy_status.enemies) {
+     document.getElementById('player_attack_enemy_select_2').innerHTML += `<div style="height:40px;"><input type=\"submit\" value=\"${enemy_status.enemies[index].name}\"  id=\"testes-button\" class="btn btn-primary" style=\"opacity:100%;font-size:12px;height:30px;\"onClick=\"player_attack_command_select_enemy_index = ${index}\;player_attack_command_selected()\;\"></div>`;
+    }
+    document.getElementById('player_attack_enemy_select').style.display = 'block';
+   }
+   //選択後
+   function player_attack_command_selected() {
+    var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
+    var player_status = JSON.parse(localStorage.getItem('player_status_key'));
 
-      document.getElementById("rpg-player_battlelog").innerHTML = `${player_status.name}のこうげき！<br>${enemy_status.enemies[enemy_index].name}は${player_attack_damage}ダメージうけた！`;
+    document.getElementById('player_attack_enemy_select').style.display = 'none';
+    var enemy_index = player_attack_command_select_enemy_index * 1;
 
-      var enemy_status_result = JSON.stringify(enemy_status);
-      localStorage.setItem('enemy_status_key', enemy_status_result);
+    var player_attack_damage = Math.floor((player_status.atk * 1.5 - enemy_status.enemies[enemy_index].def * 1.2) + (Math.random() * 6));
+    player_attack_damage = player_attack_damage < 1 ? 1 : player_attack_damage;
+    enemy_status.enemies[enemy_index].hp = (enemy_status.enemies[enemy_index].hp * 1) - player_attack_damage;
+    enemy_status.enemies[enemy_index].hp = enemy_status.enemies[enemy_index].hp * 1 < 0 ? 0 : enemy_status.enemies[enemy_index].hp * 1;
 
-      if (enemy_status.enemies[enemy_index].hp <= 0) {
-       var enemy_exp = localStorage.getItem('enemy_exp');
-       if (!enemy_exp) enemy_exp = 0;
-       enemy_exp = enemy_exp * 1 + enemy_status.enemies[enemy_index].exp * 1;
-       localStorage.setItem('enemy_exp', enemy_exp);
+    new_battlelog = `${player_status.name}のこうげき！<br>${enemy_status.enemies[enemy_index].name}は${player_attack_damage}ダメージうけた！`;
 
-       document.getElementById("rpg-player_battlelog").innerHTML = `${player_status.name}は${enemy_status.enemies[enemy_index].name}をたおした！`;
-       enemy_status.enemies.splice(enemy_index, 1);
-       var enemy_status_result = JSON.stringify(enemy_status);
-       localStorage.setItem('enemy_status_key', enemy_status_result);
-       if (!enemy_status.enemies.length) {
-        levelup();
-        battle_end();
-        return;
-       }
-      }
+    var enemy_status_result = JSON.stringify(enemy_status);
+    localStorage.setItem('enemy_status_key', enemy_status_result);
 
+    if (enemy_status.enemies[enemy_index].hp <= 0) {
+     var enemy_exp = localStorage.getItem('enemy_exp');
+     if (!enemy_exp) enemy_exp = 0;
+     enemy_exp = enemy_exp * 1 + enemy_status.enemies[enemy_index].exp * 1;
+     localStorage.setItem('enemy_exp', enemy_exp);
 
-      enemy_pattern();
-     }
-     let player_guard_value = 1.0;
-
-     function player_guard_command() {
-      var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
-      var player_status = JSON.parse(localStorage.getItem('player_status_key'));
-
-      player_guard_value = 0.5;
-      document.getElementById("rpg-player_battlelog").innerHTML = `${player_status.name}はぼうぎょした！`;
-
-      enemy_pattern();
-     }
-
-     function player_holding_command() {
-      var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
-      var player_status = JSON.parse(localStorage.getItem('player_status_key'));
-
-      document.getElementById("rpg-player_battlelog").innerHTML = `${player_status.name}はなにもしなかった！`;
-
-      enemy_pattern();
-     }
-
-     function player_escape_command() {
-      var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
-      var player_status = JSON.parse(localStorage.getItem('player_status_key'));
-      document.getElementById("rpg-player_battlelog").innerHTML = `${player_status.name}はバトルからにげた！`;
+     new_battlelog = `${player_status.name}は${enemy_status.enemies[enemy_index].name}をたおした！`;
+     enemy_status.enemies.splice(enemy_index, 1);
+     var enemy_status_result = JSON.stringify(enemy_status);
+     localStorage.setItem('enemy_status_key', enemy_status_result);
+     if (!enemy_status.enemies.length) {
       battle_end();
+      levelup();
+      return;
+     }
+    }
+    enemy_pattern();
+   }
+
+   let player_guard_value = 1.0;
+
+   function player_guard_command() {
+    var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
+    var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+
+    player_guard_value = 0.5;
+    new_battlelog = `${player_status.name}はぼうぎょした！`;
+
+    enemy_pattern();
+   }
+
+   function player_holding_command() {
+    var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
+    var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+
+    new_battlelog = `${player_status.name}はなにもしなかった！`;
+
+    enemy_pattern();
+   }
+
+   function player_escape_command() {
+    var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
+    var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+    new_battlelog = `${player_status.name}はバトルからにげた！`;
+    battle_end();
+   }
+
+   //敵の行動パターン
+   function enemy_pattern() {
+    var enemy_index = 0;
+    document.getElementById("player_battle_commands2").style.display = "none";
+    var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
+    var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+
+    var enemy_number = enemy_status.enemies.length * 1 - 1;
+
+    setTimeout(() => {
+     enemy_pattern_0();
+    }, 1000);
+
+    function enemy_pattern_0() {
+     //パターンてすてす
+     if (enemy_status.enemies[enemy_index].id == 'enm_testes') {
+      var enemy_attack_damage = Math.floor(((enemy_status.enemies[enemy_index].atk * 1.5 - player_status.def * 1.2) + (Math.random() * 5)) * player_guard_value);
+      enemy_attack_damage = enemy_attack_damage < 1 ? 1 : enemy_attack_damage;
+      player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
+      new_battlelog = `${enemy_status.enemies[enemy_index].name}のこうげき！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！`;
      }
 
-     //敵の行動パターン
-     function enemy_pattern() {
-      var enemy_index = 0;
-      document.getElementById("player_battle_commands2").style.display = "none";
-      var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
-      var player_status = JSON.parse(localStorage.getItem('player_status_key'));
-
-      var enemy_number = enemy_status.enemies.length * 1 - 1;
-
-      setTimeout(() => {
-       enemy_pattern_0();
-      }, 1000);
-
-      function enemy_pattern_0() {
-       //パターンてすてす
-       if (enemy_status.enemies[enemy_index].id == 'enm_testes') {
-        var enemy_attack_damage = Math.floor(((enemy_status.enemies[enemy_index].atk * 1.5 - player_status.def * 1.2) + (Math.random() * 5)) * player_guard_value);
-        enemy_attack_damage = enemy_attack_damage < 1 ? 1 : enemy_attack_damage;
-        player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
-        document.getElementById("rpg-player_battlelog").innerHTML += `<br>${enemy_status.enemies[enemy_index].name}のこうげき！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！<br>`;
-       }
-
-       //パターンつよいがいこつ
-       else if (enemy_status.enemies[enemy_index].id == 'enm_strong_skeleton') {
-        var enemy_randomize = Math.floor(Math.random() * 1000);
-        if (enemy_randomize - 300 <= 0) {
-         var enemy_attack_damage = Math.floor(((enemy_status.enemies[enemy_index].atk * 2.2 - player_status.def * 1.2) + (Math.random() * 5)) * player_guard_value);
-         enemy_attack_damage = enemy_attack_damage < 1 ? 1 : enemy_attack_damage;
-         player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
-         document.getElementById("rpg-player_battlelog").innerHTML += `<br>${enemy_status.enemies[enemy_index].name}のきっく！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！<br>`;
-        }
-        else {
-         var enemy_attack_damage = Math.floor(((enemy_status.enemies[enemy_index].atk * 1.5 - player_status.def * 1.2) + (Math.random() * 5)) * player_guard_value);
-         enemy_attack_damage = enemy_attack_damage < 1 ? 1 : enemy_attack_damage;
-         player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
-         document.getElementById("rpg-player_battlelog").innerHTML += `<br>${enemy_status.enemies[enemy_index].name}のこうげき！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！<br>`;
-        }
-       }
-       //パターンあああ
-       else if (enemy_status.enemies[enemy_index].id == 'enm_aaa') {
-        var enemy_attack_damage = Math.floor(((enemy_status.enemies[enemy_index].atk * 1.5 - player_status.def * 1.2) + (Math.random() * 5)) * player_guard_value);
-        enemy_attack_damage = enemy_attack_damage < 1 ? 1 : enemy_attack_damage;
-        player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
-        document.getElementById("rpg-player_battlelog").innerHTML += `<br>${enemy_status.enemies[enemy_index].name}のこうげき！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！<br>`;
-       }
-       else {
-        document.getElementById("rpg-player_battlelog").innerHTML += `<br>${enemy_status.enemies[enemy_index].name}はなにもしなかった！<br>`;
-       }
-
-       player_status.hp = player_status.hp * 1 < 0 ? 0 : player_status.hp * 1;
-       player_guard_value = 1.0;
-       var player_status_result = JSON.stringify(player_status);
-       localStorage.setItem('player_status_key', player_status_result);
-
-       if (player_status.hp <= 0) {
-        document.getElementById("rpg-player_battlelog").innerHTML += `<br>${player_status.name}はちからつきてしまった...`;
-        battle_end();
-        return;
-       }
-
-       rpg_player_status_set();
-
-       enemy_index += 1;
-       if (enemy_number >= enemy_index) {
-        setTimeout(enemy_pattern_0, 800);
-       } else {
-        setTimeout(() => {
-         document.getElementById("player_battle_commands2").style.display = "block";
-        }, 500);
-       }
+     //パターンつよいがいこつ
+     else if (enemy_status.enemies[enemy_index].id == 'enm_strong_skeleton') {
+      var enemy_randomize = Math.floor(Math.random() * 1000);
+      if (enemy_randomize - 300 <= 0) {
+       var enemy_attack_damage = Math.floor(((enemy_status.enemies[enemy_index].atk * 2.2 - player_status.def * 1.2) + (Math.random() * 5)) * player_guard_value);
+       enemy_attack_damage = enemy_attack_damage < 1 ? 1 : enemy_attack_damage;
+       player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
+       new_battlelog = `${enemy_status.enemies[enemy_index].name}のきっく！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！`;
+      }
+      else {
+       var enemy_attack_damage = Math.floor(((enemy_status.enemies[enemy_index].atk * 1.5 - player_status.def * 1.2) + (Math.random() * 5)) * player_guard_value);
+       enemy_attack_damage = enemy_attack_damage < 1 ? 1 : enemy_attack_damage;
+       player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
+       new_battlelog = `${enemy_status.enemies[enemy_index].name}のこうげき！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！`;
       }
      }
-
-
-     //てすてす1
-     function enemy_testes() {
-      var enemy_status = JSON.parse('{"enemies":[]}');
-      var enemy_data = JSON.stringify({
-       id: "enm_testes",
-       name: "てすてす",
-       hp: 20,
-       maxhp: 20,
-       atk: 1,
-       def: 0,
-       exp: 10,
-       coin: 100
-      });
-      enemy_status.enemies.push(JSON.parse(enemy_data));
-      enemy_status = JSON.stringify(enemy_status);
-      localStorage.setItem('enemy_status_key', enemy_status);
-      battle_start();
+     //パターンメタルなんとか
+     else if (enemy_status.enemies[enemy_index].id == 'enm_metal_nan') {
+      var enemy_randomize = Math.floor(Math.random() * 1000);
+      if (enemy_randomize - 300 <= 0) {
+       var enemy_attack_damage = Math.floor(((enemy_status.enemies[enemy_index].atk * 2.8 - player_status.def * 1.2) + (Math.random() * 5)) * player_guard_value);
+       enemy_attack_damage = enemy_attack_damage < 1 ? 1 : enemy_attack_damage;
+       player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
+       new_battlelog = `${enemy_status.enemies[enemy_index].name}のこんしんのたいあたり！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！`;
+      }
+      else {
+       var enemy_attack_damage = Math.floor(((enemy_status.enemies[enemy_index].atk * 1.5 - player_status.def * 1.2) + (Math.random() * 5)) * player_guard_value);
+       enemy_attack_damage = enemy_attack_damage < 1 ? 1 : enemy_attack_damage;
+       player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
+       new_battlelog = `${enemy_status.enemies[enemy_index].name}のこうげき！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！`;
+      }
+     }
+     //パターンメタルなんとかEX
+     else if (enemy_status.enemies[enemy_index].id == 'enm_metal_nan_ex') {
+      var enemy_randomize = Math.floor(Math.random() * 1000);
+      if (enemy_randomize - 100 <= 0) {
+       var enemy_attack_damage = Math.floor(((enemy_status.enemies[enemy_index].atk * 4.5 - player_status.def * 1.2) + (Math.random() * 5)) * player_guard_value);
+       enemy_attack_damage = enemy_attack_damage < 1 ? 1 : enemy_attack_damage;
+       player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
+       new_battlelog = `${enemy_status.enemies[enemy_index].name}のひっさつ  ずつき！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！`;
+      }
+      if (enemy_randomize - 300 <= 0) {
+       var enemy_attack_damage = Math.floor(((enemy_status.enemies[enemy_index].atk * 2.8 - player_status.def * 1.2) + (Math.random() * 5)) * player_guard_value);
+       enemy_attack_damage = enemy_attack_damage < 1 ? 1 : enemy_attack_damage;
+       player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
+       new_battlelog = `${enemy_status.enemies[enemy_index].name}のこんしんのたいあたり！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！`;
+      }
+      else {
+       var enemy_attack_damage = Math.floor(((enemy_status.enemies[enemy_index].atk * 1.5 - player_status.def * 1.2) + (Math.random() * 5)) * player_guard_value);
+       enemy_attack_damage = enemy_attack_damage < 1 ? 1 : enemy_attack_damage;
+       player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
+       new_battlelog = `${enemy_status.enemies[enemy_index].name}のこうげき！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！`;
+      }
+     }
+     //パターンあああ
+     else if (enemy_status.enemies[enemy_index].id == 'enm_aaa') {
+      var enemy_attack_damage = Math.floor(((enemy_status.enemies[enemy_index].atk * 1.5 - player_status.def * 1.2) + (Math.random() * 5)) * player_guard_value);
+      enemy_attack_damage = enemy_attack_damage < 1 ? 1 : enemy_attack_damage;
+      player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
+      new_battlelog = `${enemy_status.enemies[enemy_index].name}のこうげき！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！`;
+     }
+     else {
+      new_battlelog = `${enemy_status.enemies[enemy_index].name}はなにもしなかった！`;
      }
 
-     //てすてす2
-     function enemy_testes_2() {
-      var enemy_status = JSON.parse('{"enemies":[]}');
+     player_status.hp = player_status.hp * 1 < 0 ? 0 : player_status.hp * 1;
+     player_guard_value = 1.0;
+     var player_status_result = JSON.stringify(player_status);
+     localStorage.setItem('player_status_key', player_status_result);
 
-      var enemy_data = JSON.stringify({
-       id: "enm_testes",
-       name: "てすてす A",
-       hp: 30,
-       maxhp: 30,
-       atk: 2,
-       def: 0,
-       exp: 10,
-       coin: 100
-      });
-      enemy_status.enemies.push(JSON.parse(enemy_data));
-      var enemy_data = JSON.stringify({
-       id: "enm_testes",
-       name: "てすてす B",
-       hp: 45,
-       maxhp: 45,
-       atk: 2,
-       def: 0,
-       exp: 15,
-       coin: 100
-      });
-      enemy_status.enemies.push(JSON.parse(enemy_data));
-      var enemy_data = JSON.stringify({
-       id: "enm_testes",
-       name: "てすてす C",
-       hp: 20,
-       maxhp: 20,
-       atk: 10,
-       def: 15,
-       exp: 10,
-       coin: 100
-      });
-      enemy_status.enemies.push(JSON.parse(enemy_data));
-
-      enemy_status = JSON.stringify(enemy_status);
-      localStorage.setItem('enemy_status_key', enemy_status);
-      battle_start();
+     if (player_status.hp <= 0) {
+      new_battlelog = `${player_status.name}はちからつきてしまった...`;
+      battle_end();
+      return;
      }
 
-
-     //テスト
-     function test_enemy_death1() {
-      localStorage.setItem('enemy_exp', 10);
-      levelup();
-     }
-
-     function test_enemy_death2() {
-      localStorage.setItem('enemy_exp', 100);
-      levelup();
-     }
-
-     function test_enemy_death3() {
-      localStorage.setItem('enemy_exp', 1000);
-      levelup();
-     }
-
-     function test_enemy_death4() {
-      localStorage.setItem('enemy_exp', 9999);
-      levelup();
-     }
-
-     function test_enemy_death5() {
-      localStorage.setItem('enemy_exp', Infinity);
-      levelup();
-     }
      rpg_player_status_set();
-    </script>
-    <div id="rpg_game_blocker" style="padding-left: 40px;position:fixed;width:120%;height:120%;">
-     <h2 style="position:fixed;z-index: 600;">このゲームは画面横向き専用です。</h2>
-     <img style="position:fixed;top:0px;left:0px;z-index: 599;width:110%;height:110%;" class="img-responsive center-block" src="https://cdn.discordapp.com/attachments/706660445519347763/708266741398241310/333-2.png">
-    </div>
+
+     enemy_index += 1;
+     if (enemy_number >= enemy_index) {
+      setTimeout(enemy_pattern_0, 900);
+     } else {
+      setTimeout(() => {
+       document.getElementById("player_battle_commands2").style.display = "block";
+      }, 700);
+     }
+    }
+   }
+
+
+   //てすてす1
+   function enemy_testes() {
+    var enemy_status = JSON.parse('{"enemies":[]}');
+    var enemy_data = JSON.stringify({
+     id: "enm_testes",
+     name: "てすてす",
+     hp: 20,
+     maxhp: 20,
+     atk: 1,
+     def: 0,
+     exp: 10,
+     coin: 100
+    });
+    enemy_status.enemies.push(JSON.parse(enemy_data));
+    enemy_status = JSON.stringify(enemy_status);
+    localStorage.setItem('enemy_status_key', enemy_status);
+    battle_start();
+   }
+
+   //てすてす2
+   function enemy_testes_2() {
+    var enemy_status = JSON.parse('{"enemies":[]}');
+
+    var enemy_data = JSON.stringify({
+     id: "enm_testes",
+     name: "てすてす A",
+     hp: 30,
+     maxhp: 30,
+     atk: 2,
+     def: 0,
+     exp: 10,
+     coin: 100
+    });
+    enemy_status.enemies.push(JSON.parse(enemy_data));
+    var enemy_data = JSON.stringify({
+     id: "enm_testes",
+     name: "てすてす B",
+     hp: 45,
+     maxhp: 45,
+     atk: 2,
+     def: 0,
+     exp: 15,
+     coin: 100
+    });
+    enemy_status.enemies.push(JSON.parse(enemy_data));
+    var enemy_data = JSON.stringify({
+     id: "enm_testes",
+     name: "てすてす C",
+     hp: 20,
+     maxhp: 20,
+     atk: 10,
+     def: 15,
+     exp: 10,
+     coin: 100
+    });
+    enemy_status.enemies.push(JSON.parse(enemy_data));
+
+    enemy_status = JSON.stringify(enemy_status);
+    localStorage.setItem('enemy_status_key', enemy_status);
+    battle_start();
+   }
+
+   //メタルなんとか
+   function enemy_metal_nan_0() {
+    var enemy_status = JSON.parse('{"enemies":[]}');
+
+    for (let i = 1; i <= 4; i++) {
+     var enemy_data = JSON.stringify({
+      id: "enm_metal_nan",
+      name: `メタルなんとか ${i}`,
+      hp: 8,
+      maxhp: 8,
+      atk: 10,
+      def: "Infinity",
+      exp: 999,
+      coin: 500
+     });
+     enemy_status.enemies.push(JSON.parse(enemy_data));
+    }
+    var enemy_data = JSON.stringify({
+     id: "enm_metal_nan_ex",
+     name: "メタルなんとかEX",
+     hp: 35,
+     maxhp: 35,
+     atk: 35,
+     def: "Infinity",
+     exp: 5000,
+     coin: 1000
+    });
+    enemy_status.enemies.push(JSON.parse(enemy_data));
+
+    enemy_status = JSON.stringify(enemy_status);
+    localStorage.setItem('enemy_status_key', enemy_status);
+    battle_start();
+   }
+
+
+   //テスト
+   /*
+   function test_enemy_death1() {
+   	localStorage.setItem('enemy_exp', 10);
+   	levelup();
+   }
+   function test_enemy_death2() {
+   	localStorage.setItem('enemy_exp', 100);
+   	levelup();
+   }
+   function test_enemy_death3() {
+   	localStorage.setItem('enemy_exp', 1000);
+   	levelup();
+   }
+   function test_enemy_death4() {
+   	localStorage.setItem('enemy_exp', 9999);
+   	levelup();
+   }
+   function test_enemy_death5() {
+   	localStorage.setItem('enemy_exp', Infinity);
+   	levelup();
+   }
+   */
+   rpg_player_status_set();
+  </script>
+  <div id="rpg_game_blocker" style="padding-left: 40px;position:fixed;width:120%;height:120%;">
+   <h2 style="position:fixed;z-index: 600;">このゲームは画面横向き専用です。</h2>
+   <img style="position:fixed;top:0px;left:0px;z-index: 599;width:110%;height:110%;" class="img-responsive center-block" src="https://cdn.discordapp.com/attachments/706660445519347763/708266741398241310/333-2.png">
+  </div>
  </rpg>
  <!-- ページ操作 -->
  <script>
