@@ -161,6 +161,10 @@
    alert("バージョンが違うため ステータスを初期化しました。");
   }
  </script>
+ <audio id="testsound" preload="auto">
+  <source src="https://cdn.discordapp.com/attachments/709110499429711952/709110751071043594/ka-soruidou.mp3" type="audio/mp3">
+ </audio>
+ <!-- <input type="submit" style="color:black; font-size:100%;" value="てすと" onClick="document.getElementById('testsound').play();"> -->
 </head>
 
 <body>
@@ -639,13 +643,11 @@
    }
    //エネミー
    function battle_start() {
-    total_maxhp = 0;
-    var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
-    enemy_status.enemies.forEach(enemy => total_maxhp += enemy.maxhp);
-    if (isNaN(total_maxhp)) total_maxhp = 1;
+    enemy_total_maxhp_set();
 
     player_battle = true;
     enemy_healthbarback = 0;
+    enemy_healthbar = 100;
     document.getElementById("player_battle_commands2").style.display = "none";
     var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
     var player_status = JSON.parse(localStorage.getItem('player_status_key'));
@@ -822,6 +824,7 @@
 
     setTimeout(() => {
      enemy_pattern_0();
+     document.getElementById('testsound').play();
     }, 1000);
 
     function enemy_pattern_0() {
@@ -835,22 +838,61 @@
      //パターンてすてすキング
      else if (enemy_status.enemies[enemy_index].id == 'enm_testes_king') {
       var enemy_randomize = Math.floor(Math.random() * 1000);
-      if (enemy_randomize - 400 <= 0 && enemy_status.enemies.length <= 2) {
-       var enemy_data = JSON.stringify({
-        id: "enm_testes",
-        name: "エリートてすてす C",
-        hp: 150,
-        maxhp: 150,
-        atk: 20,
-        def: 10,
-        exp: 300,
-        coin: 200
-       });
+      if (enemy_randomize - 300 <= 0 && enemy_status.enemies.length <= 4) {
+       var summon_randomize = Math.floor(Math.random() * 2);
+
+       var enemy_data = ``;
+       if (summon_randomize == 0) {
+        enemy_data = JSON.stringify({
+         id: "enm_testes",
+         name: `エリートてすてす ${(enemy_status.enemies.length * 1)}`,
+         hp: 90,
+         maxhp: 90,
+         atk: 20,
+         def: 10,
+         exp: 100,
+         coin: 100
+        });
+       }
+       else if (summon_randomize == 1) {
+        enemy_data = JSON.stringify({
+         id: "enm_testes_dr",
+         name: `ドクターてすてす ${(enemy_status.enemies.length * 1)}`,
+         hp: 100,
+         maxhp: 100,
+         atk: 10,
+         def: 18,
+         exp: 100,
+         coin: 100
+        });
+       }
        enemy_status.enemies.push(JSON.parse(enemy_data));
        var enemy_status_result = JSON.stringify(enemy_status);
        localStorage.setItem('enemy_status_key', enemy_status_result);
        enemy_total_maxhp_set();
        new_battlelog = `${enemy_status.enemies[enemy_index].name}はみかたをよんだ！`;
+      }
+      else {
+       var enemy_attack_damage = Math.floor(((enemy_status.enemies[enemy_index].atk * 1.5 - player_status.def * 1.2) + (Math.random() * 5)) * player_guard_value);
+       enemy_attack_damage = enemy_attack_damage < 1 ? 1 : enemy_attack_damage;
+       player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
+       new_battlelog = `${enemy_status.enemies[enemy_index].name}のこうげき！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！`;
+      }
+     }
+     //パターンドクターてすてす
+     else if (enemy_status.enemies[enemy_index].id == 'enm_testes_dr') {
+      var enemy_randomize = Math.floor(Math.random() * 1000);
+      if (enemy_randomize - 500 <= 0 && total_hp <= total_maxhp) {
+       var heal_randomize = Math.floor(Math.random() * enemy_status.enemies.length);
+       var enemy_heal = 60;
+       enemy_status.enemies[heal_randomize].hp = enemy_status.enemies[heal_randomize].hp * 1 + enemy_heal;
+       enemy_status.enemies[heal_randomize].hp = enemy_status.enemies[heal_randomize].maxhp < enemy_status.enemies[heal_randomize].hp ? enemy_status.enemies[heal_randomize].maxhp : enemy_status.enemies[heal_randomize].hp;
+       var enemy_status_result = JSON.stringify(enemy_status);
+       localStorage.setItem('enemy_status_key', enemy_status_result);
+       enemy_total_maxhp_set();
+       var new_battlelog_yotei = `${enemy_status.enemies[enemy_index].name}は${enemy_status.enemies[heal_randomize].name}に回復薬を投げた！<br>${enemy_status.enemies[heal_randomize].name}は${enemy_heal}回復した！`;
+       new_battlelog_yotei = heal_randomize == enemy_index ? `${enemy_status.enemies[enemy_index].name}は回復薬を飲んだ！${enemy_heal}回復した！` : new_battlelog_yotei;
+       new_battlelog = new_battlelog_yotei;
       }
       else {
        var enemy_attack_damage = Math.floor(((enemy_status.enemies[enemy_index].atk * 1.5 - player_status.def * 1.2) + (Math.random() * 5)) * player_guard_value);
@@ -975,7 +1017,7 @@
 
     var enemy_data = JSON.stringify({
      id: "enm_testes",
-     name: "てすてす A",
+     name: "てすてす 1",
      hp: 30,
      maxhp: 30,
      atk: 2,
@@ -986,7 +1028,7 @@
     enemy_status.enemies.push(JSON.parse(enemy_data));
     var enemy_data = JSON.stringify({
      id: "enm_testes",
-     name: "てすてす B",
+     name: "てすてす 2",
      hp: 45,
      maxhp: 45,
      atk: 2,
@@ -997,7 +1039,7 @@
     enemy_status.enemies.push(JSON.parse(enemy_data));
     var enemy_data = JSON.stringify({
      id: "enm_testes",
-     name: "てすてす C",
+     name: "てすてす 3",
      hp: 20,
      maxhp: 20,
      atk: 10,
@@ -1028,7 +1070,7 @@
     enemy_status.enemies.push(JSON.parse(enemy_data));
     var enemy_data = JSON.stringify({
      id: "enm_testes",
-     name: "エリートてすてす A",
+     name: "エリートてすてす 1",
      hp: 150,
      maxhp: 150,
      atk: 15,
@@ -1039,7 +1081,7 @@
     enemy_status.enemies.push(JSON.parse(enemy_data));
     var enemy_data = JSON.stringify({
      id: "enm_testes",
-     name: "エリートてすてす B",
+     name: "エリートてすてす 2",
      hp: 90,
      maxhp: 90,
      atk: 26,
