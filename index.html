@@ -186,6 +186,41 @@
   function sound_damagesound() {
    healsound.play();
   }
+
+  var encountsound = new Howl({ src: ['https://cdn.discordapp.com/attachments/709110499429711952/709310447743926322/ennkaunnto.wav'] });
+
+  function sound_encountsound() {
+   encountsound.play();
+  }
+
+  var deathsound = new Howl({ src: ['https://cdn.discordapp.com/attachments/709110499429711952/709310915723657247/b1959fa79da07675.wav'] });
+
+  function sound_deathsound() {
+   deathsound.play();
+  }
+
+  var guardsound = new Howl({ src: ['https://cdn.discordapp.com/attachments/709110499429711952/709311641333792788/112e08bc49ece07c.wav'] });
+
+  function sound_guardsound() {
+   guardsound.play();
+  }
+
+  var kaisinsound_1 = new Howl({ src: ['https://cdn.discordapp.com/attachments/709110499429711952/709314758838452255/kaisinn1.wav'] });
+
+  function sound_kaisinsound_1() {
+   kaisinsound_1.play();
+  }
+  var kaisinsound_2 = new Howl({ src: ['https://cdn.discordapp.com/attachments/709110499429711952/709314847879463015/kaisinn2.wav'] });
+
+  function sound_kaisinsound_2() {
+   kaisinsound_2.play();
+  }
+
+  var shoukansound = new Howl({ src: ['https://cdn.discordapp.com/attachments/709110499429711952/709314944314900510/shoukann.wav'] });
+
+  function sound_shoukansound() {
+   shoukansound.play();
+  }
  </script>
  <!-- <input id="testsound_button"type="submit" style="color:black; font-size:100%;" value="てすと" onClick="sound_testsound();"> -->
 </head>
@@ -671,6 +706,7 @@
     }
     //エネミー
     function battle_start() {
+     sound_encountsound();
      enemy_total_maxhp_set();
 
      player_battle = true;
@@ -719,15 +755,23 @@
    progress_anim_2 = Math.abs(enemy_health - enemy_healthbarback) / 50.0;
 `);
 
+    let function_player_death = (`
+     if(player_status.hp <= 0){
+     	new_battlelog = \`${player_status.name}はちからつきてしまった...\`;
+     	battle_end();
+         return;
+      }
+`);
+
     let player_attack_command_select_enemy_index = 0;
 
     function player_attack_command() {
      var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
      var player_status = JSON.parse(localStorage.getItem('player_status_key'));
 
+     document.getElementById('player_battle_commands2').style.display = 'none';
      //敵が複数の時だけ動くやつ
      if (enemy_status.enemies.length > 1) {
-      document.getElementById('player_battle_commands2').style.display = 'none';
       //敵の数だけボタンを生成
       document.getElementById('player_attack_enemy_select_2').innerHTML = "";
       for (index in enemy_status.enemies) {
@@ -750,16 +794,36 @@
      document.getElementById('player_attack_enemy_select').style.display = 'none';
      var enemy_index = player_attack_command_select_enemy_index * 1;
 
-     var player_attack_damage = Math.floor((player_status.atk * 1.5 - enemy_status.enemies[enemy_index].def * 1.2) + (Math.random() * 6));
+     var kaishin_random = Math.floor(Math.random() * 100) + 1;
+     var kaishin_random_2 = 0;
+     var kaishin_text = ``;
+
+     var player_attack_damage = 0;
+     player_attack_damage = Math.floor((player_status.atk * 1.5 - enemy_status.enemies[enemy_index].def * 1.2) + (Math.random() * 6));
      player_attack_damage = player_attack_damage < 1 ? 1 : player_attack_damage;
+     if (kaishin_random <= 6) {
+      kaishin_random_2 = 1;
+      kaishin_text = `かいしんのいちげき！`;
+      player_attack_damage = player_attack_damage * 3;
+      setTimeout(() => {
+       sound_kaisinsound_1();
+      }, 400);
+     }
      enemy_status.enemies[enemy_index].hp = (enemy_status.enemies[enemy_index].hp * 1) - player_attack_damage;
      enemy_status.enemies[enemy_index].hp = enemy_status.enemies[enemy_index].hp * 1 < 0 ? 0 : enemy_status.enemies[enemy_index].hp * 1;
+     new_battlelog = `${player_status.name}のこうげき！`;
 
      setTimeout(() => {
-      new_battlelog = `${player_status.name}のこうげき！<br>${enemy_status.enemies[enemy_index].name}は${player_attack_damage}ダメージうけた！`;
+      new_battlelog = `${kaishin_text}${enemy_status.enemies[enemy_index].name}は${player_attack_damage}ダメージうけた！`;
+      if (kaishin_random_2 == 1) {
+       kaisinsound_1.stop();
+       damagesound.play();
+       sound_kaisinsound_2();
+      } else {
+       damagesound.play();
+      }
       var enemy_status_result = JSON.stringify(enemy_status);
       localStorage.setItem('enemy_status_key', enemy_status_result);
-      damagesound.play();
       if (enemy_status.enemies[enemy_index].hp <= 0) {
        var enemy_exp = localStorage.getItem('enemy_exp');
        if (!enemy_exp) enemy_exp = 0;
@@ -771,10 +835,11 @@
        enemy_coin = enemy_coin * 1 + enemy_status.enemies[enemy_index].coin * 1;
        localStorage.setItem('enemy_coin', enemy_coin);
 
-       new_battlelog = `${player_status.name}は${enemy_status.enemies[enemy_index].name}をたおした！`;
+       new_battlelog += `<br>${player_status.name}は${enemy_status.enemies[enemy_index].name}をたおした！`;
        enemy_status.enemies.splice(enemy_index, 1);
        var enemy_status_result = JSON.stringify(enemy_status);
        localStorage.setItem('enemy_status_key', enemy_status_result);
+       sound_deathsound();
        if (!enemy_status.enemies.length) {
         battle_end();
         levelup();
@@ -798,6 +863,7 @@
 
      player_guard_value = 0.5;
      new_battlelog = `${player_status.name}はぼうぎょした！`;
+     sound_guardsound();
 
      enemy_pattern();
     }
@@ -812,6 +878,7 @@
        player_status.coin = player_status.coin * 1 - 100;
        var player_heal = Math.floor(player_status.maxhp * 0.5);
        player_status.hp = player_status.hp * 1 + player_heal * 1;
+       player_status.hp = player_status.hp * 1 > player_status.maxhp * 1 ? player_status.maxhp : player_status.hp;
 
        new_battlelog = `${player_status.name}はアイテムをつかった！<br>${player_status.name}は${player_heal} 回復した！`;
        healsound.play();
@@ -902,6 +969,7 @@
         localStorage.setItem('enemy_status_key', enemy_status_result);
         enemy_total_maxhp_set();
         new_battlelog = `${enemy_status.enemies[enemy_index].name}はみかたをよんだ！`;
+        sound_shoukansound();
        }
        else {
         var enemy_attack_damage = Math.floor(((enemy_status.enemies[enemy_index].atk * 1.5 - player_status.def * 1.2) + (Math.random() * 5)) * player_guard_value);
@@ -925,6 +993,7 @@
         var new_battlelog_yotei = `${enemy_status.enemies[enemy_index].name}は${enemy_status.enemies[heal_randomize].name}に回復薬を投げた！<br>${enemy_status.enemies[heal_randomize].name}は${enemy_heal}回復した！`;
         new_battlelog_yotei = heal_randomize == enemy_index ? `${enemy_status.enemies[enemy_index].name}は回復薬を飲んだ！${enemy_heal}回復した！` : new_battlelog_yotei;
         new_battlelog = new_battlelog_yotei;
+        healsound.play();
        }
        else {
         var enemy_attack_damage = Math.floor(((enemy_status.enemies[enemy_index].atk * 1.5 - player_status.def * 1.2) + (Math.random() * 5)) * player_guard_value);
@@ -1013,25 +1082,23 @@
       var player_status_result = JSON.stringify(player_status);
       localStorage.setItem('player_status_key', player_status_result);
 
-      if (player_status.hp <= 0) {
-       new_battlelog = `${player_status.name}はちからつきてしまった...`;
-       battle_end();
-       return;
-      }
-
       rpg_player_status_set();
 
       enemy_index += 1;
       if (enemy_number >= enemy_index) {
        setTimeout(enemy_pattern_0, enemy_attack_interval);
       } else {
+       if (player_status.hp <= 0) {
+        new_battlelog = `${player_status.name}はちからつきてしまった...`;
+        battle_end();
+        return;
+       }
        setTimeout(() => {
         document.getElementById("player_battle_commands2").style.display = "block";
        }, 700);
       }
      }
     }
-
 
     //てすてす1
     function enemy_testes() {
