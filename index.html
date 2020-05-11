@@ -10,6 +10,7 @@
  <!-- Bootstrap -->
  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.1/howler.min.js"></script>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
  <style>
   test-text2 {
    padding: 0px;
@@ -30,6 +31,7 @@
   }
 
   body {
+   -webkit-text-size-adjust: 100%;
    padding: 30px;
    background-color: #222222;
   }
@@ -307,7 +309,7 @@
     type: "attack",
     atk: 2.5,
     tp: 5,
-    all: false
+    all: true
    });
    player_status.skills.push(JSON.parse(skill_data));
    var player_status_result = JSON.stringify(player_status);
@@ -542,7 +544,45 @@
   <rpg id="rpg-game" style="padding-left: 40px;position:static;">
    <div id="rpg_header">
     <p class="lead" style="color:white;">RPGもどき</p> <input type="submit" value="ホームに戻る" class="btn btn-primary" id="rpg_home_move_button" onClick="sound_clicksound();home_move_button();">
-    <br><br><br><br>
+    <br><br><br>
+    <input align="left" type="submit" style="color:black; width:8;font-size:100%;" value="ショップ(即席)" onClick="sound_clicksound();document.getElementById('shop').style.display = 'block';"><br><br><br>
+    <div align="left" style="display:none;z-index: 600;position: fixed;top: 0;left: 0;height: 120%;width: 100%;background-size: 400px 400px;background-position: 0% 0px;background-image:url('https://cdn.discordapp.com/attachments/706660445519347763/708633819103756308/333-3.png');" id="shop">
+     <input align="left" type="submit" style="color:black; width:8;font-size:100%;" value="閉じる" onClick="sound_clicksound();document.getElementById('shop').style.display = 'none';"><br><br><br>
+     <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="skill_toriaezunaguru_shop" value="とりあえずぜんいんなぐる の秘伝書  1200ｺｲﾝ" onClick="sound_clicksound();skill_toriaezunaguru_shop();"><br><br>
+     <script>
+      var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+
+      function shop_view_set() {
+       if (player_status.skills.findIndex(data => data.id == "skill_toriaezunaguru") != -1) document.getElementById('skill_toriaezunaguru_shop').style.display = 'none';
+      }
+      shop_view_set();
+
+      function skill_toriaezunaguru_shop() {
+       var nedan = 1200;
+       var result = window.confirm('とりあえずぜんいんなぐるの秘伝書 を購入しますか？');
+       if (result == true && player_status.coin * 1 >= nedan) {
+        player_status.coin = player_status.coin * 1 - nedan;
+        var skill_data = JSON.stringify({
+         id: "skill_toriaezunaguru",
+         name: "とりあえずぜんいんなぐる",
+         type: "attack",
+         atk: 2.0,
+         tp: 30,
+         all: true
+        });
+        player_status.skills.push(JSON.parse(skill_data));
+        var player_status_result = JSON.stringify(player_status);
+        localStorage.setItem('player_status_key', player_status_result);
+        rpg_player_status_set();
+        shop_view_set();
+
+        alert('わざ  とりあえずぜんいんなぐる  をおぼえた！');
+       } else if (result == true) {
+        alert("コインが足りません( 'ω')");
+       }
+      }
+     </script>
+    </div>
    </div>
    <!-- 敵召喚デバッグ -->
    <div id="battle_start_debug_button">
@@ -551,7 +591,8 @@
     <input type="submit" value="戦闘開始(てすてす キング)" id="testes-button" onClick="sound_clicksound();enemy_testes_3();"><br><br>
     <input type="submit" value="戦闘開始(メタルなんとかフェスティバル)" id="testes-button" onClick="sound_clicksound();enemy_metal_nan_0();"><br><br>
     <input type="submit" value="戦闘開始(メタルなんとかフェスティバル EX)" id="testes-button" onClick="sound_clicksound();enemy_metal_nan_1();"><br><br><br>
-    <input type="submit" value="戦闘開始(クリル・クラルサー)" id="testes-button" onClick="sound_clicksound();enemy_cril();">
+    <input type="submit" value="戦闘開始(クリル・クラルサー)" id="testes-button" onClick="sound_clicksound();enemy_cril();"><br><br>
+    <input type="submit" value="戦闘開始(クリル・クラルサー テスト)" id="testes-button" onClick="sound_clicksound();enemy_cril_2();">
    </div>
    <div id="player_battle_window" style="display:none;bottom: 20px;">
     <!-- <div style="position:relative; top: -20px; left:0px;"><strong style="color:white">HP SET (デバッグ) - </strong><input type="text" id="hp" value="100"> <input type="submit" style="color: black;" value="SET" id="hp_button" onClick="return test_click();"></div> -->
@@ -582,14 +623,14 @@
       <a style="color:white;position:relative; bottom: 5px; left:19px;text-align:left;"><strong id="playertp_value"></strong></a>
      </nobr>
     </div><br>
-    <div id="player_attack_enemy_select" style="z-index: 50;display:none;position:fixed;bottom:30px;right:10px;width:260px;height:85%;border: groove white;background-color: #141c29;opacity:100%;">
+    <div id="player_attack_enemy_select" style="overflow:auto;z-index: 50;display:none;position:fixed;bottom:30px;right:10px;width:260px;height:85%;border: groove white;background-color: #141c29;opacity:100%;">
      <div id="player_attack_enemy_select_2" style="position:relative;top: 12px;left:20px;">
      </div>
      <div style="font-size:12px;position:fixed;bottom:35px;right:20px;"><input type="submit" value="キャンセル" id="" onClick="sound_clicksound();document.getElementById('player_attack_enemy_select').style.display = 'none';document.getElementById('player_battle_commands2').style.display = 'block';"></div>
     </div>
     <div style="padding-left:50px;">
      <rpg-player_status>
-      <p id="rpg-player_battlelog" style="font-size:13px;display:block;position:fixed;width:80%;bottom:70px;border: groove white;background-color: #141c29;"></p>
+      <div id="rpg-player_battlelog" style="overflow:auto;font-size:13px;display:block;position:fixed;height:80px;width:80%;bottom:70px;border: groove white;background-color: #141c29;"></div>
       <rpg-player_status>
        <!-- <rpg-player_status><p id="rpg-player_status2"style="border: groove white;"></p></rpg-player_status> -->
        <br>
@@ -622,7 +663,13 @@
     setInterval(() => {
      if (document.getElementById("rpg-game").style.display == "block") {
       var battlelog = document.getElementById("rpg-player_battlelog").innerHTML;
-      if (new_battlelog) battlelog = (`${battlelog}<br><br>${new_battlelog}`).split("<br>").slice(-5).join("<br>");
+      if (new_battlelog) {
+       var battlelog_scroll = battlelog.split("<br>").length * 20;
+       battlelog = (`${battlelog}<br>${new_battlelog}`).split("<br>").slice(-8).join("<br>");
+       $("#rpg-player_battlelog").animate({
+        scrollTop: battlelog_scroll
+       });
+      }
       document.getElementById("rpg-player_battlelog").innerHTML = battlelog;
       new_battlelog = ``;
 
@@ -943,7 +990,8 @@
      //わざの数だけボタンを生成
      document.getElementById('player_attack_enemy_select_2').innerHTML = "";
      for (index in player_status.skills) {
-      document.getElementById('player_attack_enemy_select_2').innerHTML += `<div style="height:40px;"><input type=\"submit\" value=\"${player_status.skills[index].name} -- TP ${player_status.skills[index].tp}\"  id=\"skill_select_button_${index}\" class="btn btn-primary" style=\"opacity:100%;font-size:12px;height:30px;\"onClick=\"player_skill_command_select_skill_index = ${index}\;player_skill_command_2()\;\"></div>`;
+      var enemy_taishou = player_status.skills[index].all == true ? `敵全体` : `敵単体`;
+      document.getElementById('player_attack_enemy_select_2').innerHTML += `<div style="height:40px;"><input type=\"submit\" value=\"${player_status.skills[index].name} - 消費TP ${player_status.skills[index].tp} - 対象 ${enemy_taishou}\"  id=\"skill_select_button_${index}\" class="btn btn-primary" style=\"opacity:100%;font-size:10px;height:30px;width:86%;\"onClick=\"player_skill_command_select_skill_index = ${index}\;player_skill_command_2()\;\"></div>`;
      }
      document.getElementById('player_attack_enemy_select').style.display = 'block';
 
@@ -953,7 +1001,12 @@
      var player_status = JSON.parse(localStorage.getItem('player_status_key'));
      if (player_status.skills[player_skill_command_select_skill_index].tp <= player_status.tp) {
       sound_clicksound();
-      player_attack_command();
+      if (player_status.skills[player_skill_command_select_skill_index].all == true) {
+       player_attack_command_select_enemy_index = 0;
+       player_attack_command_selected();
+      } else {
+       player_attack_command();
+      }
      } else {
       sound_clicknone();
      }
@@ -964,12 +1017,13 @@
      var player_status = JSON.parse(localStorage.getItem('player_status_key'));
 
      document.getElementById('player_battle_commands2').style.display = 'none';
+
      //敵が複数の時だけ動くやつ
      if (enemy_status.enemies.length > 1) {
       //敵の数だけボタンを生成
       document.getElementById('player_attack_enemy_select_2').innerHTML = "";
       for (index in enemy_status.enemies) {
-       document.getElementById('player_attack_enemy_select_2').innerHTML += `<div style="height:40px;"><input type=\"submit\" value=\"${enemy_status.enemies[index].name}\"  id=\"testes-button\" class="btn btn-primary" style=\"opacity:100%;font-size:12px;height:30px;\"onClick=\"sound_clicksound()\;player_attack_command_select_enemy_index = ${index}\;player_attack_command_selected()\;\"></div>`;
+       document.getElementById('player_attack_enemy_select_2').innerHTML += `<div style="height:40px;"><input type=\"submit\" value=\"${enemy_status.enemies[index].name}\"  id=\"testes-button\" class="btn btn-primary" style=\"opacity:100%;font-size:12px;height:30px;width:80%;\"onClick=\"sound_clicksound()\;player_attack_command_select_enemy_index = ${index}\;player_attack_command_selected()\;\"></div>`;
       }
       document.getElementById('player_attack_enemy_select').style.display = 'block';
      }
@@ -978,8 +1032,8 @@
       player_attack_command_select_enemy_index = 0;
       player_attack_command_selected();
      }
-
     }
+
     //選択後
     function player_attack_command_selected() {
      var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
@@ -988,70 +1042,81 @@
      document.getElementById('player_attack_enemy_select').style.display = 'none';
      var enemy_index = player_attack_command_select_enemy_index * 1;
      var player_skill_index = player_skill_command_select_skill_index * 1;
-     //  alert(player_skill_index);
-
-     var kaishin_random = Math.floor(Math.random() * 100) + 1;
-     var kaishin_random_2 = 0;
-     var kaishin_text = ``;
-     var new_battlelog_yotei = ``;
-
-     var player_attack_damage = 0;
+     if (player_skill_index > -1 && player_status.skills[player_skill_index].all == true) enemy_index = 0;
+     var enemy_number = enemy_status.enemies.length * 1 - 1;
 
      //わざかこうげきかの区別
      if (player_skill_index == -1) {
-      //つうじょうこうげき
-      player_attack_damage = Math.floor((player_status.atk * 1.5 - enemy_status.enemies[enemy_index].def * 1.2) + (Math.random() * 6));
-      player_attack_damage = player_attack_damage < 1 ? 1 : player_attack_damage;
-
       player_status.tp = player_status.tp * 1 + 5;
       player_status.tp = player_status.tp * 1 > player_status.maxtp * 1 ? player_status.maxtp : player_status.tp;
-
-      if (kaishin_random <= 6) {
-       kaishin_random_2 = 1;
-       kaishin_text = `かいしんのいちげき！`;
-       player_attack_damage = player_attack_damage * 3;
-       setTimeout(() => {
-        sound_kaisinsound_1();
-       }, 400);
-      }
-      enemy_status.enemies[enemy_index].hp = (enemy_status.enemies[enemy_index].hp * 1) - player_attack_damage;
-      enemy_status.enemies[enemy_index].hp = enemy_status.enemies[enemy_index].hp * 1 < 0 ? 0 : enemy_status.enemies[enemy_index].hp * 1;
       new_battlelog = `${player_status.name}のこうげき！`;
-      new_battlelog_yotei = `${kaishin_text}${enemy_status.enemies[enemy_index].name}は${player_attack_damage}ダメージうけた！`;
-
      } else {
-      if (player_status.skills[player_skill_index].tp > player_status.tp) {
-       document.getElementById('player_attack_enemy_select').style.display = 'block';
-       return;
-      }
-      //わざ
-      if (player_status.skills[player_skill_index].type == 'attack') {
+      player_status.tp = player_status.tp * 1 - player_status.skills[player_skill_index].tp * 1;
+      new_battlelog = `${player_status.name}の${player_status.skills[player_skill_index].name}！`;
+     }
+
+     setTimeout(() => {
+      player_attack_command_selected_0();
+     }, 800);
+
+     function player_attack_command_selected_0() {
+      enemy_number = enemy_status.enemies.length * 1 - 1;
+      var enemy_attack_interval = 1100 - (enemy_status.enemies.length * 100);
+      var kaishin_random = Math.floor(Math.random() * 100) + 1;
+      var kaishin_random_2 = 0;
+      var kaishin_text = ``;
+      var new_battlelog_yotei = ``;
+
+      var player_attack_damage = 0;
+
+      //わざかこうげきかの区別
+      if (player_skill_index == -1) {
+       //つうじょうこうげき
        player_attack_damage = Math.floor((player_status.atk * 1.5 - enemy_status.enemies[enemy_index].def * 1.2) + (Math.random() * 6));
        player_attack_damage = player_attack_damage < 1 ? 1 : player_attack_damage;
-
-       player_attack_damage = Math.floor(player_attack_damage * (player_status.skills[player_skill_index].atk * 1));
-
-       player_status.tp = player_status.tp * 1 - player_status.skills[player_skill_index].tp * 1;
 
        if (kaishin_random <= 6) {
         kaishin_random_2 = 1;
         kaishin_text = `かいしんのいちげき！`;
         player_attack_damage = player_attack_damage * 3;
-        setTimeout(() => {
-         sound_kaisinsound_1();
-        }, 400);
+        // setTimeout(()=>{
+        sound_kaisinsound_1();
+        //  },400);
        }
        enemy_status.enemies[enemy_index].hp = (enemy_status.enemies[enemy_index].hp * 1) - player_attack_damage;
        enemy_status.enemies[enemy_index].hp = enemy_status.enemies[enemy_index].hp * 1 < 0 ? 0 : enemy_status.enemies[enemy_index].hp * 1;
-       new_battlelog = `${player_status.name}の${player_status.skills[player_skill_index].name}！`;
+       new_battlelog = `${player_status.name}のこうげき！`;
        new_battlelog_yotei = `${kaishin_text}${enemy_status.enemies[enemy_index].name}は${player_attack_damage}ダメージうけた！`;
+
+      } else {
+       //わざ
+       if (player_status.skills[player_skill_index].type == 'attack') {
+
+        player_attack_damage = Math.floor((player_status.atk * 1.5 - enemy_status.enemies[enemy_index].def * 1.2) + (Math.random() * 6));
+        player_attack_damage = player_attack_damage < 1 ? 1 : player_attack_damage;
+
+        player_attack_damage = Math.floor(player_attack_damage * (player_status.skills[player_skill_index].atk * 1));
+
+
+        if (kaishin_random <= 6) {
+         kaishin_random_2 = 1;
+         kaishin_text = `かいしんのいちげき！`;
+         player_attack_damage = player_attack_damage * 3;
+         // setTimeout(()=>{
+         sound_kaisinsound_1();
+         // },400);
+        }
+        enemy_status.enemies[enemy_index].hp = (enemy_status.enemies[enemy_index].hp * 1) - player_attack_damage;
+        enemy_status.enemies[enemy_index].hp = enemy_status.enemies[enemy_index].hp * 1 < 0 ? 0 : enemy_status.enemies[enemy_index].hp * 1;
+        new_battlelog = `${player_status.name}の${player_status.skills[player_skill_index].name}！`;
+        new_battlelog_yotei = `${kaishin_text}${enemy_status.enemies[enemy_index].name}は${player_attack_damage}ダメージうけた！`;
+       }
+
       }
 
-     }
+      var player_status_result = JSON.stringify(player_status);
+      localStorage.setItem('player_status_key', player_status_result);
 
-     var player_status_result = JSON.stringify(player_status);
-     localStorage.setItem('player_status_key', player_status_result);
-     setTimeout(() => {
       new_battlelog = new_battlelog_yotei;
       if (player_skill_index == -1) {
        if (kaishin_random_2 == 1) {
@@ -1092,15 +1157,25 @@
         battle_end();
         levelup();
         return;
-       } else {
+       }
+      } else {
+       enemy_index += 1;
+      }
+
+
+      if (enemy_number >= enemy_index && player_skill_index > -1 && player_status.skills[player_skill_index].all == true) {
+       setTimeout(player_attack_command_selected_0, enemy_attack_interval);
+      } else {
+       setTimeout(() => {
         var total_maxhp_timeout = Math.floor(((total_maxhp * 1) / (total_hp * 1)) * 1000);
-        setTimeout(() => {
+        var a = setTimeout(() => {
          enemy_total_maxhp_set();
         }, total_maxhp_timeout);
-       }
+        enemy_pattern();
+       }, 500);
       }
-      enemy_pattern();
-     }, 800);
+
+     }
     }
 
 
@@ -1366,14 +1441,14 @@
         new_battlelog = `${enemy_status.enemies[enemy_index].name}はなにか準備している！<br>{あと 3 ターン}`;
         sound_shoukansound();
        }
-       else if (enemy_randomize - 120 <= 0) {
+       else if (enemy_randomize - 70 <= 0) {
         var enemy_attack_damage = Math.floor(((enemy_status.enemies[enemy_index].atk * 4.0 - player_status.def * 1.2) + (Math.random() * 5)) * player_guard_value);
         enemy_attack_damage = enemy_attack_damage < 1 ? 1 : enemy_attack_damage;
         player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
         new_battlelog = `${enemy_status.enemies[enemy_index].name}の神葬 クラルスクリア！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！`;
         damagesound.play();
        }
-       else if (enemy_randomize - 180 <= 0 && total_hp <= total_maxhp) {
+       else if (enemy_randomize - 100 <= 0 && total_hp <= total_maxhp) {
         var heal_randomize = Math.floor(Math.random() * enemy_status.enemies.length);
         var enemy_heal = Math.floor(enemy_status.enemies[enemy_index].maxhp * 0.1);
         enemy_status.enemies[heal_randomize].hp = enemy_status.enemies[heal_randomize].hp * 1 + enemy_heal;
@@ -1610,12 +1685,34 @@
       name: "クリル・クラルサー",
       hp: 9900,
       maxhp: 9900,
-      atk: 135,
-      def: 65,
+      atk: 120,
+      def: 50,
       exp: 99999,
       coin: 10000
      });
      enemy_status.enemies.push(JSON.parse(enemy_data));
+
+     enemy_status = JSON.stringify(enemy_status);
+     localStorage.setItem('enemy_status_key', enemy_status);
+     battle_start();
+    }
+    //テスト
+    function enemy_cril_2() {
+     var enemy_status = JSON.parse('{"enemies":[]}');
+
+     for (let i = 1; i <= 6; i++) {
+      var enemy_data = JSON.stringify({
+       id: "enm_cril",
+       name: `クリル・クラルサー ${i}`,
+       hp: 9900,
+       maxhp: 9900,
+       atk: 120,
+       def: 50,
+       exp: 99999,
+       coin: 10000
+      });
+      enemy_status.enemies.push(JSON.parse(enemy_data));
+     }
 
      enemy_status = JSON.stringify(enemy_status);
      localStorage.setItem('enemy_status_key', enemy_status);
