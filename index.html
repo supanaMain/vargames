@@ -226,7 +226,7 @@
   <div style="display:none;z-index: 500;position: fixed;top: 0;right: 0px;height: 310px;width: 300px;background-size: 100% 100%;background-position: 0% 0px;background-image:url('https://cdn.discordapp.com/attachments/706660445519347763/706851683602268201/331-2.png');" id="player_status_main">
    <rpg-player_status>
     <!-- <img style="position:relative; top: 400px; left:0%;" class="img-responsive center-block" src = "https://cdn.discordapp.com/attachments/706660445519347763/706660466859966570/331.png"> -->
-    <img id="player_icon" src="https://cdn.discordapp.com/attachments/656126030062419998/704208453052137512/315.png" style="position:relative; top: 30px; left: 200px;width:60px;height:60px;">
+    <img id="player_icon" src="https://cdn.discordapp.com/attachments/656126030062419998/704208453052137512/315.png" style="position:relative; top: 30px; left: 45px;width:54px;height:54px;">
     <script>
      var player_icon_uri = localStorage.getItem('player_icon_uri_key');
      if (player_icon_uri) {
@@ -234,7 +234,7 @@
       document.getElementById("player_icon_preview").src = player_icon_uri;
      }
     </script>
-    <div style="position:relative; top: 20px; left:0px;">
+    <div style="position:relative; top: 40px; left:0px;">
      <p id="rpg-player_status1" style="position:relative; top: 0px; left:10%;"></p>
     </div>
     <input type="button" style="position:relative; top: 0px; left: 210px;color:black; width:8;font-size:100%;" value="編集" onClick="sound_clicksound();document.getElementById('status_edit').style.display = 'block';">
@@ -259,7 +259,7 @@
 
     function name_check() {
      var player_name_txt = document.getElementById("player_name_txt").value;
-     if (player_name_txt && player_name_txt.length <= 5) {
+     if (player_name_txt && player_name_txt.length <= 10) {
       player_name = player_name_txt;
       localStorage.setItem('player_name_key', player_name);
       var player_status = JSON.parse(localStorage.getItem('player_status_key'));
@@ -270,8 +270,8 @@
        rpg_player_status_set();
       }
       alert(`${player_name}にしました( 'ω')`);
-     } else if (player_name_txt.length > 5) {
-      alert("おなまえの長さは5文字までです( 'ω')");
+     } else if (player_name_txt.length > 10) {
+      alert("おなまえの長さは10文字までです( 'ω')");
       return;
      } else {
       alert("おなまえを入力してください( 'ω')");
@@ -408,7 +408,8 @@
     <input type="submit" value="戦闘開始(てすてす)" id="testes-button" onClick="sound_clicksound();enemy_testes();"><br><br>
     <input type="submit" value="戦闘開始(てすてす x3)" id="testes-button" onClick="sound_clicksound();enemy_testes_2();"><br><br>
     <input type="submit" value="戦闘開始(てすてす キング)" id="testes-button" onClick="sound_clicksound();enemy_testes_3();"><br><br>
-    <input type="submit" value="戦闘開始(メタルなんとかフェスティバル)" id="testes-button" onClick="sound_clicksound();enemy_metal_nan_0();">
+    <input type="submit" value="戦闘開始(メタルなんとかフェスティバル)" id="testes-button" onClick="sound_clicksound();enemy_metal_nan_0();"><br><br>
+    <input type="submit" value="戦闘開始(メタルなんとかフェスティバル EX)" id="testes-button" onClick="sound_clicksound();enemy_metal_nan_1();">
    </div>
    <div id="player_battle_window" style="display:none;bottom: 20px;">
     <!-- <div style="position:relative; top: -20px; left:0px;"><strong style="color:white">HP SET (デバッグ) - </strong><input type="text" id="hp" value="100"> <input type="submit" style="color: black;" value="SET" id="hp_button" onClick="return test_click();"></div> -->
@@ -856,6 +857,7 @@
      }, 1000);
 
      function enemy_pattern_0() {
+      var enemy_attack_interval = 1100 - (enemy_status.enemies.length * 100);
       //パターンてすてす
       if (enemy_status.enemies[enemy_index].id == 'enm_testes') {
        var enemy_attack_damage = Math.floor(((enemy_status.enemies[enemy_index].atk * 1.5 - player_status.def * 1.2) + (Math.random() * 5)) * player_guard_value);
@@ -1021,7 +1023,7 @@
 
       enemy_index += 1;
       if (enemy_number >= enemy_index) {
-       setTimeout(enemy_pattern_0, 900);
+       setTimeout(enemy_pattern_0, enemy_attack_interval);
       } else {
        setTimeout(() => {
         document.getElementById("player_battle_commands2").style.display = "block";
@@ -1155,12 +1157,46 @@
      var enemy_data = JSON.stringify({
       id: "enm_metal_nan_ex",
       name: "メタルなんとかEX",
-      hp: 35,
-      maxhp: 35,
+      hp: 30,
+      maxhp: 30,
       atk: 35,
       def: "Infinity",
       exp: 9999,
       coin: 999
+     });
+     enemy_status.enemies.push(JSON.parse(enemy_data));
+
+     enemy_status = JSON.stringify(enemy_status);
+     localStorage.setItem('enemy_status_key', enemy_status);
+     battle_start();
+    }
+
+    //メタルなんとかEX
+    function enemy_metal_nan_1() {
+     var enemy_status = JSON.parse('{"enemies":[]}');
+
+     for (let i = 1; i <= 5; i++) {
+      var enemy_data = JSON.stringify({
+       id: "enm_metal_nan_ex",
+       name: `メタルなんとかEX ${i}`,
+       hp: 30,
+       maxhp: 30,
+       atk: 35,
+       def: "Infinity",
+       exp: 9999,
+       coin: 999
+      });
+      enemy_status.enemies.push(JSON.parse(enemy_data));
+     }
+     var enemy_data = JSON.stringify({
+      id: "enm_metal_nan_ex",
+      name: "メタルシン",
+      hp: 50,
+      maxhp: 50,
+      atk: 45,
+      def: "Infinity",
+      exp: 12000,
+      coin: 1200
      });
      enemy_status.enemies.push(JSON.parse(enemy_data));
 
