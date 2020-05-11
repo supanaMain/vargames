@@ -1169,11 +1169,6 @@
      }, 1000);
 
      function enemy_pattern_0() {
-      if (player_status.hp <= 0) {
-       new_battlelog = `${player_status.name}はちからつきてしまった...`;
-       battle_end();
-       return;
-      }
 
       var enemy_attack_interval = 1100 - (enemy_status.enemies.length * 100);
       //パターンてすてす
@@ -1333,6 +1328,11 @@
       var player_status_result = JSON.stringify(player_status);
       localStorage.setItem('player_status_key', player_status_result);
 
+      if (player_status.hp <= 0) {
+       new_battlelog = `${player_status.name}はちからつきてしまった...`;
+       battle_end();
+       return;
+      }
       rpg_player_status_set();
 
       enemy_index += 1;
