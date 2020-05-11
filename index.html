@@ -289,6 +289,12 @@
    shoukansound.play();
   }
 
+  var skillsound = new Howl({ src: ['https://cdn.discordapp.com/attachments/709110499429711952/709425255474528366/28c5c99a3314650c.wav'] });
+
+  function sound_skillsound() {
+   skillsound.play();
+  }
+
 
 
 
@@ -544,7 +550,8 @@
     <input type="submit" value="戦闘開始(てすてす x3)" id="testes-button" onClick="sound_clicksound();enemy_testes_2();"><br><br>
     <input type="submit" value="戦闘開始(てすてす キング)" id="testes-button" onClick="sound_clicksound();enemy_testes_3();"><br><br>
     <input type="submit" value="戦闘開始(メタルなんとかフェスティバル)" id="testes-button" onClick="sound_clicksound();enemy_metal_nan_0();"><br><br>
-    <input type="submit" value="戦闘開始(メタルなんとかフェスティバル EX)" id="testes-button" onClick="sound_clicksound();enemy_metal_nan_1();">
+    <input type="submit" value="戦闘開始(メタルなんとかフェスティバル EX)" id="testes-button" onClick="sound_clicksound();enemy_metal_nan_1();"><br><br><br>
+    <input type="submit" value="戦闘開始(クリル・クラルサー)" id="testes-button" onClick="sound_clicksound();enemy_cril();">
    </div>
    <div id="player_battle_window" style="display:none;bottom: 20px;">
     <!-- <div style="position:relative; top: -20px; left:0px;"><strong style="color:white">HP SET (デバッグ) - </strong><input type="text" id="hp" value="100"> <input type="submit" style="color: black;" value="SET" id="hp_button" onClick="return test_click();"></div> -->
@@ -587,12 +594,14 @@
        <!-- <rpg-player_status><p id="rpg-player_status2"style="border: groove white;"></p></rpg-player_status> -->
        <br>
        <div id="player_battle_commands2" style="display:block;position:fixed;bottom:30px;">
-        <input type="submit" value="こうげき" class="btn btn-primary" id="attack-button" onClick="sound_clicksound();player_skill_command_select_skill_index = -1;player_attack_command();">
-        <input type="submit" value="わざ" class="btn btn-primary" id="skill-button" onClick="sound_clicksound();player_skill_command();">
-        <input type="submit" value="ぼうぎょ" class="btn btn-primary" id="guard-button" onClick="sound_clicksound();player_guard_command();">
-        <input type="submit" value="かいふく" class="btn btn-primary" id="item-button" onClick="sound_clicksound();player_item_command();">
-        <input type="submit" value="なにもしない" class="btn btn-primary" id="holding-button" onClick="sound_clicksound();player_holding_command();">
-        <input type="submit" value="にげる" class="btn btn-primary" id="escape-button" onClick="sound_clicksound();player_escape_command();">
+        <nobr>
+         <input style="width:17%;" type="submit" value="こうげき" class="btn btn-primary" id="attack-button" onClick="sound_clicksound();player_skill_command_select_skill_index = -1;player_attack_command();">
+         <input style="width:17%;" type="submit" value="わざ" class="btn btn-primary" id="skill-button" onClick="sound_clicksound();player_skill_command();">
+         <input style="width:17%;" type="submit" value="ぼうぎょ" class="btn btn-primary" id="guard-button" onClick="sound_clicksound();player_guard_command();">
+         <input style="width:17%;" type="submit" value="かいふく" class="btn btn-primary" id="item-button" onClick="sound_clicksound();player_item_command();">
+         <input style="width:17%;" type="submit" value="ほうち" class="btn btn-primary" id="holding-button" onClick="sound_clicksound();player_holding_command();">
+         <input style="width:17%;" type="submit" value="にげる" class="btn btn-primary" id="escape-button" onClick="sound_clicksound();player_escape_command();">
+        </nobr>
        </div>
     </div>
    </div>
@@ -1233,8 +1242,6 @@
         var enemy_heal = 60;
         enemy_status.enemies[heal_randomize].hp = enemy_status.enemies[heal_randomize].hp * 1 + enemy_heal;
         enemy_status.enemies[heal_randomize].hp = enemy_status.enemies[heal_randomize].maxhp < enemy_status.enemies[heal_randomize].hp ? enemy_status.enemies[heal_randomize].maxhp : enemy_status.enemies[heal_randomize].hp;
-        var enemy_status_result = JSON.stringify(enemy_status);
-        localStorage.setItem('enemy_status_key', enemy_status_result);
         enemy_total_maxhp_set();
         var new_battlelog_yotei = `${enemy_status.enemies[enemy_index].name}は${enemy_status.enemies[heal_randomize].name}に回復薬を投げた！<br>${enemy_status.enemies[heal_randomize].name}は${enemy_heal}回復した！`;
         new_battlelog_yotei = heal_randomize == enemy_index ? `${enemy_status.enemies[enemy_index].name}は回復薬を飲んだ！${enemy_heal}回復した！` : new_battlelog_yotei;
@@ -1319,6 +1326,80 @@
        new_battlelog = `${enemy_status.enemies[enemy_index].name}のこうげき！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！`;
        damagesound.play();
       }
+      //パターンクリル
+      else if (enemy_status.enemies[enemy_index].id == 'enm_cril') {
+       var enemy_randomize = Math.floor(Math.random() * 1000);
+       if (enemy_status.enemies[enemy_index].hp < 5000 && enemy_status.enemies[enemy_index].cril_hp_event_0 != true) {
+        enemy_status.enemies[enemy_index].cril_hp_event_0 = true;
+        enemy_status.enemies[enemy_index].hp = enemy_status.enemies[enemy_index].maxhp;
+        enemy_status.enemies[enemy_index].atk = Math.floor(enemy_status.enemies[enemy_index].atk * 1.5);
+        enemy_status.enemies[enemy_index].def = Math.floor(enemy_status.enemies[enemy_index].def * 1.5);
+        enemy_total_maxhp_set();
+        new_battlelog = `${enemy_status.enemies[enemy_index].name}はいらだっている！<br>${enemy_status.enemies[enemy_index].name}は超回復薬をつかった！99999回復した！<br>ステータスが上がった！`;
+        healsound.play();
+        sound_shoukansound();
+       }
+       else if (enemy_status.enemies[enemy_index].cril_hp_event_1 == 1) {
+        enemy_status.enemies[enemy_index].cril_hp_event_1 = undefined;
+        enemy_status.enemies[enemy_index].hp = enemy_status.enemies[enemy_index].maxhp;
+        var enemy_attack_damage = (player_status.maxhp * 1) - 1;
+        enemy_attack_damage = enemy_attack_damage < 1 ? 1 : enemy_attack_damage;
+        player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
+        new_battlelog = `${enemy_status.enemies[enemy_index].name}「神滅槍 ファイナルクラルスピア！」<br>${enemy_status.enemies[enemy_index].name}は99999回復した！${player_status.name}は${enemy_attack_damage}ダメージうけた！`;
+        sound_shoukansound();
+        sound_skillsound();
+        damagesound.play();
+       }
+       else if (enemy_status.enemies[enemy_index].cril_hp_event_1 == 2) {
+        enemy_status.enemies[enemy_index].cril_hp_event_1 = 1;
+        new_battlelog = `${enemy_status.enemies[enemy_index].name}はなにか準備している！<br>{あと 1 ターン}`;
+        sound_shoukansound();
+       }
+       else if (enemy_status.enemies[enemy_index].cril_hp_event_1 == 3) {
+        enemy_status.enemies[enemy_index].cril_hp_event_1 = 2;
+        new_battlelog = `${enemy_status.enemies[enemy_index].name}はなにか準備している！<br>{あと 2 ターン}`;
+        sound_shoukansound();
+       }
+       else if (enemy_status.enemies[enemy_index].hp < 1500 && enemy_status.enemies[enemy_index].cril_hp_event_1 == undefined) {
+        enemy_status.enemies[enemy_index].cril_hp_event_1 = 3;
+        enemy_status.enemies[enemy_index].def = Math.floor(enemy_status.enemies[enemy_index].def * 1.2);
+        new_battlelog = `${enemy_status.enemies[enemy_index].name}はなにか準備している！<br>{あと 3 ターン}`;
+        sound_shoukansound();
+       }
+       else if (enemy_randomize - 120 <= 0) {
+        var enemy_attack_damage = Math.floor(((enemy_status.enemies[enemy_index].atk * 4.0 - player_status.def * 1.2) + (Math.random() * 5)) * player_guard_value);
+        enemy_attack_damage = enemy_attack_damage < 1 ? 1 : enemy_attack_damage;
+        player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
+        new_battlelog = `${enemy_status.enemies[enemy_index].name}の神葬 クラルスクリア！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！`;
+        damagesound.play();
+       }
+       else if (enemy_randomize - 180 <= 0 && total_hp <= total_maxhp) {
+        var heal_randomize = Math.floor(Math.random() * enemy_status.enemies.length);
+        var enemy_heal = Math.floor(enemy_status.enemies[enemy_index].maxhp * 0.1);
+        enemy_status.enemies[heal_randomize].hp = enemy_status.enemies[heal_randomize].hp * 1 + enemy_heal;
+        enemy_status.enemies[heal_randomize].hp = enemy_status.enemies[heal_randomize].maxhp < enemy_status.enemies[heal_randomize].hp ? enemy_status.enemies[heal_randomize].maxhp : enemy_status.enemies[heal_randomize].hp;
+        enemy_total_maxhp_set();
+        var new_battlelog_yotei = `${enemy_status.enemies[enemy_index].name}は${enemy_status.enemies[heal_randomize].name}に回復薬を投げた！<br>${enemy_status.enemies[heal_randomize].name}は${enemy_heal}回復した！`;
+        new_battlelog_yotei = heal_randomize == enemy_index ? `${enemy_status.enemies[enemy_index].name}は回復薬を飲んだ！${enemy_heal}回復した！` : new_battlelog_yotei;
+        new_battlelog = new_battlelog_yotei;
+        healsound.play();
+       }
+       else if (enemy_randomize - 200 <= 0) {
+        var enemy_attack_damage = Math.floor(((enemy_status.enemies[enemy_index].atk * 1.2) + (Math.random() * 5)) * player_guard_value);
+        enemy_attack_damage = enemy_attack_damage < 1 ? 1 : enemy_attack_damage;
+        player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
+        new_battlelog = `${enemy_status.enemies[enemy_index].name}はデリートジエンドを放った！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！`;
+        damagesound.play();
+       }
+       else {
+        var enemy_attack_damage = Math.floor(((enemy_status.enemies[enemy_index].atk * 1.5 - player_status.def * 1.2) + (Math.random() * 5)) * player_guard_value);
+        enemy_attack_damage = enemy_attack_damage < 1 ? 1 : enemy_attack_damage;
+        player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
+        new_battlelog = `${enemy_status.enemies[enemy_index].name}のこうげき！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！`;
+        damagesound.play();
+       }
+      }
+
       else {
        new_battlelog = `${enemy_status.enemies[enemy_index].name}はなにもしなかった！`;
       }
@@ -1327,6 +1408,8 @@
       player_guard_value = 1.0;
       var player_status_result = JSON.stringify(player_status);
       localStorage.setItem('player_status_key', player_status_result);
+      var enemy_status_result = JSON.stringify(enemy_status);
+      localStorage.setItem('enemy_status_key', enemy_status_result);
 
       if (player_status.hp <= 0) {
        new_battlelog = `${player_status.name}はちからつきてしまった...`;
@@ -1518,30 +1601,55 @@
      battle_start();
     }
 
+    //クリルクラルサー
+    function enemy_cril() {
+     var enemy_status = JSON.parse('{"enemies":[]}');
+
+     var enemy_data = JSON.stringify({
+      id: "enm_cril",
+      name: "クリル・クラルサー",
+      hp: 9900,
+      maxhp: 9900,
+      atk: 135,
+      def: 65,
+      exp: 99999,
+      coin: 10000
+     });
+     enemy_status.enemies.push(JSON.parse(enemy_data));
+
+     enemy_status = JSON.stringify(enemy_status);
+     localStorage.setItem('enemy_status_key', enemy_status);
+     battle_start();
+    }
+
 
     //テスト
-    /*
+
     function test_enemy_death1() {
-    	localStorage.setItem('enemy_exp', 10);
-    	levelup();
+     localStorage.setItem('enemy_exp', 10);
+     levelup();
     }
+
     function test_enemy_death2() {
-    	localStorage.setItem('enemy_exp', 100);
-    	levelup();
+     localStorage.setItem('enemy_exp', 100);
+     levelup();
     }
+
     function test_enemy_death3() {
-    	localStorage.setItem('enemy_exp', 1000);
-    	levelup();
+     localStorage.setItem('enemy_exp', 1000);
+     levelup();
     }
+
     function test_enemy_death4() {
-    	localStorage.setItem('enemy_exp', 9999);
-    	levelup();
+     localStorage.setItem('enemy_exp', 9999);
+     levelup();
     }
+
     function test_enemy_death5() {
-    	localStorage.setItem('enemy_exp', Infinity);
-    	levelup();
+     localStorage.setItem('enemy_exp', Infinity);
+     levelup();
     }
-    */
+
     rpg_player_status_set();
    </script>
    <div id="rpg_game_blocker" style="padding-left: 40px;position:fixed;width:120%;height:120%;">
