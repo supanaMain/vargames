@@ -66,6 +66,27 @@
    background-color: #2f4f4f;
   }
 
+  #playertpbar::-webkit-progress-bar {
+   background: none;
+  }
+
+  #playertpbar::-webkit-progress-value {
+   background-color: #efc400;
+  }
+
+  #playertpbar_back::-webkit-progress-bar {
+   background-color: black;
+  }
+
+  .playertpbar_back_p::-webkit-progress-value {
+   background-color: #ffff4b;
+  }
+
+  .playertpbar_back_m::-webkit-progress-value {
+   background-color: #4e3800;
+  }
+
+
   #enemyhealthbar::-webkit-progress-bar {
    background: none;
   }
@@ -93,8 +114,9 @@
 
   function rpg_player_status_set() {
    var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+
    if (!player_status) {
-    player_status = JSON.stringify({
+    player_status_result = JSON.stringify({
      version: now_version,
      name: player_name,
      level: 1,
@@ -102,21 +124,61 @@
      nextexp: 20,
      hp: 20,
      maxhp: 20,
+     tp: 100,
+     maxhp: 100,
      atk: 1,
      def: 0,
-     coin: 100
+     coin: 100,
+     weapon: {
+      id: ``,
+      name: ``,
+      atk: 0
+     },
+     items: [],
+     skills: []
     });
-    localStorage.setItem('player_status_key', player_status);
+
+    localStorage.setItem('player_status_key', player_status_result);
+   } else {
+
+    //アプデで追加した要素を埋め込む用
+
+    if (player_status.tp == undefined) player_status.tp = 100;
+    if (player_status.maxtp == undefined) player_status.maxtp = 100;
+    if (!player_status.weapon) player_status.weapon = { id: ``, name: ``, atk: 0 };
+    if (!player_status.items) player_status.items = [];
+    if (!player_status.skills) player_status.skills = [];
+
+    var player_status_result = JSON.stringify(player_status);
+    localStorage.setItem('player_status_key', player_status_result);
    }
+
+   //初期技追加
+   if (!player_status.skills.length) {
+    var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+    var skill_data = JSON.stringify({
+     id: "fullpower_attack",
+     name: "ぜんりょくこうげき",
+     type: "attack",
+     atk: 2.5,
+     tp: 25,
+     all: false
+    });
+    player_status.skills.push(JSON.parse(skill_data));
+    var player_status_result = JSON.stringify(player_status);
+    localStorage.setItem('player_status_key', player_status_result);
+   }
+
+
    var rpg_player_status_view = (`
              《おなまえ》${player_status.name} <br>
              ・レベル: ${player_status.level}<br>
              ・けいけんち: ${player_status.exp}<br>
-                  - - -  つぎのレベルまで: ${player_status.nextexp}<br><br>
-             	
+                  - - -  つぎのレベルまで: ${player_status.nextexp}<br>   	
              ・たいりょく: ${player_status.hp} / ${player_status.maxhp}<br>
              ・こうげきりょく: ${player_status.atk}<br>
              ・ぼうぎょりょく: ${player_status.def}<br>
+             ・TP : ${player_status.tp}% / ${player_status.maxtp}%<br>
              ・しょじきん: ${player_status.coin}
              <br>
         `)
@@ -174,6 +236,11 @@
   function sound_clicksound() {
    clicksound.play();
   }
+  var clicknone = new Howl({ src: ['https://cdn.discordapp.com/attachments/709110499429711952/709410913643397140/none.wav'] });
+
+  function sound_clicknone() {
+   clicknone.play();
+  }
 
   var damagesound = new Howl({ src: ['https://cdn.discordapp.com/attachments/709110499429711952/709276714102161479/damage.wav'] });
 
@@ -221,6 +288,32 @@
   function sound_shoukansound() {
    shoukansound.play();
   }
+
+
+
+
+  //技追加テスト
+  function test_skill_add() {
+   var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+   var skill_data = JSON.stringify({
+    id: "test",
+    name: "てすとばすたー",
+    type: "attack",
+    atk: 2.5,
+    tp: 5,
+    all: false
+   });
+   player_status.skills.push(JSON.parse(skill_data));
+   var player_status_result = JSON.stringify(player_status);
+   localStorage.setItem('player_status_key', player_status_result);
+  }
+
+  function test_skill_remove() {
+   var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+   player_status.skills.splice(player_status.skills.findIndex(data => data.id == "test"), 1);
+   var player_status_result = JSON.stringify(player_status);
+   localStorage.setItem('player_status_key', player_status_result);
+  }
  </script>
  <!-- <input id="testsound_button"type="submit" style="color:black; font-size:100%;" value="てすと" onClick="sound_testsound();"> -->
 </head>
@@ -230,6 +323,13 @@
   <input type="submit" class="btn btn-primary" style="width:70%;height:10%;position:relative; top:60px;left:12%;font-size:20px;text-align: center;" value="はじめる" onClick="sound_testsound();document.getElementById('start_window').style.display ='none';document.getElementById('main_windows').style.display ='block';document.getElementById('home').style.display ='block';"><br>
  </div>
  <div id="main_windows" style="display:none;">
+  <!-- デバッグエリア -->
+  <!--
+	  <div style="position:relative;top:80px;left:100px;">
+         <input type="submit"  value="わざついか" onClick="sound_testsound();test_skill_add();"><br><br>
+         <input type="submit"  value="わざけし" onClick="sound_testsound();test_skill_remove();"><br>
+	  </div>
+	-->
   <div align="left" style="display:none;z-index: 600;position: fixed;top: 0;left: 0;height: 120%;width: 100%;background-size: 400px 400px;background-position: 0% 0px;background-image:url('https://cdn.discordapp.com/attachments/706660445519347763/708633819103756308/333-3.png');" id="status_edit">
    <input align="left" type="submit" style="color:black; width:8;font-size:100%;" value="閉じる" onClick="sound_clicksound();status_edit_out();">
    <br><strong style="text-align: left; color:white; position:relative; top: 50px; left:50px;">《おなまえ》</strong>
@@ -270,7 +370,7 @@
      }
     </script>
     <div style="position:relative; top: 40px; left:0px;">
-     <p id="rpg-player_status1" style="position:relative; top: 0px; left:10%;"></p>
+     <p id="rpg-player_status1" style="font-size:14px;position:relative; top: 0px; left:10%;"></p>
     </div>
     <input type="button" style="position:relative; top: 0px; left: 210px;color:black; width:8;font-size:100%;" value="編集" onClick="sound_clicksound();document.getElementById('status_edit').style.display = 'block';">
    </rpg-player_status>
@@ -456,7 +556,7 @@
       <br><a style="color:white;position:relative; top: 0px; left:0px;"><strong id="enemyhealth_name">エネミー</strong></a>
      </nobr>
     </div><br><br>
-    <div id="playerhealthbar_core" style="position:fixed;top: 20px;left: 72px">
+    <div id="playerhealthbar_core" style="position:fixed;top: 40px;left: 122px">
      <nobr>
       <progress id="playerhealthbar_back" max="100" value="0" style="position:relative; top: 0px; left:0px;-webkit-appearance: none;appearance: none;" class=""></progress>
       <progress id="playerhealthbar" max="100" value="0" style="position:relative; top: 0px; left:-143.5px;-webkit-appearance: none;appearance: none;"></progress>
@@ -464,23 +564,37 @@
       <br><a style="color:white"><strong id="playerhealth_name"></strong></a>
      </nobr>
     </div><br>
+    <div style="position: fixed;top: 0;left: 60px;height: 120%;width: 50px;background-size: 100% 100%;background-position: 0% 0px;background-image:url('https://cdn.discordapp.com/attachments/706660445519347763/709400542782292088/333-6.png');"></div>
+    <div id="playertpbar_core" style="position:fixed;bottom: 50px;left: 68px;">
+     <nobr>
+      <br><a style="color:white;position:relative; bottom: 140px; left:18px;"><strong id="playertp_name">TP</strong></a>
+      <div style="transform: rotate(-90deg);position:relative;right: 212px;bottom:173.5px;">
+       <progress id="playertpbar_back" max="100" value="0" style="width:220px;position:relative; top: 0px; left:0px;-webkit-appearance: none;appearance: none;" class=""></progress>
+       <progress id="playertpbar" max="100" value="0" style="width:220px;position:relative; top: 0px; left:-223.5px;-webkit-appearance: none;appearance: none;"></progress>
+      </div>
+      <a style="color:white;position:relative; bottom: 5px; left:19px;text-align:left;"><strong id="playertp_value"></strong></a>
+     </nobr>
+    </div><br>
     <div id="player_attack_enemy_select" style="z-index: 50;display:none;position:fixed;bottom:30px;right:10px;width:260px;height:85%;border: groove white;background-color: #141c29;opacity:100%;">
      <div id="player_attack_enemy_select_2" style="position:relative;top: 12px;left:20px;">
      </div>
      <div style="font-size:12px;position:fixed;bottom:35px;right:20px;"><input type="submit" value="キャンセル" id="" onClick="sound_clicksound();document.getElementById('player_attack_enemy_select').style.display = 'none';document.getElementById('player_battle_commands2').style.display = 'block';"></div>
     </div>
-    <rpg-player_status>
-     <p id="rpg-player_battlelog" style="font-size:13px;display:block;position:fixed;width:90%;bottom:70px;border: groove white;background-color: #141c29;"></p>
+    <div style="padding-left:50px;">
      <rpg-player_status>
-      <!-- <rpg-player_status><p id="rpg-player_status2"style="border: groove white;"></p></rpg-player_status> -->
-      <br>
-      <div id="player_battle_commands2" style="display:block;position:fixed;bottom:30px;">
-       <input type="submit" value="こうげき" class="btn btn-primary" id="attack-button" onClick="sound_clicksound();player_attack_command();">
-       <input type="submit" value="ぼうぎょ" class="btn btn-primary" id="guard-button" onClick="sound_clicksound();player_guard_command();">
-       <input type="submit" value="かいふく" class="btn btn-primary" id="item-button" onClick="sound_clicksound();player_item_command();">
-       <input type="submit" value="なにもしない" class="btn btn-primary" id="holding-button" onClick="sound_clicksound();player_holding_command();">
-       <input type="submit" value="にげる" class="btn btn-primary" id="escape-button" onClick="sound_clicksound();player_escape_command();">
-      </div>
+      <p id="rpg-player_battlelog" style="font-size:13px;display:block;position:fixed;width:80%;bottom:70px;border: groove white;background-color: #141c29;"></p>
+      <rpg-player_status>
+       <!-- <rpg-player_status><p id="rpg-player_status2"style="border: groove white;"></p></rpg-player_status> -->
+       <br>
+       <div id="player_battle_commands2" style="display:block;position:fixed;bottom:30px;">
+        <input type="submit" value="こうげき" class="btn btn-primary" id="attack-button" onClick="sound_clicksound();player_skill_command_select_skill_index = -1;player_attack_command();">
+        <input type="submit" value="わざ" class="btn btn-primary" id="skill-button" onClick="sound_clicksound();player_skill_command();">
+        <input type="submit" value="ぼうぎょ" class="btn btn-primary" id="guard-button" onClick="sound_clicksound();player_guard_command();">
+        <input type="submit" value="かいふく" class="btn btn-primary" id="item-button" onClick="sound_clicksound();player_item_command();">
+        <input type="submit" value="なにもしない" class="btn btn-primary" id="holding-button" onClick="sound_clicksound();player_holding_command();">
+        <input type="submit" value="にげる" class="btn btn-primary" id="escape-button" onClick="sound_clicksound();player_escape_command();">
+       </div>
+    </div>
    </div>
    <br><br>
    <!--
@@ -542,6 +656,20 @@
     playerhealthbar.value = health;
     playerhealthbar_back.value = health;
 
+
+    var tp = 100;
+    var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+    if (player_status) {
+     tp = (player_status.tp / player_status.maxtp) * 100;
+    }
+    var tpbarback = tp;
+
+    var progress_anim_tp = 0;
+
+    let playertpbar = document.getElementById("playertpbar");
+    let playertpbar_back = document.getElementById("playertpbar_back");
+    playertpbar.value = tp;
+    playertpbar_back.value = tp;
     //エネミーヘルス
     var enemy_health = 100;
     var enemy_healthbarback = enemy_health;
@@ -586,6 +714,35 @@
 
        playerhealthbar_back.classList.add("playerhealthbar_back_m");
        playerhealthbar_back.classList.remove("playerhealthbar_back_p");
+      }
+     }
+
+     progress_anim_tp = Math.abs(tp - tpbarback) / 20.0;
+
+     if (player_status) {
+      document.getElementById("playertp_value").innerHTML = `${player_status.tp}<br>%`;
+      tp = (player_status.tp / player_status.maxtp) * 100;
+     }
+     if (tp <= 0) {
+      playertpbar.value = 0;
+      playertpbar_back.value = 0;
+     }
+     if (tp != tpbarback) {
+      if (tp > tpbarback) {
+       tpbarback += progress_anim_tp;
+       playertpbar.value = tpbarback;
+       playertpbar_back.value = tp;
+
+       playertpbar_back.classList.add("playertpbar_back_p");
+       playertpbar_back.classList.remove("playertpbar_back_m");
+      }
+      if (tp < tpbarback) {
+       tpbarback -= progress_anim_tp;
+       playertpbar.value = tp;
+       playertpbar_back.value = tpbarback;
+
+       playertpbar_back.classList.add("playertpbar_back_m");
+       playertpbar_back.classList.remove("playertpbar_back_p");
       }
      }
      //エネミー
@@ -721,6 +878,9 @@
      document.getElementById("rpg-player_battlelog").innerHTML += `  が現れた！ `;
 
      player_status.hp = player_status.maxhp;
+     player_status.tp = 0;
+     tpbarback = 0;
+     tpbar = 0;
      player_status = JSON.stringify(player_status);
      localStorage.setItem('player_status_key', player_status);
      rpg_player_status_set();
@@ -764,7 +924,32 @@
 `);
 
     let player_attack_command_select_enemy_index = 0;
+    let player_skill_command_select_skill_index = -1;
+    //わざ
+    function player_skill_command() {
+     var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
+     var player_status = JSON.parse(localStorage.getItem('player_status_key'));
 
+     document.getElementById('player_battle_commands2').style.display = 'none';
+     //わざの数だけボタンを生成
+     document.getElementById('player_attack_enemy_select_2').innerHTML = "";
+     for (index in player_status.skills) {
+      document.getElementById('player_attack_enemy_select_2').innerHTML += `<div style="height:40px;"><input type=\"submit\" value=\"${player_status.skills[index].name} -- TP ${player_status.skills[index].tp}\"  id=\"skill_select_button_${index}\" class="btn btn-primary" style=\"opacity:100%;font-size:12px;height:30px;\"onClick=\"player_skill_command_select_skill_index = ${index}\;player_skill_command_2()\;\"></div>`;
+     }
+     document.getElementById('player_attack_enemy_select').style.display = 'block';
+
+    }
+
+    function player_skill_command_2() {
+     var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+     if (player_status.skills[player_skill_command_select_skill_index].tp <= player_status.tp) {
+      sound_clicksound();
+      player_attack_command();
+     } else {
+      sound_clicknone();
+     }
+    }
+    //こうげき
     function player_attack_command() {
      var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
      var player_status = JSON.parse(localStorage.getItem('player_status_key'));
@@ -793,34 +978,88 @@
 
      document.getElementById('player_attack_enemy_select').style.display = 'none';
      var enemy_index = player_attack_command_select_enemy_index * 1;
+     var player_skill_index = player_skill_command_select_skill_index * 1;
+     //  alert(player_skill_index);
 
      var kaishin_random = Math.floor(Math.random() * 100) + 1;
      var kaishin_random_2 = 0;
      var kaishin_text = ``;
+     var new_battlelog_yotei = ``;
 
      var player_attack_damage = 0;
-     player_attack_damage = Math.floor((player_status.atk * 1.5 - enemy_status.enemies[enemy_index].def * 1.2) + (Math.random() * 6));
-     player_attack_damage = player_attack_damage < 1 ? 1 : player_attack_damage;
-     if (kaishin_random <= 6) {
-      kaishin_random_2 = 1;
-      kaishin_text = `かいしんのいちげき！`;
-      player_attack_damage = player_attack_damage * 3;
-      setTimeout(() => {
-       sound_kaisinsound_1();
-      }, 400);
-     }
-     enemy_status.enemies[enemy_index].hp = (enemy_status.enemies[enemy_index].hp * 1) - player_attack_damage;
-     enemy_status.enemies[enemy_index].hp = enemy_status.enemies[enemy_index].hp * 1 < 0 ? 0 : enemy_status.enemies[enemy_index].hp * 1;
-     new_battlelog = `${player_status.name}のこうげき！`;
 
+     //わざかこうげきかの区別
+     if (player_skill_index == -1) {
+      //つうじょうこうげき
+      player_attack_damage = Math.floor((player_status.atk * 1.5 - enemy_status.enemies[enemy_index].def * 1.2) + (Math.random() * 6));
+      player_attack_damage = player_attack_damage < 1 ? 1 : player_attack_damage;
+
+      player_status.tp = player_status.tp * 1 + 5;
+      player_status.tp = player_status.tp * 1 > player_status.maxtp * 1 ? player_status.maxtp : player_status.tp;
+
+      if (kaishin_random <= 6) {
+       kaishin_random_2 = 1;
+       kaishin_text = `かいしんのいちげき！`;
+       player_attack_damage = player_attack_damage * 3;
+       setTimeout(() => {
+        sound_kaisinsound_1();
+       }, 400);
+      }
+      enemy_status.enemies[enemy_index].hp = (enemy_status.enemies[enemy_index].hp * 1) - player_attack_damage;
+      enemy_status.enemies[enemy_index].hp = enemy_status.enemies[enemy_index].hp * 1 < 0 ? 0 : enemy_status.enemies[enemy_index].hp * 1;
+      new_battlelog = `${player_status.name}のこうげき！`;
+      new_battlelog_yotei = `${kaishin_text}${enemy_status.enemies[enemy_index].name}は${player_attack_damage}ダメージうけた！`;
+
+     } else {
+      if (player_status.skills[player_skill_index].tp > player_status.tp) {
+       document.getElementById('player_attack_enemy_select').style.display = 'block';
+       return;
+      }
+      //わざ
+      if (player_status.skills[player_skill_index].type == 'attack') {
+       player_attack_damage = Math.floor((player_status.atk * 1.5 - enemy_status.enemies[enemy_index].def * 1.2) + (Math.random() * 6));
+       player_attack_damage = player_attack_damage < 1 ? 1 : player_attack_damage;
+
+       player_attack_damage = Math.floor(player_attack_damage * (player_status.skills[player_skill_index].atk * 1));
+
+       player_status.tp = player_status.tp * 1 - player_status.skills[player_skill_index].tp * 1;
+
+       if (kaishin_random <= 6) {
+        kaishin_random_2 = 1;
+        kaishin_text = `かいしんのいちげき！`;
+        player_attack_damage = player_attack_damage * 3;
+        setTimeout(() => {
+         sound_kaisinsound_1();
+        }, 400);
+       }
+       enemy_status.enemies[enemy_index].hp = (enemy_status.enemies[enemy_index].hp * 1) - player_attack_damage;
+       enemy_status.enemies[enemy_index].hp = enemy_status.enemies[enemy_index].hp * 1 < 0 ? 0 : enemy_status.enemies[enemy_index].hp * 1;
+       new_battlelog = `${player_status.name}の${player_status.skills[player_skill_index].name}！`;
+       new_battlelog_yotei = `${kaishin_text}${enemy_status.enemies[enemy_index].name}は${player_attack_damage}ダメージうけた！`;
+      }
+
+     }
+
+     var player_status_result = JSON.stringify(player_status);
+     localStorage.setItem('player_status_key', player_status_result);
      setTimeout(() => {
-      new_battlelog = `${kaishin_text}${enemy_status.enemies[enemy_index].name}は${player_attack_damage}ダメージうけた！`;
-      if (kaishin_random_2 == 1) {
-       kaisinsound_1.stop();
-       damagesound.play();
-       sound_kaisinsound_2();
-      } else {
-       damagesound.play();
+      new_battlelog = new_battlelog_yotei;
+      if (player_skill_index == -1) {
+       if (kaishin_random_2 == 1) {
+        kaisinsound_1.stop();
+        damagesound.play();
+        sound_kaisinsound_2();
+       } else {
+        damagesound.play();
+       }
+      } else if (player_status.skills[player_skill_index].type == 'attack') {
+       if (kaishin_random_2 == 1) {
+        kaisinsound_1.stop();
+        damagesound.play();
+        sound_kaisinsound_2();
+       } else {
+        damagesound.play();
+       }
       }
       var enemy_status_result = JSON.stringify(enemy_status);
       localStorage.setItem('enemy_status_key', enemy_status_result);
@@ -855,6 +1094,7 @@
      }, 800);
     }
 
+
     let player_guard_value = 1.0;
 
     function player_guard_command() {
@@ -864,6 +1104,11 @@
      player_guard_value = 0.5;
      new_battlelog = `${player_status.name}はぼうぎょした！`;
      sound_guardsound();
+
+     player_status.tp = player_status.tp * 1 + 20;
+     player_status.tp = player_status.tp * 1 > player_status.maxtp * 1 ? player_status.maxtp : player_status.tp;
+     var player_status_result = JSON.stringify(player_status);
+     localStorage.setItem('player_status_key', player_status_result);
 
      enemy_pattern();
     }
@@ -924,6 +1169,12 @@
      }, 1000);
 
      function enemy_pattern_0() {
+      if (player_status.hp <= 0) {
+       new_battlelog = `${player_status.name}はちからつきてしまった...`;
+       battle_end();
+       return;
+      }
+
       var enemy_attack_interval = 1100 - (enemy_status.enemies.length * 100);
       //パターンてすてす
       if (enemy_status.enemies[enemy_index].id == 'enm_testes') {
@@ -1088,11 +1339,6 @@
       if (enemy_number >= enemy_index) {
        setTimeout(enemy_pattern_0, enemy_attack_interval);
       } else {
-       if (player_status.hp <= 0) {
-        new_battlelog = `${player_status.name}はちからつきてしまった...`;
-        battle_end();
-        return;
-       }
        setTimeout(() => {
         document.getElementById("player_battle_commands2").style.display = "block";
        }, 700);
