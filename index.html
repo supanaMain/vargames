@@ -153,9 +153,9 @@
 
     if (player_status.tp == undefined) player_status.tp = 100;
     if (player_status.maxtp == undefined) player_status.maxtp = 100;
-    if (!player_status.weapon) player_status.weapon = { id: ``, name: ``, atk: 0 };
-    if (!player_status.items) player_status.items = [];
-    if (!player_status.skills) player_status.skills = [];
+    if (player_status.weapon == undefined) player_status.weapon = { id: ``, name: ``, atk: 0 };
+    if (player_status.items == undefined) player_status.items = [];
+    if (player_status.skills == undefined) player_status.skills = [];
 
     var player_status_result = JSON.stringify(player_status);
     localStorage.setItem('player_status_key', player_status_result);
@@ -587,7 +587,7 @@
       function skill_toriaezunaguru_shop() {
        var nedan = 1200;
        var result = window.confirm('とりあえずぜんいんなぐるの秘伝書 を購入しますか？');
-       if (result == true && player_status.coin * 1 >= nedan) {
+       if (result == true && (player_status.coin * 1) >= nedan) {
         player_status.coin = player_status.coin * 1 - nedan;
         var skill_data = JSON.stringify({
          id: "skill_toriaezunaguru",
@@ -604,8 +604,10 @@
         shop_view_set();
 
         alert('わざ  とりあえずぜんいんなぐる  をおぼえた！');
+        return;
        } else if (result == true) {
         alert("コインが足りません( 'ω')");
+        return;
        }
       }
      </script>
@@ -1073,6 +1075,12 @@
      if (player_skill_index > -1 && player_status.skills[player_skill_index].all == true) enemy_index = 0;
      var enemy_number = enemy_status.enemies.length * 1 - 1;
 
+     var target_all = false;
+     if (player_skill_index > -1) {
+      target_all = player_status.skills[player_skill_index].all;
+      if (target_all == true) enemy_index = 0;
+     }
+
      //わざかこうげきかの区別
      if (player_skill_index == -1) {
       player_status.tp = player_status.tp * 1 + 5;
@@ -1088,11 +1096,6 @@
      }, 500);
 
      function player_attack_command_selected_0() {
-      var target_all = false;
-      if (player_skill_index > -1) {
-       target_all = player_status.skills[player_skill_index].all;
-       if (target_all == true) enemy_index = 0;
-      }
       var enemy_attack_interval = 600 - (enemy_status.enemies.length * 50);
       enemy_attack_interval = enemy_attack_interval < 10 ? 10 : enemy_attack_interval;
 
@@ -1109,6 +1112,11 @@
        //わざかこうげきかの区別
        if (player_skill_index <= -1) {
         //つうじょうこうげき
+
+        /*
+        	target_all = true;
+            enemy_index = 0;
+         */
         player_attack_damage = Math.floor((player_status.atk * 1.5 - enemy_status.enemies[enemy_index].def * 1.2) + (Math.random() * 6));
         player_attack_damage = player_attack_damage < 1 ? 1 : player_attack_damage;
 
