@@ -133,7 +133,7 @@
      hp: 20,
      maxhp: 20,
      tp: 100,
-     maxhp: 100,
+     maxtp: 100,
      atk: 1,
      def: 0,
      coin: 100,
@@ -575,7 +575,15 @@
     <input align="left" type="submit" style="color:black; width:8;font-size:100%;" value="ショップ(即席)" onClick="sound_clicksound();document.getElementById('shop').style.display = 'block';"><br><br><br>
     <div align="left" style="display:none;z-index: 600;position: fixed;top: 0;left: 0;height: 120%;width: 100%;background-size: 400px 400px;background-position: 0% 0px;background-image:url('https://cdn.discordapp.com/attachments/706660445519347763/708633819103756308/333-3.png');" id="shop">
      <input align="left" type="submit" style="color:black; width:8;font-size:100%;" value="閉じる" onClick="sound_clicksound();document.getElementById('shop').style.display = 'none';"><br><br><br>
-     <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="skill_toriaezunaguru_shop" value="とりあえずぜんいんなぐる の秘伝書  1200ｺｲﾝ" onClick="sound_clicksound();skill_toriaezunaguru_shop();"><br><br>
+     <div style="padding-left: 60px;">
+      <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="skill_toriaezunaguru_shop" value="やくそう  $40ｺｲﾝ" onClick="sound_clicksound();yakuso_shop();"><br><br>
+      <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="skill_toriaezunaguru_shop" value="つよいやくそう  $120ｺｲﾝ" onClick="sound_clicksound();yakuso_2_shop();"><br><br>
+      <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="skill_toriaezunaguru_shop" value="回復薬  $250ｺｲﾝ" onClick="sound_clicksound();heal_kusuri_shop();"><br><br>
+      <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="skill_toriaezunaguru_shop" value="つよい回復薬    $550ｺｲﾝ" onClick="sound_clicksound();heal_kusuri_2_shop();"><br><br>
+      <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="skill_toriaezunaguru_shop" value="超回復薬    $1100ｺｲﾝ" onClick="sound_clicksound();heal_kusuri_3_shop();"><br><br>
+      <br>
+      <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="skill_toriaezunaguru_shop" value="とりあえずぜんいんなぐる の秘伝書  1200ｺｲﾝ" onClick="sound_clicksound();skill_toriaezunaguru_shop();"><br><br>
+     </div>
      <script>
       var player_status = JSON.parse(localStorage.getItem('player_status_key'));
 
@@ -583,6 +591,207 @@
        if (player_status.skills.findIndex(data => data.id == "skill_toriaezunaguru") != -1) document.getElementById('skill_toriaezunaguru_shop').style.display = 'none';
       }
       shop_view_set();
+
+      function yakuso_shop() {
+       var nedan = 40;
+       var result = window.confirm('やくそう を購入しますか？');
+       if (result == true && (player_status.coin * 1) >= nedan) {
+        let if_item_data = player_status.items.find(data => data.id == 'yakuso');
+        let item_data_index = player_status.items.findIndex(data => data.id == 'yakuso');
+        if (if_item_data) {
+         var item_number = player_status.items[item_data_index].number * 1 + 1;
+         if (item_number <= 99) {
+          player_status.items[item_data_index].number = item_number;
+         } else {
+          alert("やくそう はこれ以上持ちきれません");
+          return;
+         }
+        } else {
+         var item_data = JSON.stringify({
+          id: "yakuso",
+          name: "やくそう",
+          number: 1,
+          type: "heal",
+          value: 30.0,
+          cost: true,
+          all: false
+         });
+         player_status.items.push(JSON.parse(item_data));
+        }
+        player_status.coin = player_status.coin * 1 - nedan;
+        var player_status_result = JSON.stringify(player_status);
+        localStorage.setItem('player_status_key', player_status_result);
+        rpg_player_status_set();
+        shop_view_set();
+
+        alert('やくそう を購入した！');
+        return;
+       } else if (result == true) {
+        alert("コインが足りません( 'ω')");
+        return;
+       }
+      }
+
+      function yakuso_2_shop() {
+       var nedan = 120;
+       var result = window.confirm('やくそう を購入しますか？');
+       if (result == true && (player_status.coin * 1) >= nedan) {
+        let if_item_data = player_status.items.find(data => data.id == 'yakuso_2');
+        let item_data_index = player_status.items.findIndex(data => data.id == 'yakuso_2');
+        if (if_item_data) {
+         var item_number = player_status.items[item_data_index].number * 1 + 1;
+         if (item_number <= 99) {
+          player_status.items[item_data_index].number = item_number;
+         } else {
+          alert("つよいやくそう はこれ以上持ちきれません");
+          return;
+         }
+        } else {
+         var item_data = JSON.stringify({
+          id: "yakuso_2",
+          name: "つよいやくそう",
+          number: 1,
+          type: "heal",
+          value: 100.0,
+          cost: true,
+          all: false
+         });
+         player_status.items.push(JSON.parse(item_data));
+        }
+        player_status.coin = player_status.coin * 1 - nedan;
+        var player_status_result = JSON.stringify(player_status);
+        localStorage.setItem('player_status_key', player_status_result);
+        rpg_player_status_set();
+        shop_view_set();
+
+        alert('つよいやくそう を購入した！');
+        return;
+       } else if (result == true) {
+        alert("コインが足りません( 'ω')");
+        return;
+       }
+      }
+
+      function heal_kusuri_shop() {
+       var nedan = 250;
+       var result = window.confirm('回復薬 を購入しますか？');
+       if (result == true && (player_status.coin * 1) >= nedan) {
+        let if_item_data = player_status.items.find(data => data.id == 'heal_kusuri');
+        let item_data_index = player_status.items.findIndex(data => data.id == 'heal_kusuri');
+        if (if_item_data) {
+         var item_number = player_status.items[item_data_index].number * 1 + 1;
+         if (item_number <= 99) {
+          player_status.items[item_data_index].number = item_number;
+         } else {
+          alert("回復薬 はこれ以上持ちきれません");
+          return;
+         }
+        } else {
+         var item_data = JSON.stringify({
+          id: "heal_kusuri",
+          name: "回復薬",
+          number: 1,
+          type: "heal",
+          value: 250.0,
+          cost: true,
+          all: false
+         });
+         player_status.items.push(JSON.parse(item_data));
+        }
+        player_status.coin = player_status.coin * 1 - nedan;
+        var player_status_result = JSON.stringify(player_status);
+        localStorage.setItem('player_status_key', player_status_result);
+        rpg_player_status_set();
+        shop_view_set();
+
+        alert('回復薬 を購入した！');
+        return;
+       } else if (result == true) {
+        alert("コインが足りません( 'ω')");
+        return;
+       }
+      }
+
+      function heal_kusuri_2_shop() {
+       var nedan = 550;
+       var result = window.confirm('つよい回復薬 を購入しますか？');
+       if (result == true && (player_status.coin * 1) >= nedan) {
+        let if_item_data = player_status.items.find(data => data.id == 'heal_kusuri_2');
+        let item_data_index = player_status.items.findIndex(data => data.id == 'heal_kusuri_2');
+        if (if_item_data) {
+         var item_number = player_status.items[item_data_index].number * 1 + 1;
+         if (item_number <= 99) {
+          player_status.items[item_data_index].number = item_number;
+         } else {
+          alert("つよい回復薬 はこれ以上持ちきれません");
+          return;
+         }
+        } else {
+         var item_data = JSON.stringify({
+          id: "heal_kusuri_2",
+          name: "つよい回復薬",
+          number: 1,
+          type: "heal",
+          value: 500.0,
+          cost: true,
+          all: false
+         });
+         player_status.items.push(JSON.parse(item_data));
+        }
+        player_status.coin = player_status.coin * 1 - nedan;
+        var player_status_result = JSON.stringify(player_status);
+        localStorage.setItem('player_status_key', player_status_result);
+        rpg_player_status_set();
+        shop_view_set();
+
+        alert('つよい回復薬 を購入した！');
+        return;
+       } else if (result == true) {
+        alert("コインが足りません( 'ω')");
+        return;
+       }
+      }
+
+      function heal_kusuri_3_shop() {
+       var nedan = 1100;
+       var result = window.confirm('超回復薬 を購入しますか？');
+       if (result == true && (player_status.coin * 1) >= nedan) {
+        let if_item_data = player_status.items.find(data => data.id == 'heal_kusuri_3');
+        let item_data_index = player_status.items.findIndex(data => data.id == 'heal_kusuri_3');
+        if (if_item_data) {
+         var item_number = player_status.items[item_data_index].number * 1 + 1;
+         if (item_number <= 99) {
+          player_status.items[item_data_index].number = item_number;
+         } else {
+          alert("超回復薬 はこれ以上持ちきれません");
+          return;
+         }
+        } else {
+         var item_data = JSON.stringify({
+          id: "heal_kusuri_3",
+          name: "超回復薬",
+          number: 1,
+          type: "heal",
+          value: 1000,
+          cost: true,
+          all: false
+         });
+         player_status.items.push(JSON.parse(item_data));
+        }
+        player_status.coin = player_status.coin * 1 - nedan;
+        var player_status_result = JSON.stringify(player_status);
+        localStorage.setItem('player_status_key', player_status_result);
+        rpg_player_status_set();
+        shop_view_set();
+
+        alert('超回復薬 を購入した！');
+        return;
+       } else if (result == true) {
+        alert("コインが足りません( 'ω')");
+        return;
+       }
+      }
+
 
       function skill_toriaezunaguru_shop() {
        var nedan = 1200;
@@ -669,7 +878,7 @@
          <input style="width:17%;" type="submit" value="こうげき" class="btn btn-primary" id="attack-button" onClick="sound_clicksound();player_skill_command_select_skill_index = -1;player_attack_command();">
          <input style="width:17%;" type="submit" value="わざ" class="btn btn-primary" id="skill-button" onClick="sound_clicksound();player_skill_command();">
          <input style="width:17%;" type="submit" value="ぼうぎょ" class="btn btn-primary" id="guard-button" onClick="sound_clicksound();player_guard_command();">
-         <input style="width:17%;" type="submit" value="かいふく" class="btn btn-primary" id="item-button" onClick="sound_clicksound();player_item_command();">
+         <input style="width:17%;" type="submit" value="もちもの" class="btn btn-primary" id="item-button" onClick="sound_clicksound();player_item_command();">
          <input style="width:17%;" type="submit" value="ほうち" class="btn btn-primary" id="holding-button" onClick="sound_clicksound();player_holding_command();">
          <input style="width:17%;" type="submit" value="にげる" class="btn btn-primary" id="escape-button" onClick="sound_clicksound();player_escape_command();">
         </nobr>
@@ -1011,6 +1220,7 @@
 
     let player_attack_command_select_enemy_index = 0;
     let player_skill_command_select_skill_index = -1;
+    let player_item_command_select_item_index = 0;
     //わざ
     function player_skill_command() {
      var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
@@ -1283,22 +1493,202 @@
      var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
      var player_status = JSON.parse(localStorage.getItem('player_status_key'));
 
-     var command_result = window.confirm('100コイン消費して回復しますか？(現在即席システム)');
-     if (command_result == true) {
-      if (player_status.coin >= 100) {
-       player_status.coin = player_status.coin * 1 - 100;
-       var player_heal = Math.floor(player_status.maxhp * 0.5);
+     document.getElementById('player_battle_commands2').style.display = 'none';
+     //アイテムの数だけボタンを生成
+     document.getElementById('player_attack_enemy_select_2').innerHTML = "";
+     for (index in player_status.items) {
+      document.getElementById('player_attack_enemy_select_2').innerHTML += `<div style="height:40px;"><input type=\"submit\" value=\"${player_status.items[index].name}  × ${player_status.items[index].number}"  id=\"item_select_button_${index}\" class="btn btn-primary" style=\"opacity:100%;font-size:10px;height:30px;width:86%;\"onClick=\"player_item_command_select_item_index = ${index}\;player_item_command_2()\;\"></div>`;
+     }
+     document.getElementById('player_attack_enemy_select').style.display = 'block';
+
+
+     /*
+   var command_result = window.confirm('100コイン消費して回復しますか？(現在即席システム)');
+  if(command_result == true) {
+  	if(player_status.coin >= 100){
+   player_status.coin = player_status.coin * 1 - 100;
+   var player_heal = Math.floor(player_status.maxhp * 0.5);
+   player_status.hp = player_status.hp * 1 + player_heal * 1;
+   player_status.hp = player_status.hp * 1 > player_status.maxhp * 1 ? player_status.maxhp:player_status.hp;
+
+   new_battlelog = `${player_status.name}はアイテムをつかった！<br>${player_status.name}は${player_heal} 回復した！`;
+   healsound.play(); 
+      var player_status_result = JSON.stringify(player_status);
+      localStorage.setItem('player_status_key', player_status_result);
+   enemy_pattern();
+   } else {
+   	alert("コインが足りません( 'ω')");
+   }
+  }
+ */
+    }
+
+    function player_item_command_2() {
+     sound_clicksound();
+
+     var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
+     var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+
+     document.getElementById('player_attack_enemy_select').style.display = 'none';
+     var enemy_index = player_attack_command_select_enemy_index * 1;
+     var player_item_index = player_item_command_select_item_index * 1;
+     if (player_item_index > -1 && player_status.items[player_item_index].type == 'attack' && player_status.items[player_item_index].all == true) enemy_index = 0;
+     var enemy_number = enemy_status.enemies.length * 1 - 1;
+
+     var target_all = false;
+     target_all = player_status.items[player_item_index].all;
+     if (target_all == true) enemy_index = 0;
+
+     new_battlelog = `${player_status.name}は${player_status.items[player_item_index].name}をつかった！`;
+
+     setTimeout(() => {
+      player_item_command_selected_0();
+     }, 500);
+
+     function player_item_command_selected_0() {
+      //	alert("a");
+
+
+      if (player_status.items[player_item_index].type == 'heal') {
+       var player_heal = Math.floor(player_status.items[player_item_index].value * 1);
        player_status.hp = player_status.hp * 1 + player_heal * 1;
        player_status.hp = player_status.hp * 1 > player_status.maxhp * 1 ? player_status.maxhp : player_status.hp;
 
-       new_battlelog = `${player_status.name}はアイテムをつかった！<br>${player_status.name}は${player_heal} 回復した！`;
+       new_battlelog = `${player_status.name}は${player_heal} 回復した！`;
        healsound.play();
+
+       if (player_status.items[player_item_index].cost == true) {
+        if (player_status.items[player_item_index].number > 1) {
+         var item_number = player_status.items[player_item_index].number * 1 - 1;
+         player_status.items[player_item_index].number = item_number;
+        } else {
+         player_status.items.splice(player_item_index, 1);
+        }
+       }
        var player_status_result = JSON.stringify(player_status);
        localStorage.setItem('player_status_key', player_status_result);
-
        enemy_pattern();
-      } else {
-       alert("コインが足りません( 'ω')");
+      }
+      else if (player_status.items[player_item_index].type == 'attack') {
+       var enemy_attack_interval = 600 - (enemy_status.enemies.length * 50);
+       enemy_attack_interval = enemy_attack_interval < 10 ? 10 : enemy_attack_interval;
+
+       var player_attack_interval = setInterval(() => {
+        enemy_number = enemy_status.enemies.length * 1 - 1;
+
+        var kaishin_random = Math.floor(Math.random() * 100) + 1;
+        var kaishin_random_2 = 0;
+        var kaishin_text = ``;
+        var new_battlelog_yotei = ``;
+
+        var player_attack_damage = 0;
+
+
+        player_attack_damage = Math.floor((player_status.atk * 1.5 - enemy_status.enemies[enemy_index].def * 1.2) + (Math.random() * 6));
+        player_attack_damage = player_attack_damage < 1 ? 1 : player_attack_damage;
+
+
+        if (kaishin_random <= 6) {
+         kaishin_random_2 = 1;
+         kaishin_text = `かいしんのいちげき！`;
+         player_attack_damage = player_attack_damage * 3;
+         sound_kaisinsound_1();
+        }
+        enemy_status.enemies[enemy_index].hp = (enemy_status.enemies[enemy_index].hp * 1) - player_attack_damage;
+        enemy_status.enemies[enemy_index].hp = enemy_status.enemies[enemy_index].hp * 1 < 0 ? 0 : enemy_status.enemies[enemy_index].hp * 1;
+        new_battlelog_yotei = `${kaishin_text}${enemy_status.enemies[enemy_index].name}は${player_attack_damage}ダメージうけた！`;
+
+
+        if (player_status.items[player_item_index].cost == true) {
+         if (player_status.items[player_item_index].number > 1) {
+          var item_number = player_status.items[player_item_index].number * 1 - 1;
+          player_status.items[player_item_index].number = item_number;
+         } else {
+          player_status.items.splice(player_item_index, 1);
+         }
+        }
+        var player_status_result = JSON.stringify(player_status);
+        localStorage.setItem('player_status_key', player_status_result);
+
+        new_battlelog = new_battlelog_yotei;
+        if (kaishin_random_2 == 1) {
+         kaisinsound_1.stop();
+         damagesound.play();
+         sound_kaisinsound_2();
+        } else {
+         damagesound.play();
+        }
+        var enemy_status_result = JSON.stringify(enemy_status);
+        localStorage.setItem('enemy_status_key', enemy_status_result);
+        if (enemy_status.enemies[enemy_index].hp <= 0) {
+         var enemy_exp = localStorage.getItem('enemy_exp');
+         if (!enemy_exp) enemy_exp = 0;
+         enemy_exp = enemy_exp * 1 + enemy_status.enemies[enemy_index].exp * 1;
+         localStorage.setItem('enemy_exp', enemy_exp);
+
+         var enemy_coin = localStorage.getItem('enemy_coin');
+         if (!enemy_coin) enemy_coin = 0;
+         enemy_coin = enemy_coin * 1 + enemy_status.enemies[enemy_index].coin * 1;
+         localStorage.setItem('enemy_coin', enemy_coin);
+
+         new_battlelog += `<br>${player_status.name}は${enemy_status.enemies[enemy_index].name}をたおした！`;
+
+         enemy_status.enemies[enemy_index].hp = 0;
+
+         enemy_status.enemies.splice(enemy_index, 1);
+
+         var enemy_status_result = JSON.stringify(enemy_status);
+         localStorage.setItem('enemy_status_key', enemy_status_result);
+
+         //ボス戦処理
+         var boss_testfor = false;
+         if (enemy_status.type == 'boss') {
+          enemy_status.enemies.forEach((data, index) => {
+           if (data.type == 'boss') boss_testfor = true;
+          });
+         }
+
+         sound_deathsound();
+
+         if (!enemy_status.enemies.length || (enemy_status.type == 'boss' && boss_testfor == false)) {
+          if (enemy_status.enemies.length) {
+           setTimeout(() => {
+            var text = ``;
+            for (index in enemy_status.enemies) {
+             var escapelog = enemy_status.enemies[index].escapelog;
+             if (escapelog == undefined) escapelog = "\`${enemy_status.enemies[index].name}はにげだした！\`";
+             text += `<br>${eval(escapelog)}`
+            }
+            new_battlelog = text;
+            enemy_status.enemies.splice(0, (enemy_status.enemies.length * 1));
+            var enemy_status_result = JSON.stringify(enemy_status);
+            localStorage.setItem('enemy_status_key', enemy_status_result);
+            sound_escapesound();
+            battle_end();
+            levelup();
+           }, 1800);
+          } else {
+           battle_end();
+           levelup();
+          }
+          clearInterval(player_attack_interval);
+          return;
+         }
+        } else {
+         enemy_index += 1;
+        }
+        if (enemy_index > enemy_number || target_all == false) {
+         var enemy_status_result = JSON.stringify(enemy_status);
+         localStorage.setItem('enemy_status_key', enemy_status_result);
+
+         var total_maxhp_timeout = Math.floor(((total_maxhp * 1) / (total_hp * 1)) * 1000);
+         setTimeout(() => {
+          enemy_total_maxhp_set();
+         }, total_maxhp_timeout);
+         enemy_pattern();
+         clearInterval(player_attack_interval);
+        }
+       }, enemy_attack_interval);
       }
      }
     }
