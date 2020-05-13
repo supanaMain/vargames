@@ -697,6 +697,7 @@
       shop_view_set();
 
       function yakuso_shop() {
+       var player_status = JSON.parse(localStorage.getItem('player_status_key'));
        var nedan = 40;
        var result = window.confirm('やくそう を購入しますか？');
        if (result == true && (player_status.coin * 1) >= nedan) {
@@ -737,6 +738,7 @@
       }
 
       function yakuso_2_shop() {
+       var player_status = JSON.parse(localStorage.getItem('player_status_key'));
        var nedan = 120;
        var result = window.confirm('やくそう を購入しますか？');
        if (result == true && (player_status.coin * 1) >= nedan) {
@@ -777,6 +779,7 @@
       }
 
       function heal_kusuri_shop() {
+       var player_status = JSON.parse(localStorage.getItem('player_status_key'));
        var nedan = 250;
        var result = window.confirm('回復薬 を購入しますか？');
        if (result == true && (player_status.coin * 1) >= nedan) {
@@ -817,6 +820,7 @@
       }
 
       function heal_kusuri_2_shop() {
+       var player_status = JSON.parse(localStorage.getItem('player_status_key'));
        var nedan = 550;
        var result = window.confirm('つよい回復薬 を購入しますか？');
        if (result == true && (player_status.coin * 1) >= nedan) {
@@ -857,6 +861,7 @@
       }
 
       function heal_kusuri_3_shop() {
+       var player_status = JSON.parse(localStorage.getItem('player_status_key'));
        var nedan = 1100;
        var result = window.confirm('超回復薬 を購入しますか？');
        if (result == true && (player_status.coin * 1) >= nedan) {
@@ -898,6 +903,7 @@
 
 
       function skill_toriaezunaguru_shop() {
+       var player_status = JSON.parse(localStorage.getItem('player_status_key'));
        var nedan = 1200;
        var result = window.confirm('ぜんいんなぐるの秘伝書 を購入しますか？');
        if (result == true && (player_status.coin * 1) >= nedan) {
@@ -925,6 +931,7 @@
       }
 
       function skill_heal_lv1_shop() {
+       var player_status = JSON.parse(localStorage.getItem('player_status_key'));
        var nedan = 1300;
        var result = window.confirm('かいふくじゅつLv1の秘伝書 を購入しますか？');
        if (result == true && (player_status.coin * 1) >= nedan) {
@@ -952,6 +959,7 @@
       }
 
       function skill_heal_lv2_shop() {
+       var player_status = JSON.parse(localStorage.getItem('player_status_key'));
        var nedan = 5000;
        var result = window.confirm('かいふくじゅつLv2の秘伝書 を購入しますか？');
        if (result == true && (player_status.coin * 1) >= nedan) {
@@ -979,6 +987,7 @@
       }
 
       function skill_heal_lv3_shop() {
+       var player_status = JSON.parse(localStorage.getItem('player_status_key'));
        var nedan = 10000;
        var result = window.confirm('かいふくじゅつLv3の秘伝書 を購入しますか？');
        if (result == true && (player_status.coin * 1) >= nedan) {
