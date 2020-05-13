@@ -330,6 +330,7 @@
 
 
 
+
   //技追加テスト
   function test_skill_add() {
    var player_status = JSON.parse(localStorage.getItem('player_status_key'));
@@ -391,7 +392,15 @@
     <input type="submit" style="color:black; width:8;font-size:90%;" value="けってい！" onClick="sound_clicksound();status_icon_set();"><br>
     <input type="file" id="player_icon_target">
    </div>
-   <img id="player_icon_preview" src="https://cdn.discordapp.com/attachments/656126030062419998/704208453052137512/315.png" style="position: relative;top: 0;left: 50px;width:120px;height:120px;">
+   <img id="player_icon_preview" src="https://cdn.discordapp.com/attachments/656126030062419998/704208453052137512/315.png" style="position: relative;bottom: 70px;right: 30px;width:70px;height:70px;" align="right"><br><br><br>
+   <div style="position:relative; bottom: 100px;">
+    <br><strong style="text-align: left; color:white; position:relative; top: 50px; left:50px;">《戦闘BGM》</strong>
+    <!-- <input type="file" id="battle_bgm_target" > -->
+    <div style="text-align: left; width:80%; position:relative; top: 50px; left:50px;">
+     <input type="url" style="color:black;" placeholder="戦闘曲のURL" id="battle_music_txt" value="">
+     <input type="submit" style="color:black; width:8;font-size:90%;" value="けってい！" onClick="sound_clicksound();battlemusic_check();">
+    </div>
+   </div><br><br><br>
    <script>
     document.getElementById("player_icon_target").addEventListener("change", function() {
      var fileList = this.files;
@@ -404,6 +413,42 @@
       fileReader.readAsDataURL(fileList[i]);
      }
     });
+
+    //戦闘BGM
+    var battlemusic_url = localStorage.getItem('battle_music_url_key');
+    if (!battlemusic_url) {
+     battlemusic_url = "https://cdn.discordapp.com/attachments/709110499429711952/710014399384911992/bae5562308ab01d4.wav";
+    } else {
+     document.getElementById("battle_music_txt").value = battlemusic_url;
+    }
+    var battlemusic = new Howl(
+    {
+     src: [battlemusic_url],
+     loop: true
+    });
+    /*
+var battlemusic_url_kouho = ``;
+document.getElementById( "battle_bgm_target" ).addEventListener( "change", function() {
+	var fileList = this.files ;
+	for( var i=0,l=fileList.length; l>i; i++ ) {
+		var fileReader = new FileReader() ;
+		fileReader.onload = function() {
+			battlemusic_url_kouho = this.result ;
+		}
+		fileReader.readAsDataURL( fileList[i] ) ;
+	}
+} ) ;
+*/
+    function battlemusic_check() {
+     var check = document.getElementById("battle_music_txt").value;
+     battlemusic.src = [check];
+     localStorage.setItem('battle_music_url_key', check);
+     alert("BGMを設定しました( 'ω')");
+    }
+
+    function bgm_battlemusic() {
+     battlemusic.play();
+    }
    </script>
   </div>
   <div style="z-index: 499;position: fixed;top: 0;left: 0;height: 120%;width: 60px;background-size: 100% 100%;background-position: 0% 0px;background-image:url('https://cdn.discordapp.com/attachments/706660445519347763/708634331517681664/333-4.png');" id="menu_bar">
@@ -411,7 +456,7 @@
     <input type="button" id="menu-status-button-b" onClick="sound_clicksound();player_status_main_button();" style="display:none;">
    </label>
   </div>
-  <div style="display:none;z-index: 500;position: fixed;top: 0;right: 0px;height: 310px;width: 300px;background-size: 100% 100%;background-position: 0% 0px;background-image:url('https://cdn.discordapp.com/attachments/706660445519347763/706851683602268201/331-2.png');" id="player_status_main">
+  <div style="display:none;z-index: 100;position: fixed;top: 0;right: 0px;height: 310px;width: 300px;background-size: 100% 100%;background-position: 0% 0px;background-image:url('https://cdn.discordapp.com/attachments/706660445519347763/706851683602268201/331-2.png');" id="player_status_main">
    <rpg-player_status>
     <!-- <img style="position:relative; top: 400px; left:0%;" class="img-responsive center-block" src = "https://cdn.discordapp.com/attachments/706660445519347763/706660466859966570/331.png"> -->
     <img id="player_icon" src="https://cdn.discordapp.com/attachments/656126030062419998/704208453052137512/315.png" style="position:relative; top: 30px; left: 45px;width:54px;height:54px;">
@@ -880,7 +925,7 @@
       <a style="color:white;position:relative; bottom: 5px; left:19px;text-align:left;"><strong id="playertp_value"></strong></a>
      </nobr>
     </div><br>
-    <div id="player_attack_enemy_select" style="overflow:auto;z-index: 50;display:none;position:fixed;bottom:30px;right:10px;width:260px;height:85%;border: groove white;background-color: #141c29;opacity:100%;">
+    <div id="player_attack_enemy_select" style="overflow:auto;z-index: 200;display:none;position:fixed;bottom:30px;right:10px;width:260px;height:85%;border: groove white;background-color: #141c29;opacity:100%;">
      <div id="player_attack_enemy_select_2" style="position:relative;top: 12px;left:20px;">
      </div>
      <div style="font-size:12px;position:fixed;bottom:35px;right:20px;"><input type="submit" value="キャンセル" id="" onClick="sound_clicksound();document.getElementById('player_attack_enemy_select').style.display = 'none';document.getElementById('player_battle_commands2').style.display = 'block';"></div>
@@ -1198,12 +1243,18 @@
      localStorage.setItem('player_status_key', player_status);
      rpg_player_status_set();
      setTimeout(() => {
+      battlemusic.play();
+     }, 500);
+     setTimeout(() => {
       document.getElementById("player_battle_commands2").style.display = "block";
      }, 1500);
     }
 
     function battle_end() {
      document.getElementById("player_battle_commands2").style.display = "none";
+     setTimeout(() => {
+      battlemusic.stop();
+     }, 500);
      setTimeout(() => {
       battle_end_2();
      }, 2600);
@@ -2280,9 +2331,9 @@
 
     rpg_player_status_set();
    </script>
-   <div id="rpg_game_blocker" style="padding-left: 40px;position:fixed;width:120%;height:120%;">
-    <h2 style="position:fixed;z-index: 600;">このゲームは画面横向き専用です。</h2>
+   <div id="rpg_game_blocker" style="z-index: 900;position:fixed;width:120%;height:120%;">
     <img style="position:fixed;top:0px;left:0px;z-index: 599;width:110%;height:110%;" class="img-responsive center-block" src="https://cdn.discordapp.com/attachments/706660445519347763/708266741398241310/333-2.png">
+    <h2 style="z-index: 901;position:fixed;color:while;" align="center">このゲームは画面横向き専用です。</h2>
    </div>
   </rpg>
  </div>
