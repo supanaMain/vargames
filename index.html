@@ -384,23 +384,24 @@
          <input type="submit"  value="わざけし" onClick="sound_testsound();test_skill_remove();"><br>
 	  </div>
 	-->
-  <div align="left" style="display:none;z-index: 600;position: fixed;top: 0;left: 0;height: 120%;width: 100%;background-size: 400px 400px;background-position: 0% 0px;background-image:url('https://cdn.discordapp.com/attachments/706660445519347763/708633819103756308/333-3.png');" id="status_edit">
+  <div align="left" style="overflow:scroll;display:none;z-index: 600;position: fixed;top: 0;left: 0;height: 120%;width: 100%;background-size: 400px 400px;background-position: 0% 0px;background-image:url('https://cdn.discordapp.com/attachments/706660445519347763/708633819103756308/333-3.png');" id="status_edit">
    <input align="left" type="submit" style="color:black; width:8;font-size:100%;" value="閉じる" onClick="sound_clicksound();status_edit_out();">
    <br><strong style="text-align: left; color:white; position:relative; top: 50px; left:50px;">《おなまえ》</strong>
    <div style="text-align: left; width:80%; position:relative; top: 50px; left:50px;"><input type="text" style="color:black;" placeholder="おなまえを入力してください" id="player_name_txt" value="ななし"> <input type="submit" style="color:black; width:8;font-size:90%;" value="けってい！" onClick="sound_clicksound();name_check();"></div><br><br><br><br>
    <div style="position: relative;top: 0;left: 50px;">
+    <br><strong style="text-align: left; color:white; position:relative; top: 0px; left:0px;">《アイコン》</strong><br>
     <input type="submit" style="color:black; width:8;font-size:90%;" value="けってい！" onClick="sound_clicksound();status_icon_set();"><br>
     <input type="file" id="player_icon_target">
    </div>
-   <img id="player_icon_preview" src="https://cdn.discordapp.com/attachments/656126030062419998/704208453052137512/315.png" style="position: relative;bottom: 70px;right: 30px;width:70px;height:70px;" align="right"><br><br><br>
-   <div style="position:relative; bottom: 100px;">
+   <img id="player_icon_preview" src="https://cdn.discordapp.com/attachments/656126030062419998/704208453052137512/315.png" style="position: relative;bottom: 70px;right: 30px;width:70px;height:70px;" align="right">
+   <div style="position:relative; ">
     <br><strong style="text-align: left; color:white; position:relative; top: 50px; left:50px;">《戦闘BGM》</strong>
-    <!-- <input type="file" id="battle_bgm_target" > -->
     <div style="text-align: left; width:80%; position:relative; top: 50px; left:50px;">
-     <input type="url" style="color:black;" placeholder="戦闘曲のURL" id="battle_music_txt" value="">
-     <input type="submit" style="color:black; width:8;font-size:90%;" value="けってい！" onClick="sound_clicksound();battlemusic_check();">
+     <input type="submit" style="color:black; width:8;font-size:90%;" value="けってい！" onClick="sound_clicksound();battlemusic_check();"><br>
+     <!-- <input type="file" id="battle_bgm_target" > -->
+     <input type="url" style="color:black;" placeholder="戦闘曲のURL ※拡張子.wavのみです" id="battle_music_txt" value="">
     </div>
-   </div><br><br><br>
+   </div><br><br><br><br><br><br><br><br><br><br><br><br>
    <script>
     document.getElementById("player_icon_target").addEventListener("change", function() {
      var fileList = this.files;
@@ -416,6 +417,7 @@
 
     //戦闘BGM
     var battlemusic_url = localStorage.getItem('battle_music_url_key');
+    // alert(battlemusic_url);
     if (!battlemusic_url) {
      battlemusic_url = "https://cdn.discordapp.com/attachments/709110499429711952/710014399384911992/bae5562308ab01d4.wav";
     } else {
@@ -424,28 +426,59 @@
     var battlemusic = new Howl(
     {
      src: [battlemusic_url],
-     loop: true
+     loop: true,
+     volume: 0.6
     });
-    /*
-var battlemusic_url_kouho = ``;
-document.getElementById( "battle_bgm_target" ).addEventListener( "change", function() {
-	var fileList = this.files ;
-	for( var i=0,l=fileList.length; l>i; i++ ) {
-		var fileReader = new FileReader() ;
-		fileReader.onload = function() {
-			battlemusic_url_kouho = this.result ;
-		}
-		fileReader.readAsDataURL( fileList[i] ) ;
-	}
-} ) ;
-*/
+
     function battlemusic_check() {
      var check = document.getElementById("battle_music_txt").value;
      battlemusic.src = [check];
      localStorage.setItem('battle_music_url_key', check);
-     alert("BGMを設定しました( 'ω')");
+     alert("BGMを設定しました( 'ω')\n反映させるにはwebを再読み込みしてください。");
     }
+    /*
+ var allow_exts = new Array('wav');
+       function battlemusic_check() {
+	// フォームで選択された全ファイルを取得
+	var fileList = document.getElementById( "battle_bgm_target" ).files ;
+    if(!checkExt(fileList[0].name)){
+    	alert("拡張子 .wav のサウンドファイルを選択してください( 'ω')");
+    	return;
+    }
+	// 個数分の画像を表示する
+	for( var i=0,l=fileList.length; l>i; i++ ) {
+		// FileReaderオブジェクトを作成
+		var fileReader = new FileReader() ;
 
+		// 読み込み後の処理を決めておく
+		fileReader.onload = function() {
+			// Data URIを取得
+			var dataUri = this.result ;
+              battlemusic.src = [ dataUri ];
+              battlemusic.load();
+              localStorage.setItem('battle_music_url_key', dataUri);       
+	          alert("BGMを設定しました( 'ω')");
+		}
+
+		// ファイルをData URIとして読み込む
+		fileReader.readAsDataURL( fileList[i] ) ;
+	}
+
+ } 
+        function checkExt(filename) {
+            //比較のため小文字にする
+            var ext = getExt(filename).toLowerCase();
+            //許可する拡張子の一覧(allow_exts)から対象の拡張子があるか確認する
+            if (allow_exts.indexOf(ext) === -1) return false;
+            return true;
+        }
+
+        function getExt(filename) {
+            var pos = filename.lastIndexOf('.');
+            if (pos === -1) return '';
+            return filename.slice(pos + 1);
+        }
+        */
     function bgm_battlemusic() {
      battlemusic.play();
     }
@@ -522,14 +555,16 @@ document.getElementById( "battle_bgm_target" ).addEventListener( "change", funct
         if (result == true) {
          result = window.confirm('こうかいしませんね？');
          if (result == true) {
+          var battle_music_url = localStorage.getItem('battle_music_url_key');
           var player_icon_uri = localStorage.getItem('player_icon_uri_key');
           var player_name = localStorage.getItem('player_name_key');
 
           localStorage.clear();
+          if (battle_music_url) localStorage.setItem('battle_music_url_key', battle_music_url);
           if (player_icon_uri) localStorage.setItem('player_icon_uri_key', player_icon_uri);
           if (player_name) localStorage.setItem('player_name_key', player_name);
 
-          alert('データを初期化しました。webを更新してください。');
+          alert('データを初期化しました。webを再読み込みしてください。');
           rpg_player_status_set();
          }
         }
@@ -636,7 +671,7 @@ document.getElementById( "battle_bgm_target" ).addEventListener( "change", funct
     <p class="lead" style="color:white;">RPGもどき</p> <input type="submit" value="ホームに戻る" class="btn btn-primary" id="rpg_home_move_button" onClick="sound_clicksound();home_move_button();">
     <br><br><br>
     <input align="left" type="submit" style="color:black; width:8;font-size:100%;" value="ショップ(即席)" onClick="sound_clicksound();document.getElementById('shop').style.display = 'block';"><br><br><br>
-    <div align="left" style="display:none;z-index: 600;position: fixed;top: 0;left: 0;height: 120%;width: 100%;background-size: 400px 400px;background-position: 0% 0px;background-image:url('https://cdn.discordapp.com/attachments/706660445519347763/708633819103756308/333-3.png');" id="shop">
+    <div align="left" style="overflow:scroll;display:none;z-index: 600;position: fixed;top: 0;left: 0;height: 120%;width: 100%;background-size: 400px 400px;background-position: 0% 0px;background-image:url('https://cdn.discordapp.com/attachments/706660445519347763/708633819103756308/333-3.png');" id="shop">
      <input align="left" type="submit" style="color:black; width:8;font-size:100%;" value="閉じる" onClick="sound_clicksound();document.getElementById('shop').style.display = 'none';"><br><br><br>
      <div style="padding-left: 60px;">
       <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="yakuso_shop" value="やくそう  $40ｺｲﾝ" onClick="sound_clicksound();yakuso_shop();"><br><br>
@@ -644,14 +679,20 @@ document.getElementById( "battle_bgm_target" ).addEventListener( "change", funct
       <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="heal_kusuri_shop" value="回復薬  $250ｺｲﾝ" onClick="sound_clicksound();heal_kusuri_shop();"><br><br>
       <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="heal_kusuri_2_shop" value="つよい回復薬    $550ｺｲﾝ" onClick="sound_clicksound();heal_kusuri_2_shop();"><br><br>
       <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="heal_kusuri_3_shop" value="超回復薬    $1100ｺｲﾝ" onClick="sound_clicksound();heal_kusuri_3_shop();"><br><br>
-      <br>
       <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="skill_toriaezunaguru_shop" value="ぜんいんなぐる の秘伝書  1200ｺｲﾝ" onClick="sound_clicksound();skill_toriaezunaguru_shop();"><br><br>
+      <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="skill_heal_lv1_shop" value="かいふくじゅつLv1 の秘伝書  1300ｺｲﾝ" onClick="sound_clicksound();skill_heal_lv1_shop();"><br><br>
+      <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="skill_heal_lv2_shop" value="かいふくじゅつLv2 の秘伝書  5000ｺｲﾝ" onClick="sound_clicksound();skill_heal_lv2_shop();"><br><br>
+      <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="skill_heal_lv3_shop" value="かいふくじゅつLv3 の秘伝書  10000ｺｲﾝ" onClick="sound_clicksound();skill_heal_lv3_shop();"><br><br>
+      <br><br><br><br><br><br><br><br><br>
      </div>
      <script>
       var player_status = JSON.parse(localStorage.getItem('player_status_key'));
 
       function shop_view_set() {
        if (player_status.skills.findIndex(data => data.id == "skill_toriaezunaguru") != -1) document.getElementById('skill_toriaezunaguru_shop').style.display = 'none';
+       if (player_status.skills.findIndex(data => data.id == "skill_heal_lv1") != -1) document.getElementById('skill_heal_lv1_shop').style.display = 'none';
+       if (player_status.skills.findIndex(data => data.id == "skill_heal_lv2") != -1) document.getElementById('skill_heal_lv2_shop').style.display = 'none';
+       if (player_status.skills.findIndex(data => data.id == "skill_heal_lv3") != -1) document.getElementById('skill_heal_lv3_shop').style.display = 'none';
       }
       shop_view_set();
 
@@ -882,6 +923,87 @@ document.getElementById( "battle_bgm_target" ).addEventListener( "change", funct
         return;
        }
       }
+
+      function skill_heal_lv1_shop() {
+       var nedan = 1300;
+       var result = window.confirm('かいふくじゅつLv1の秘伝書 を購入しますか？');
+       if (result == true && (player_status.coin * 1) >= nedan) {
+        player_status.coin = player_status.coin * 1 - nedan;
+        var skill_data = JSON.stringify({
+         id: "skill_heal_lv1",
+         name: "かいふくじゅつ Lv1",
+         type: "heal",
+         value: 0.2,
+         tp: 20,
+         all: false
+        });
+        player_status.skills.push(JSON.parse(skill_data));
+        var player_status_result = JSON.stringify(player_status);
+        localStorage.setItem('player_status_key', player_status_result);
+        rpg_player_status_set_view();
+        shop_view_set();
+
+        alert('わざ  かいふくじゅつLv1  をおぼえた！');
+        return;
+       } else if (result == true) {
+        alert("コインが足りません( 'ω')");
+        return;
+       }
+      }
+
+      function skill_heal_lv2_shop() {
+       var nedan = 5000;
+       var result = window.confirm('かいふくじゅつLv2の秘伝書 を購入しますか？');
+       if (result == true && (player_status.coin * 1) >= nedan) {
+        player_status.coin = player_status.coin * 1 - nedan;
+        var skill_data = JSON.stringify({
+         id: "skill_heal_lv2",
+         name: "かいふくじゅつ Lv2",
+         type: "heal",
+         value: 0.5,
+         tp: 30,
+         all: false
+        });
+        player_status.skills.push(JSON.parse(skill_data));
+        var player_status_result = JSON.stringify(player_status);
+        localStorage.setItem('player_status_key', player_status_result);
+        rpg_player_status_set_view();
+        shop_view_set();
+
+        alert('わざ  かいふくじゅつLv2  をおぼえた！');
+        return;
+       } else if (result == true) {
+        alert("コインが足りません( 'ω')");
+        return;
+       }
+      }
+
+      function skill_heal_lv3_shop() {
+       var nedan = 10000;
+       var result = window.confirm('かいふくじゅつLv3の秘伝書 を購入しますか？');
+       if (result == true && (player_status.coin * 1) >= nedan) {
+        player_status.coin = player_status.coin * 1 - nedan;
+        var skill_data = JSON.stringify({
+         id: "skill_heal_lv3",
+         name: "かいふくじゅつ Lv3",
+         type: "heal",
+         value: 0.9,
+         tp: 35,
+         all: false
+        });
+        player_status.skills.push(JSON.parse(skill_data));
+        var player_status_result = JSON.stringify(player_status);
+        localStorage.setItem('player_status_key', player_status_result);
+        rpg_player_status_set_view();
+        shop_view_set();
+
+        alert('わざ  かいふくじゅつLv3  をおぼえた！');
+        return;
+       } else if (result == true) {
+        alert("コインが足りません( 'ω')");
+        return;
+       }
+      }
      </script>
     </div>
    </div>
@@ -890,6 +1012,7 @@ document.getElementById( "battle_bgm_target" ).addEventListener( "change", funct
     <input type="submit" value="戦闘開始(てすてす)" id="testes-button" onClick="sound_clicksound();enemy_testes();"><br><br>
     <input type="submit" value="戦闘開始(てすてす x3)" id="testes-button" onClick="sound_clicksound();enemy_testes_2();"><br><br>
     <input type="submit" value="戦闘開始(てすてす キング)" id="testes-button" onClick="sound_clicksound();enemy_testes_3();"><br><br>
+    <input type="submit" value="戦闘開始(変動モンスター)" id="testes-button" onClick="sound_clicksound();enemy_hendou();"><br><br><br>
     <input type="submit" value="戦闘開始(メタルなんとかフェスティバル)" id="testes-button" onClick="sound_clicksound();enemy_metal_nan_0();"><br><br>
     <input type="submit" value="戦闘開始(メタルなんとかフェスティバル EX)" id="testes-button" onClick="sound_clicksound();enemy_metal_nan_1();"><br><br><br>
     <input type="submit" value="戦闘開始(クリル・クラルサー)" id="testes-button" onClick="sound_clicksound();enemy_cril();"><br><br>
@@ -1215,7 +1338,9 @@ document.getElementById( "battle_bgm_target" ).addEventListener( "change", funct
       localStorage.setItem('player_status_key', player_status);
       rpg_player_status_set();
      }
-     document.getElementById("rpg-player_battlelog").innerHTML = `\nコイン ${enemy_coin} , けいけんち ${enemy_exp} かくとく！<br>${levelup_log}`;
+     setTimeout(() => {
+      document.getElementById("rpg-player_battlelog").innerHTML = `\nコイン ${enemy_coin} , けいけんち ${enemy_exp} かくとく！<br>${levelup_log}`;
+     }, 150);
      localStorage.removeItem('enemy_exp');
      localStorage.removeItem('enemy_coin');
     }
@@ -1235,16 +1360,17 @@ document.getElementById( "battle_bgm_target" ).addEventListener( "change", funct
      for (index in enemy_status.enemies) document.getElementById("rpg-player_battlelog").innerHTML += ` <strong>${enemy_status.enemies[index].name}</strong> - `;
      document.getElementById("rpg-player_battlelog").innerHTML += `  が現れた！ `;
 
-     player_status.hp = player_status.maxhp;
+     // player_status.hp = player_status.maxhp;
      player_status.tp = 0;
      tpbarback = 0;
      tpbar = 0;
      player_status = JSON.stringify(player_status);
      localStorage.setItem('player_status_key', player_status);
      rpg_player_status_set();
+
      setTimeout(() => {
       battlemusic.play();
-     }, 500);
+     }, 100);
      setTimeout(() => {
       document.getElementById("player_battle_commands2").style.display = "block";
      }, 1500);
@@ -1254,7 +1380,7 @@ document.getElementById( "battle_bgm_target" ).addEventListener( "change", funct
      document.getElementById("player_battle_commands2").style.display = "none";
      setTimeout(() => {
       battlemusic.stop();
-     }, 500);
+     }, 2300);
      setTimeout(() => {
       battle_end_2();
      }, 2600);
@@ -1300,6 +1426,7 @@ document.getElementById( "battle_bgm_target" ).addEventListener( "change", funct
      document.getElementById('player_attack_enemy_select_2').innerHTML = "";
      for (index in player_status.skills) {
       var enemy_taishou = player_status.skills[index].all == true ? `敵全体` : `敵単体`;
+      enemy_taishou = player_status.skills[index].type == 'heal' ? `味方` : enemy_taishou;
       document.getElementById('player_attack_enemy_select_2').innerHTML += `<div style="height:40px;"><input type=\"submit\" value=\"${player_status.skills[index].name} - 消費TP ${player_status.skills[index].tp} - 対象 ${enemy_taishou}\"  id=\"skill_select_button_${index}\" class="btn btn-primary" style=\"opacity:100%;font-size:73%;height:30px;width:86%;\"onClick=\"player_skill_command_select_skill_index = ${index}\;player_skill_command_2()\;\"></div>`;
      }
      document.getElementById('player_attack_enemy_select').style.display = 'block';
@@ -1310,11 +1437,16 @@ document.getElementById( "battle_bgm_target" ).addEventListener( "change", funct
      var player_status = JSON.parse(localStorage.getItem('player_status_key'));
      if (player_status.skills[player_skill_command_select_skill_index].tp <= player_status.tp) {
       sound_clicksound();
-      if (player_status.skills[player_skill_command_select_skill_index].all == true) {
-       player_attack_command_select_enemy_index = 0;
+      if (player_status.skills[player_skill_command_select_skill_index].type == 'heal') {
        player_attack_command_selected();
-      } else {
-       player_attack_command();
+      }
+      else if (player_status.skills[player_skill_command_select_skill_index].type == 'attack') {
+       if (player_status.skills[player_skill_command_select_skill_index].all == true) {
+        player_attack_command_select_enemy_index = 0;
+        player_attack_command_selected();
+       } else {
+        player_attack_command();
+       }
       }
      } else {
       sound_clicknone();
@@ -1428,6 +1560,21 @@ document.getElementById( "battle_bgm_target" ).addEventListener( "change", funct
          enemy_status.enemies[enemy_index].hp = (enemy_status.enemies[enemy_index].hp * 1) - player_attack_damage;
          enemy_status.enemies[enemy_index].hp = enemy_status.enemies[enemy_index].hp * 1 < 0 ? 0 : enemy_status.enemies[enemy_index].hp * 1;
          new_battlelog_yotei = `${kaishin_text}${enemy_status.enemies[enemy_index].name}は${player_attack_damage}ダメージうけた！`;
+        }
+        else if (player_status.skills[player_skill_index].type == 'heal') {
+         var player_heal = Math.floor((player_status.skills[player_skill_index].value * 1) * (player_status.maxhp * 1));
+         player_status.hp = player_status.hp * 1 + player_heal * 1;
+         player_status.hp = player_status.hp * 1 > player_status.maxhp * 1 ? player_status.maxhp : player_status.hp;
+
+         new_battlelog = `${player_status.name}は${player_heal} 回復した！`;
+         healsound.play();
+
+
+         var player_status_result = JSON.stringify(player_status);
+         localStorage.setItem('player_status_key', player_status_result);
+         enemy_pattern();
+         clearInterval(player_attack_interval);
+         return;
         }
 
        }
@@ -2292,6 +2439,30 @@ document.getElementById( "battle_bgm_target" ).addEventListener( "change", funct
        def: "Infinity",
        exp: 10,
        coin: 10
+      });
+      enemy_status.enemies.push(JSON.parse(enemy_data));
+     }
+
+
+     enemy_status = JSON.stringify(enemy_status);
+     localStorage.setItem('enemy_status_key', enemy_status);
+     battle_start();
+    }
+    //へんどう
+    function enemy_hendou() {
+     var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+     var enemy_status = JSON.parse('{"enemies":[]}');
+
+     for (let i = 1; i <= 1; i++) {
+      var enemy_data = JSON.stringify({
+       id: "enm_metal_nan_ex",
+       name: `強さが変動するマン`,
+       hp: ((player_status.hp * 1) + (player_status.level * 10)),
+       maxhp: ((player_status.maxhp * 1) + (player_status.level * 10)),
+       atk: Math.floor(player_status.atk * 0.4),
+       def: Math.floor(player_status.def * 1.8),
+       exp: Math.floor((player_status.nextexp * 1 - player_status.exp * 1) * 0.3),
+       coin: Math.floor(player_status.coin * 0.3)
       });
       enemy_status.enemies.push(JSON.parse(enemy_data));
      }
