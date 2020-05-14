@@ -937,19 +937,25 @@
    </div>
    <div id="player_battle_window" style="display:none;bottom: 20px;">
     <!-- <div style="position:relative; top: -20px; left:0px;"><strong style="color:white">HP SET (デバッグ) - </strong><input type="text" id="hp" value="100"> <input type="submit" style="color: black;" value="SET" id="hp_button" onClick="return test_click();"></div> -->
-    <div id="enemyhealthbar_core" style="position:fixed; top: 12px; right:20px;display:block;" align="right">
+    <div id="enemyhealthbar_core" style="width:35%;position:fixed; top: 12px; right:35%;display:block;" align="right">
      <nobr>
-      <a style="color:white;position:relative; top: 0px; left:303.5px;text-align:left;"><strong id="enemyhealth_value"></strong></a>
-      <progress id="enemyhealthbar_back" max="100" value="0" align="left" style="width:300px;position:relative; top: 0px; left:303.5px;-webkit-appearance: none;appearance: none;" class=""></progress>
-      <progress id="enemyhealthbar" max="100" value="0" align="left" style="width:300px;position:relative; top: 0px; left:0px;-webkit-appearance: none;appearance: none;"></progress>
-      <br><a style="color:white;position:relative; top: 0px; left:0px;"><strong id="enemyhealth_name">エネミー</strong></a>
+      <test style="position:relative; top: 20.0px; right:5px;" align="right">
+       <test style="position:relative; top: 0px; right:0px;"><a style="color:white;position:relative; top: 0px; right:3.5px;text-align:right;" align="right"><strong id="enemyhealth_value"></strong></a></test>
+      </test><br>
+      <test style="position:relative; top: 0px; right:10px;">
+       <test style="position:relative; top: 0px; left:3.5px;"><progress id="enemyhealthbar_back" max="100" value="0" align="left" style="width:100%;position:relative; top: 0px; left:100%;-webkit-appearance: none;appearance: none;" class=""></progress></test>
+       <progress id="enemyhealthbar" max="100" value="0" align="left" style="width:100%;position:relative; top: 0px; left:0px;-webkit-appearance: none;appearance: none;"></progress>
+       <br>
+       <test style="position:relative; top: 0px; left:0px;"><a style="color:white;position:relative; top: 0px; left:100%;text-align:right;" align="right"><strong id="enemyhealth_name">エネミー</strong></a></test>
+      </test>
      </nobr>
-    </div><br><br>
-    <div id="playerhealthbar_core" style="position:fixed;top: 40px;left: 122px">
+    </div>
+    <br><br>
+    <div id="playerhealthbar_core" style="width:20%;position:fixed;top: 40px;left:122px;">
      <nobr>
-      <progress id="playerhealthbar_back" max="100" value="0" style="position:relative; top: 0px; left:0px;-webkit-appearance: none;appearance: none;" class=""></progress>
-      <progress id="playerhealthbar" max="100" value="0" style="position:relative; top: 0px; left:-143.5px;-webkit-appearance: none;appearance: none;"></progress>
-      <a style="color:white;position:relative; top: 0px; left:-143.5px;text-align:left;"><strong id="playerhealth_value"></strong></a>
+      <progress id="playerhealthbar_back" max="100" value="0" style="position:relative; top: 0px; left:0px;width:100%;-webkit-appearance: none;appearance: none;" class=""></progress>
+      <test style="position:relative; top: 0px; left:-3.5px;"><progress id="playerhealthbar" max="100" value="0" style="position:relative; top: 0px; left:-100%;width:100%;-webkit-appearance: none;appearance: none;"></progress></test>
+      <test style="position:relative; top: 0px; left:-3.5px;"><a style="color:white;position:relative; top: 0px; left:-100%;width:100%;text-align:left;"><strong id="playerhealth_value"></strong></a></test>
       <br><a style="color:white"><strong id="playerhealth_name"></strong></a>
      </nobr>
     </div><br>
@@ -975,7 +981,7 @@
       <rpg-player_status>
        <!-- <rpg-player_status><p id="rpg-player_status2"style="border: groove white;"></p></rpg-player_status> -->
        <br>
-       <div id="player_battle_commands2" style="display:block;position:fixed;bottom:30px;">
+       <div id="player_battle_commands2" style="width:76%;display:block;position:fixed;bottom:30px;">
         <nobr>
          <input style="width:17%;" type="submit" value="こうげき" class="btn btn-primary" id="attack-button" onClick="sound_clicksound();player_skill_command_select_skill_index = -1;player_attack_command();">
          <input style="width:17%;" type="submit" value="わざ" class="btn btn-primary" id="skill-button" onClick="sound_clicksound();player_skill_command();">
@@ -1278,9 +1284,8 @@
      document.getElementById("rpg-player_battlelog").innerHTML += `  が現れた！ `;
 
      // player_status.hp = player_status.maxhp;
-     player_status.tp = 0;
+     //   player_status.tp = 0;
      tpbarback = 0;
-     tpbar = 0;
      player_status = JSON.stringify(player_status);
      localStorage.setItem('player_status_key', player_status);
      rpg_player_status_set();
