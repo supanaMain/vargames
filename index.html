@@ -948,6 +948,7 @@
     <input type="submit" value="戦闘開始(メタルなんとかフェスティバル EX)  適正レベル 90" id="testes-button" onClick="sound_clicksound();enemy_metal_nan_1();"><br><br><br>
     <input type="submit" value="戦闘開始(ライトサイド ミョン)  適正レベル 75" id="testes-button" onClick="sound_clicksound();enemy_myon_light();"><br><br><br>
     <input type="submit" value="戦闘開始(クリル・クラルサー) 適正レベル 95" id="testes-button" onClick="sound_clicksound();enemy_cril();"><br><br>
+    <input type="submit" value="戦闘開始(？？？) 適正レベル 100" id="testes-button" onClick="sound_clicksound();enemy_cril_2();"><br><br>
     <!--     <input type="submit" value="戦闘開始(クリル・クラルサー テスト)"  id="testes-button" onClick="sound_clicksound();enemy_cril_2();"><br><br><br> -->
     <input type="submit" value="戦闘開始(テスト(音量注意))" id="testes-button" onClick="sound_clicksound();enemy_metal_mini();">
    </div>
@@ -1823,6 +1824,14 @@
          sound_deathsound();
 
          if (!enemy_status.enemies.length || (enemy_status.type == 'boss' && boss_testfor == false)) {
+          if (player_status.items[player_item_index].cost == true) {
+           if (player_status.items[player_item_index].number > 1) {
+            var item_number = player_status.items[player_item_index].number * 1 - 1;
+            player_status.items[player_item_index].number = item_number;
+           } else {
+            player_status.items.splice(player_item_index, 1);
+           }
+          }
           if (enemy_status.enemies.length) {
            setTimeout(() => {
             var text = ``;
@@ -2585,6 +2594,42 @@
      localStorage.setItem('enemy_status_key', enemy_status);
      battle_start();
     }
+
+
+    //クリルクラルサーとダークリ
+    function enemy_cril_2() {
+     var enemy_status = JSON.parse('{"type": "boss", "enemies":[]}');
+
+     var enemy_data = JSON.stringify({
+      type: "boss",
+      id: "enm_cril",
+      name: "クリル・クラルサー",
+      hp: 17000,
+      maxhp: 17000,
+      atk: 80,
+      def: 50,
+      exp: 50000,
+      coin: 10000
+     });
+     enemy_status.enemies.push(JSON.parse(enemy_data));
+     var enemy_data = JSON.stringify({
+      type: "boss",
+      id: "enm_cril",
+      name: "ダーク クリル",
+      hp: 13000,
+      maxhp: 13000,
+      atk: 95,
+      def: 40,
+      exp: 50000,
+      coin: 10000
+     });
+     enemy_status.enemies.push(JSON.parse(enemy_data));
+
+     enemy_status = JSON.stringify(enemy_status);
+     localStorage.setItem('enemy_status_key', enemy_status);
+     battle_start();
+    }
+
     //へんどう
     function enemy_hendou() {
      var player_status = JSON.parse(localStorage.getItem('player_status_key'));
