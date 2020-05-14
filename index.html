@@ -395,7 +395,7 @@
    </div>
    <img id="player_icon_preview" src="https://cdn.discordapp.com/attachments/656126030062419998/704208453052137512/315.png" style="position: relative;bottom: 70px;right: 30px;width:70px;height:70px;" align="right">
    <div style="position:relative; ">
-    <br><strong style="text-align: left; color:white; position:relative; top: 50px; left:50px;">《戦闘BGM》</strong>
+    <br><strong style="text-align: left; color:white; position:relative; top: 50px; left:50px;">《戦闘BGM》※使用ブラウザChrome推奨 iOSでは再生できません。</strong>
     <div style="text-align: left; width:80%; position:relative; top: 50px; left:50px;">
      <input type="submit" style="color:black; width:8;font-size:90%;" value="けってい！" onClick="sound_clicksound();battlemusic_check();"><br>
      <!-- <input type="file" id="battle_bgm_target" > -->
@@ -426,8 +426,10 @@
     var battlemusic = new Howl(
     {
      src: [battlemusic_url],
-     loop: true,
-     volume: 0.6
+     volume: 0.6,
+     onend: () => {
+      battlemusic.play();
+     }
     });
 
     function battlemusic_check() {
@@ -670,7 +672,7 @@
    <div id="rpg_header">
     <p class="lead" style="color:white;">RPGもどき</p> <input type="submit" value="ホームに戻る" class="btn btn-primary" id="rpg_home_move_button" onClick="sound_clicksound();home_move_button();">
     <br><br><br>
-    <input align="left" type="submit" style="color:black; width:8;font-size:100%;" value="ショップ(即席)" onClick="sound_clicksound();document.getElementById('shop').style.display = 'block';"><br><br><br>
+    <input align="left" type="submit" style="color:black; width:8;font-size:100%;" value="ショップ(即席)" onClick="sound_clicksound();shop_view_set();document.getElementById('shop').style.display = 'block';"><br><br><br>
     <div align="left" style="overflow:scroll;display:none;z-index: 600;position: fixed;top: 0;left: 0;height: 120%;width: 100%;background-size: 400px 400px;background-position: 0% 0px;background-image:url('https://cdn.discordapp.com/attachments/706660445519347763/708633819103756308/333-3.png');" id="shop">
      <input align="left" type="submit" style="color:black; width:8;font-size:100%;" value="閉じる" onClick="sound_clicksound();document.getElementById('shop').style.display = 'none';"><br><br><br>
      <div style="padding-left: 60px;">
@@ -679,352 +681,243 @@
       <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="heal_kusuri_shop" value="回復薬  $250ｺｲﾝ" onClick="sound_clicksound();heal_kusuri_shop();"><br><br>
       <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="heal_kusuri_2_shop" value="つよい回復薬    $550ｺｲﾝ" onClick="sound_clicksound();heal_kusuri_2_shop();"><br><br>
       <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="heal_kusuri_3_shop" value="超回復薬    $1100ｺｲﾝ" onClick="sound_clicksound();heal_kusuri_3_shop();"><br><br>
-      <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="skill_toriaezunaguru_shop" value="ぜんいんなぐる の秘伝書  1200ｺｲﾝ" onClick="sound_clicksound();skill_toriaezunaguru_shop();"><br><br>
-      <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="skill_heal_lv1_shop" value="かいふくじゅつLv1 の秘伝書  1300ｺｲﾝ" onClick="sound_clicksound();skill_heal_lv1_shop();"><br><br>
-      <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="skill_heal_lv2_shop" value="かいふくじゅつLv2 の秘伝書  5000ｺｲﾝ" onClick="sound_clicksound();skill_heal_lv2_shop();"><br><br>
-      <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="skill_heal_lv3_shop" value="かいふくじゅつLv3 の秘伝書  10000ｺｲﾝ" onClick="sound_clicksound();skill_heal_lv3_shop();"><br><br>
+      <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="skill_toriaezunaguru_shop" value="ぜんいんなぐる の秘伝書  $1200ｺｲﾝ" onClick="sound_clicksound();test_skill_toriaezunaguru_shop();"><br><br>
+      <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="skill_heal_lv1_shop" value="かいふくじゅつLv1 の秘伝書  $1300ｺｲﾝ" onClick="sound_clicksound();skill_heal_lv1_shop();"><br><br>
+      <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="skill_heal_lv2_shop" value="かいふくじゅつLv2 の秘伝書  $5000ｺｲﾝ" onClick="sound_clicksound();skill_heal_lv2_shop();"><br><br>
+      <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="skill_heal_lv3_shop" value="かいふくじゅつLv3 の秘伝書  $10000ｺｲﾝ" onClick="sound_clicksound();skill_heal_lv3_shop();"><br><br>
       <br><br><br><br><br><br><br><br><br>
      </div>
      <script>
+      function yakuso_shop() {
+       var onedan = 40;
+       var item_data = JSON.stringify({
+        id: 'yakuso',
+        name: 'やくそう',
+        number: 1,
+        type: "heal",
+        value: 30.0,
+        cost: true,
+        all: false
+       });
+       item_type_shop(onedan, JSON.parse(item_data).id, JSON.parse(item_data).name, item_data);
+      }
+
+      function yakuso_2_shop() {
+       var onedan = 120;
+       var item_data = JSON.stringify({
+        id: 'yakuso_2',
+        name: 'つよいやくそう',
+        number: 1,
+        type: "heal",
+        value: 100.0,
+        cost: true,
+        all: false
+       });
+       item_type_shop(onedan, JSON.parse(item_data).id, JSON.parse(item_data).name, item_data);
+      }
+
+      function heal_kusuri_shop() {
+       var onedan = 250;
+       var item_data = JSON.stringify({
+        id: 'heal_kusuri',
+        name: '回復薬',
+        number: 1,
+        type: "heal",
+        value: 250.0,
+        cost: true,
+        all: false
+       });
+       item_type_shop(onedan, JSON.parse(item_data).id, JSON.parse(item_data).name, item_data);
+      }
+
+      function heal_kusuri_2_shop() {
+       var onedan = 550;
+       var item_data = JSON.stringify({
+        id: 'heal_kusuri_2',
+        name: 'つよい回復薬',
+        number: 1,
+        type: "heal",
+        value: 500.0,
+        cost: true,
+        all: false
+       });
+       item_type_shop(onedan, JSON.parse(item_data).id, JSON.parse(item_data).name, item_data);
+      }
+
+      function heal_kusuri_3_shop() {
+       var onedan = 1100;
+       var item_data = JSON.stringify({
+        id: 'heal_kusuri_3',
+        name: '超回復薬',
+        number: 1,
+        type: "heal",
+        value: 1000.0,
+        cost: true,
+        all: false
+       });
+       item_type_shop(onedan, JSON.parse(item_data).id, JSON.parse(item_data).name, item_data);
+      }
+
+
+      function skill_toriaezunaguru_shop() {
+       var onedan = 1200;
+       var skill_data = JSON.stringify({
+        id: 'skill_toriaezunaguru',
+        name: 'ぜんいんなぐる',
+        type: "attack",
+        atk: 2.0,
+        tp: 30,
+        all: true
+       });
+       skill_type_shop(onedan, JSON.parse(skill_data).id, JSON.parse(skill_data).name, skill_data);
+      }
+
+      function skill_heal_lv1_shop() {
+       var onedan = 1300;
+       var skill_data = JSON.stringify({
+        id: "skill_heal_lv1",
+        name: "かいふくじゅつ Lv1",
+        type: "heal",
+        value: 0.2,
+        tp: 20,
+        all: false
+       });
+       skill_type_shop(onedan, JSON.parse(skill_data).id, JSON.parse(skill_data).name, skill_data);
+      }
+
+      function skill_heal_lv2_shop() {
+       var onedan = 5000;
+       var skill_data = JSON.stringify({
+        id: "skill_heal_lv2",
+        name: "かいふくじゅつ Lv2",
+        type: "heal",
+        value: 0.5,
+        tp: 30,
+        all: false
+       });
+       skill_type_shop(onedan, JSON.parse(skill_data).id, JSON.parse(skill_data).name, skill_data);
+      }
+
+      function skill_heal_lv3_shop() {
+       var onedan = 10000;
+       var skill_data = JSON.stringify({
+        id: "skill_heal_lv3",
+        name: "かいふくじゅつ Lv3",
+        type: "heal",
+        value: 0.9,
+        tp: 35,
+        all: false
+       });
+       skill_type_shop(onedan, JSON.parse(skill_data).id, JSON.parse(skill_data).name, skill_data);
+      }
+
+      //アイテムタイプ関数
+      function test_yakuso_shop() {
+       var onedan = 40;
+       var item_data = JSON.stringify({
+        id: 'yakuso',
+        name: 'やくそう',
+        number: 1,
+        type: "heal",
+        value: 30.0,
+        cost: true,
+        all: false
+       });
+       item_type_shop(onedan, JSON.parse(item_data).id, JSON.parse(item_data).name, item_data);
+      }
+
+      function item_type_shop(var_nedan, var_id, var_name, var_data) {
+       var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+       var nedan = var_nedan;
+       var result = window.confirm(`${var_name} を購入しますか？`);
+       if (result == true && (player_status.coin * 1) >= nedan) {
+        let if_item_data = player_status.items.find(data => data.id == var_id);
+        let item_data_index = player_status.items.findIndex(data => data.id == var_id);
+        if (if_item_data) {
+         var item_number = player_status.items[item_data_index].number * 1 + 1;
+         if (item_number <= 99) {
+          player_status.items[item_data_index].number = item_number;
+         } else {
+          alert(`${var_name} はこれ以上持ちきれません`);
+          return;
+         }
+        } else {
+         var item_data = var_data;
+         player_status.items.push(JSON.parse(item_data));
+        }
+        player_status.coin = player_status.coin * 1 - nedan;
+        var player_status_result = JSON.stringify(player_status);
+        localStorage.setItem('player_status_key', player_status_result);
+        rpg_player_status_set_view();
+        shop_view_set();
+
+        alert(`${var_name} を購入した！`);
+        return;
+       } else if (result == true) {
+        alert("コインが足りません( 'ω')");
+        return;
+       }
+      }
+
+      //スキルタイプ関数
+      function test_skill_toriaezunaguru_shop() {
+       var onedan = 1200;
+       var skill_data = JSON.stringify({
+        id: 'skill_toriaezunaguru',
+        name: 'ぜんいんなぐる',
+        type: "attack",
+        atk: 2.0,
+        tp: 30,
+        all: true
+       });
+       skill_type_shop(onedan, JSON.parse(skill_data).id, JSON.parse(skill_data).name, skill_data);
+      }
+
+      function skill_type_shop(var_nedan, var_id, var_name, var_data) {
+       var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+       var nedan = var_nedan;
+       var result = window.confirm(`${var_name} の秘伝書 を購入しますか？`);
+       if (result == true && (player_status.coin * 1) >= nedan) {
+        player_status.coin = player_status.coin * 1 - nedan;
+        var skill_data = var_data;
+        player_status.skills.push(JSON.parse(skill_data));
+        var player_status_result = JSON.stringify(player_status);
+        localStorage.setItem('player_status_key', player_status_result);
+        rpg_player_status_set_view();
+        shop_view_set();
+
+        alert(`わざ  ${var_name}  をおぼえた！`);
+        return;
+       } else if (result == true) {
+        alert("コインが足りません( 'ω')");
+        return;
+       }
+      }
+
+      //リセ
       var player_status = JSON.parse(localStorage.getItem('player_status_key'));
 
       function shop_view_set() {
+       var player_status = JSON.parse(localStorage.getItem('player_status_key'));
        if (player_status.skills.findIndex(data => data.id == "skill_toriaezunaguru") != -1) document.getElementById('skill_toriaezunaguru_shop').style.display = 'none';
        if (player_status.skills.findIndex(data => data.id == "skill_heal_lv1") != -1) document.getElementById('skill_heal_lv1_shop').style.display = 'none';
        if (player_status.skills.findIndex(data => data.id == "skill_heal_lv2") != -1) document.getElementById('skill_heal_lv2_shop').style.display = 'none';
        if (player_status.skills.findIndex(data => data.id == "skill_heal_lv3") != -1) document.getElementById('skill_heal_lv3_shop').style.display = 'none';
       }
       shop_view_set();
-
-      function yakuso_shop() {
-       var player_status = JSON.parse(localStorage.getItem('player_status_key'));
-       var nedan = 40;
-       var result = window.confirm('やくそう を購入しますか？');
-       if (result == true && (player_status.coin * 1) >= nedan) {
-        let if_item_data = player_status.items.find(data => data.id == 'yakuso');
-        let item_data_index = player_status.items.findIndex(data => data.id == 'yakuso');
-        if (if_item_data) {
-         var item_number = player_status.items[item_data_index].number * 1 + 1;
-         if (item_number <= 99) {
-          player_status.items[item_data_index].number = item_number;
-         } else {
-          alert("やくそう はこれ以上持ちきれません");
-          return;
-         }
-        } else {
-         var item_data = JSON.stringify({
-          id: "yakuso",
-          name: "やくそう",
-          number: 1,
-          type: "heal",
-          value: 30.0,
-          cost: true,
-          all: false
-         });
-         player_status.items.push(JSON.parse(item_data));
-        }
-        player_status.coin = player_status.coin * 1 - nedan;
-        var player_status_result = JSON.stringify(player_status);
-        localStorage.setItem('player_status_key', player_status_result);
-        rpg_player_status_set_view();
-        shop_view_set();
-
-        alert('やくそう を購入した！');
-        return;
-       } else if (result == true) {
-        alert("コインが足りません( 'ω')");
-        return;
-       }
-      }
-
-      function yakuso_2_shop() {
-       var player_status = JSON.parse(localStorage.getItem('player_status_key'));
-       var nedan = 120;
-       var result = window.confirm('やくそう を購入しますか？');
-       if (result == true && (player_status.coin * 1) >= nedan) {
-        let if_item_data = player_status.items.find(data => data.id == 'yakuso_2');
-        let item_data_index = player_status.items.findIndex(data => data.id == 'yakuso_2');
-        if (if_item_data) {
-         var item_number = player_status.items[item_data_index].number * 1 + 1;
-         if (item_number <= 99) {
-          player_status.items[item_data_index].number = item_number;
-         } else {
-          alert("つよいやくそう はこれ以上持ちきれません");
-          return;
-         }
-        } else {
-         var item_data = JSON.stringify({
-          id: "yakuso_2",
-          name: "つよいやくそう",
-          number: 1,
-          type: "heal",
-          value: 100.0,
-          cost: true,
-          all: false
-         });
-         player_status.items.push(JSON.parse(item_data));
-        }
-        player_status.coin = player_status.coin * 1 - nedan;
-        var player_status_result = JSON.stringify(player_status);
-        localStorage.setItem('player_status_key', player_status_result);
-        rpg_player_status_set_view();
-        shop_view_set();
-
-        alert('つよいやくそう を購入した！');
-        return;
-       } else if (result == true) {
-        alert("コインが足りません( 'ω')");
-        return;
-       }
-      }
-
-      function heal_kusuri_shop() {
-       var player_status = JSON.parse(localStorage.getItem('player_status_key'));
-       var nedan = 250;
-       var result = window.confirm('回復薬 を購入しますか？');
-       if (result == true && (player_status.coin * 1) >= nedan) {
-        let if_item_data = player_status.items.find(data => data.id == 'heal_kusuri');
-        let item_data_index = player_status.items.findIndex(data => data.id == 'heal_kusuri');
-        if (if_item_data) {
-         var item_number = player_status.items[item_data_index].number * 1 + 1;
-         if (item_number <= 99) {
-          player_status.items[item_data_index].number = item_number;
-         } else {
-          alert("回復薬 はこれ以上持ちきれません");
-          return;
-         }
-        } else {
-         var item_data = JSON.stringify({
-          id: "heal_kusuri",
-          name: "回復薬",
-          number: 1,
-          type: "heal",
-          value: 250.0,
-          cost: true,
-          all: false
-         });
-         player_status.items.push(JSON.parse(item_data));
-        }
-        player_status.coin = player_status.coin * 1 - nedan;
-        var player_status_result = JSON.stringify(player_status);
-        localStorage.setItem('player_status_key', player_status_result);
-        rpg_player_status_set_view();
-        shop_view_set();
-
-        alert('回復薬 を購入した！');
-        return;
-       } else if (result == true) {
-        alert("コインが足りません( 'ω')");
-        return;
-       }
-      }
-
-      function heal_kusuri_2_shop() {
-       var player_status = JSON.parse(localStorage.getItem('player_status_key'));
-       var nedan = 550;
-       var result = window.confirm('つよい回復薬 を購入しますか？');
-       if (result == true && (player_status.coin * 1) >= nedan) {
-        let if_item_data = player_status.items.find(data => data.id == 'heal_kusuri_2');
-        let item_data_index = player_status.items.findIndex(data => data.id == 'heal_kusuri_2');
-        if (if_item_data) {
-         var item_number = player_status.items[item_data_index].number * 1 + 1;
-         if (item_number <= 99) {
-          player_status.items[item_data_index].number = item_number;
-         } else {
-          alert("つよい回復薬 はこれ以上持ちきれません");
-          return;
-         }
-        } else {
-         var item_data = JSON.stringify({
-          id: "heal_kusuri_2",
-          name: "つよい回復薬",
-          number: 1,
-          type: "heal",
-          value: 500.0,
-          cost: true,
-          all: false
-         });
-         player_status.items.push(JSON.parse(item_data));
-        }
-        player_status.coin = player_status.coin * 1 - nedan;
-        var player_status_result = JSON.stringify(player_status);
-        localStorage.setItem('player_status_key', player_status_result);
-        rpg_player_status_set_view();
-        shop_view_set();
-
-        alert('つよい回復薬 を購入した！');
-        return;
-       } else if (result == true) {
-        alert("コインが足りません( 'ω')");
-        return;
-       }
-      }
-
-      function heal_kusuri_3_shop() {
-       var player_status = JSON.parse(localStorage.getItem('player_status_key'));
-       var nedan = 1100;
-       var result = window.confirm('超回復薬 を購入しますか？');
-       if (result == true && (player_status.coin * 1) >= nedan) {
-        let if_item_data = player_status.items.find(data => data.id == 'heal_kusuri_3');
-        let item_data_index = player_status.items.findIndex(data => data.id == 'heal_kusuri_3');
-        if (if_item_data) {
-         var item_number = player_status.items[item_data_index].number * 1 + 1;
-         if (item_number <= 99) {
-          player_status.items[item_data_index].number = item_number;
-         } else {
-          alert("超回復薬 はこれ以上持ちきれません");
-          return;
-         }
-        } else {
-         var item_data = JSON.stringify({
-          id: "heal_kusuri_3",
-          name: "超回復薬",
-          number: 1,
-          type: "heal",
-          value: 1000,
-          cost: true,
-          all: false
-         });
-         player_status.items.push(JSON.parse(item_data));
-        }
-        player_status.coin = player_status.coin * 1 - nedan;
-        var player_status_result = JSON.stringify(player_status);
-        localStorage.setItem('player_status_key', player_status_result);
-        rpg_player_status_set_view();
-        shop_view_set();
-
-        alert('超回復薬 を購入した！');
-        return;
-       } else if (result == true) {
-        alert("コインが足りません( 'ω')");
-        return;
-       }
-      }
-
-
-      function skill_toriaezunaguru_shop() {
-       var player_status = JSON.parse(localStorage.getItem('player_status_key'));
-       var nedan = 1200;
-       var result = window.confirm('ぜんいんなぐるの秘伝書 を購入しますか？');
-       if (result == true && (player_status.coin * 1) >= nedan) {
-        player_status.coin = player_status.coin * 1 - nedan;
-        var skill_data = JSON.stringify({
-         id: "skill_toriaezunaguru",
-         name: "ぜんいんなぐる",
-         type: "attack",
-         atk: 2.0,
-         tp: 30,
-         all: true
-        });
-        player_status.skills.push(JSON.parse(skill_data));
-        var player_status_result = JSON.stringify(player_status);
-        localStorage.setItem('player_status_key', player_status_result);
-        rpg_player_status_set_view();
-        shop_view_set();
-
-        alert('わざ  ぜんいんなぐる  をおぼえた！');
-        return;
-       } else if (result == true) {
-        alert("コインが足りません( 'ω')");
-        return;
-       }
-      }
-
-      function skill_heal_lv1_shop() {
-       var player_status = JSON.parse(localStorage.getItem('player_status_key'));
-       var nedan = 1300;
-       var result = window.confirm('かいふくじゅつLv1の秘伝書 を購入しますか？');
-       if (result == true && (player_status.coin * 1) >= nedan) {
-        player_status.coin = player_status.coin * 1 - nedan;
-        var skill_data = JSON.stringify({
-         id: "skill_heal_lv1",
-         name: "かいふくじゅつ Lv1",
-         type: "heal",
-         value: 0.2,
-         tp: 20,
-         all: false
-        });
-        player_status.skills.push(JSON.parse(skill_data));
-        var player_status_result = JSON.stringify(player_status);
-        localStorage.setItem('player_status_key', player_status_result);
-        rpg_player_status_set_view();
-        shop_view_set();
-
-        alert('わざ  かいふくじゅつLv1  をおぼえた！');
-        return;
-       } else if (result == true) {
-        alert("コインが足りません( 'ω')");
-        return;
-       }
-      }
-
-      function skill_heal_lv2_shop() {
-       var player_status = JSON.parse(localStorage.getItem('player_status_key'));
-       var nedan = 5000;
-       var result = window.confirm('かいふくじゅつLv2の秘伝書 を購入しますか？');
-       if (result == true && (player_status.coin * 1) >= nedan) {
-        player_status.coin = player_status.coin * 1 - nedan;
-        var skill_data = JSON.stringify({
-         id: "skill_heal_lv2",
-         name: "かいふくじゅつ Lv2",
-         type: "heal",
-         value: 0.5,
-         tp: 30,
-         all: false
-        });
-        player_status.skills.push(JSON.parse(skill_data));
-        var player_status_result = JSON.stringify(player_status);
-        localStorage.setItem('player_status_key', player_status_result);
-        rpg_player_status_set_view();
-        shop_view_set();
-
-        alert('わざ  かいふくじゅつLv2  をおぼえた！');
-        return;
-       } else if (result == true) {
-        alert("コインが足りません( 'ω')");
-        return;
-       }
-      }
-
-      function skill_heal_lv3_shop() {
-       var player_status = JSON.parse(localStorage.getItem('player_status_key'));
-       var nedan = 10000;
-       var result = window.confirm('かいふくじゅつLv3の秘伝書 を購入しますか？');
-       if (result == true && (player_status.coin * 1) >= nedan) {
-        player_status.coin = player_status.coin * 1 - nedan;
-        var skill_data = JSON.stringify({
-         id: "skill_heal_lv3",
-         name: "かいふくじゅつ Lv3",
-         type: "heal",
-         value: 0.9,
-         tp: 35,
-         all: false
-        });
-        player_status.skills.push(JSON.parse(skill_data));
-        var player_status_result = JSON.stringify(player_status);
-        localStorage.setItem('player_status_key', player_status_result);
-        rpg_player_status_set_view();
-        shop_view_set();
-
-        alert('わざ  かいふくじゅつLv3  をおぼえた！');
-        return;
-       } else if (result == true) {
-        alert("コインが足りません( 'ω')");
-        return;
-       }
-      }
      </script>
     </div>
    </div>
    <!-- 敵召喚デバッグ -->
    <div id="battle_start_debug_button">
-    <input type="submit" value="戦闘開始(てすてす)" id="testes-button" onClick="sound_clicksound();enemy_testes();"><br><br>
-    <input type="submit" value="戦闘開始(てすてす x3)" id="testes-button" onClick="sound_clicksound();enemy_testes_2();"><br><br>
-    <input type="submit" value="戦闘開始(てすてす キング)" id="testes-button" onClick="sound_clicksound();enemy_testes_3();"><br><br>
-    <input type="submit" value="戦闘開始(変動モンスター)" id="testes-button" onClick="sound_clicksound();enemy_hendou();"><br><br><br>
-    <input type="submit" value="戦闘開始(メタルなんとかフェスティバル)" id="testes-button" onClick="sound_clicksound();enemy_metal_nan_0();"><br><br>
-    <input type="submit" value="戦闘開始(メタルなんとかフェスティバル EX)" id="testes-button" onClick="sound_clicksound();enemy_metal_nan_1();"><br><br><br>
-    <input type="submit" value="戦闘開始(クリル・クラルサー)" id="testes-button" onClick="sound_clicksound();enemy_cril();"><br><br>
+    <input type="submit" value="戦闘開始(てすてす)  適正レベル  1" id="testes-button" onClick="sound_clicksound();enemy_testes();"><br><br>
+    <input type="submit" value="戦闘開始(てすてす x3)  適正レベル  8" id="testes-button" onClick="sound_clicksound();enemy_testes_2();"><br><br>
+    <input type="submit" value="戦闘開始(てすてす キング)  適正レベル 16" id="testes-button" onClick="sound_clicksound();enemy_testes_3();"><br><br>
+    <input type="submit" value="戦闘開始(変動モンスター)  適正レベル ？" id="testes-button" onClick="sound_clicksound();enemy_hendou();"><br><br><br>
+    <input type="submit" value="戦闘開始(ダークサイド ミョン)  適正レベル 45" id="testes-button" onClick="sound_clicksound();enemy_myon();"><br><br><br>
+    <input type="submit" value="戦闘開始(メタルなんとかフェスティバル) 適正レベル 60" id="testes-button" onClick="sound_clicksound();enemy_metal_nan_0();"><br><br>
+    <input type="submit" value="戦闘開始(メタルなんとかフェスティバル EX)  適正レベル 90" id="testes-button" onClick="sound_clicksound();enemy_metal_nan_1();"><br><br><br>
+    <input type="submit" value="戦闘開始(クリル・クラルサー) 適正レベル 95" id="testes-button" onClick="sound_clicksound();enemy_cril();"><br><br>
     <!--     <input type="submit" value="戦闘開始(クリル・クラルサー テスト)"  id="testes-button" onClick="sound_clicksound();enemy_cril_2();"><br><br><br> -->
     <input type="submit" value="戦闘開始(テスト(音量注意))" id="testes-button" onClick="sound_clicksound();enemy_metal_mini();">
    </div>
@@ -1349,7 +1242,7 @@
      }
      setTimeout(() => {
       document.getElementById("rpg-player_battlelog").innerHTML = `\nコイン ${enemy_coin} , けいけんち ${enemy_exp} かくとく！<br>${levelup_log}`;
-     }, 150);
+     }, 900);
      localStorage.removeItem('enemy_exp');
      localStorage.removeItem('enemy_coin');
     }
@@ -2101,6 +1994,62 @@
        new_battlelog = `${enemy_status.enemies[enemy_index].name}のこうげき！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！`;
        damagesound.play();
       }
+      //パターンミョン
+      else if (enemy_status.enemies[enemy_index].id == 'enm_myon') {
+
+       var enemy_randomize = Math.floor(Math.random() * 1000);
+       if (enemy_status.enemies[enemy_index].hp < 6000 && enemy_status.enemies[enemy_index].myon_hp_event_0 != true) {
+        enemy_status.enemies[enemy_index].myon_hp_event_0 = true;
+        enemy_status.enemies[enemy_index].atk = Math.floor(enemy_status.enemies[enemy_index].atk * 1.7);
+        enemy_status.enemies[enemy_index].def = Math.floor(enemy_status.enemies[enemy_index].def * 1.5);
+        enemy_total_maxhp_set();
+        new_battlelog = `${enemy_status.enemies[enemy_index].name}の魂統一 エムボロス！<br>${enemy_status.enemies[enemy_index].name}のステータスがへんかした！`;
+        healsound.play();
+        sound_shoukansound();
+       }
+       else if (enemy_randomize - 65 <= 0) {
+        var enemy_attack_damage = Math.floor(((enemy_status.enemies[enemy_index].atk * 3.5 - player_status.def * 1.2) + (Math.random() * 5)) * player_guard_value);
+        enemy_attack_damage = enemy_attack_damage < 1 ? 1 : enemy_attack_damage;
+        player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
+        new_battlelog = `${enemy_status.enemies[enemy_index].name}のインフィニティブレイド！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！`;
+        damagesound.play();
+       }
+       else if (enemy_randomize - 140 <= 0) {
+        var enemy_attack_damage = Math.floor(((enemy_status.enemies[enemy_index].atk * 1.2) + (Math.random() * 5)));
+        enemy_attack_damage = enemy_attack_damage < 1 ? 1 : enemy_attack_damage;
+        player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
+        new_battlelog = `${enemy_status.enemies[enemy_index].name}のサタンスレーヴァテイン！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！`;
+        damagesound.play();
+       }
+       else if (enemy_randomize - 200 <= 0) {
+        var enemy_attack_damage = Math.floor(((enemy_status.enemies[enemy_index].atk * 1.1) + (Math.random() * 5)));
+        enemy_attack_damage = enemy_attack_damage < 1 ? 1 : enemy_attack_damage;
+        player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
+        new_battlelog = `${enemy_status.enemies[enemy_index].name}のデモンズレーヴァテイン！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！`;
+        damagesound.play();
+       }
+       else if (enemy_randomize - 280 <= 0) {
+        var enemy_attack_damage = Math.floor(((enemy_status.enemies[enemy_index].atk * 1.5 - player_status.def * 1.6) + (Math.random() * 5)) * player_guard_value);
+        enemy_attack_damage = enemy_attack_damage < 1 ? 1 : enemy_attack_damage;
+        player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
+        new_battlelog = `${enemy_status.enemies[enemy_index].name}のクリムゾンブレイド！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！`;
+        damagesound.play();
+       }
+       else if (enemy_randomize - 400 <= 0) {
+        var enemy_attack_damage = Math.floor(((enemy_status.enemies[enemy_index].atk * 1.2 - player_status.def * 1.6) + (Math.random() * 5)) * player_guard_value);
+        enemy_attack_damage = enemy_attack_damage < 1 ? 1 : enemy_attack_damage;
+        player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
+        new_battlelog = `${enemy_status.enemies[enemy_index].name}のサンライズパッシュメント Δ！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！`;
+        damagesound.play();
+       }
+       else {
+        var enemy_attack_damage = Math.floor(((enemy_status.enemies[enemy_index].atk * 1.5 - player_status.def * 1.2) + (Math.random() * 5)) * player_guard_value);
+        enemy_attack_damage = enemy_attack_damage < 1 ? 1 : enemy_attack_damage;
+        player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
+        new_battlelog = `${enemy_status.enemies[enemy_index].name}のこうげき！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！`;
+        damagesound.play();
+       }
+      }
       //パターンクリル
       else if (enemy_status.enemies[enemy_index].id == 'enm_cril') {
        if (enemy_status.enemies[enemy_index].cril_act_event_1 == 1) {
@@ -2390,6 +2339,27 @@
      battle_start();
     }
 
+    //ダサイミョン
+    function enemy_myon() {
+     var enemy_status = JSON.parse('{"type": "boss", "enemies":[]}');
+
+     var enemy_data = JSON.stringify({
+      type: "boss",
+      id: "enm_myon",
+      name: "ダークサイド ミョン",
+      hp: 9500,
+      maxhp: 9500,
+      atk: 40,
+      def: -70,
+      exp: 6000,
+      coin: 3000
+     });
+     enemy_status.enemies.push(JSON.parse(enemy_data));
+
+     enemy_status = JSON.stringify(enemy_status);
+     localStorage.setItem('enemy_status_key', enemy_status);
+     battle_start();
+    }
     //クリルクラルサー
     function enemy_cril() {
      var enemy_status = JSON.parse('{"type": "boss", "enemies":[]}');
@@ -2401,7 +2371,7 @@
       hp: 9900,
       maxhp: 9900,
       atk: 120,
-      def: 50,
+      def: 55,
       exp: 99999,
       coin: 10000
      });
