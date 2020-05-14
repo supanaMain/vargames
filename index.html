@@ -681,6 +681,7 @@
       <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="heal_kusuri_shop" value="回復薬  $250ｺｲﾝ" onClick="sound_clicksound();heal_kusuri_shop();"><br><br>
       <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="heal_kusuri_2_shop" value="つよい回復薬    $550ｺｲﾝ" onClick="sound_clicksound();heal_kusuri_2_shop();"><br><br>
       <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="heal_kusuri_3_shop" value="超回復薬    $1100ｺｲﾝ" onClick="sound_clicksound();heal_kusuri_3_shop();"><br><br>
+      <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="iyagarase_bomb_shop" value="いやがらせボム    $10ｺｲﾝ" onClick="sound_clicksound();iyagarase_bomb_shop();"><br><br><br>
       <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="skill_toriaezunaguru_shop" value="ぜんいんなぐる の秘伝書  $1200ｺｲﾝ" onClick="sound_clicksound();test_skill_toriaezunaguru_shop();"><br><br>
       <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="skill_heal_lv1_shop" value="かいふくじゅつLv1 の秘伝書  $1300ｺｲﾝ" onClick="sound_clicksound();skill_heal_lv1_shop();"><br><br>
       <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="skill_heal_lv2_shop" value="かいふくじゅつLv2 の秘伝書  $5000ｺｲﾝ" onClick="sound_clicksound();skill_heal_lv2_shop();"><br><br>
@@ -758,6 +759,19 @@
        item_type_shop(onedan, JSON.parse(item_data).id, JSON.parse(item_data).name, item_data);
       }
 
+      function iyagarase_bomb_shop() {
+       var onedan = 10;
+       var item_data = JSON.stringify({
+        id: 'iyagarase_bomb',
+        name: 'いやがらせボム',
+        number: 1,
+        type: "attack",
+        value: 1.0,
+        cost: true,
+        all: true
+       });
+       item_type_shop(onedan, JSON.parse(item_data).id, JSON.parse(item_data).name, item_data);
+      }
 
       function skill_toriaezunaguru_shop() {
        var onedan = 1200;
@@ -1415,7 +1429,7 @@
       enemy_attack_interval = enemy_attack_interval < 10 ? 10 : enemy_attack_interval;
 
       var player_attack_interval = setInterval(() => {
-       enemy_number = enemy_status.enemies.length * 1 - 1;
+       enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
 
        var kaishin_random = Math.floor(Math.random() * 100) + 1;
        var kaishin_random_2 = 0;
@@ -1564,6 +1578,7 @@
        } else {
         enemy_index += 1;
        }
+       enemy_number = (enemy_status.enemies.length * 1) - 1;
        //  alert(`${enemy_index}\n${enemy_number}`);
        if (enemy_index > enemy_number || target_all == false) {
 
@@ -1644,7 +1659,44 @@
     }
 
     function player_item_command_2() {
+     var player_status = JSON.parse(localStorage.getItem('player_status_key'));
      sound_clicksound();
+     if (player_status.items[player_item_command_select_item_index].type == 'attack') {
+      if (player_status.items[player_item_command_select_item_index].all == true) {
+       player_attack_command_select_enemy_index = 0;
+       player_item_command_selected();
+      } else {
+       player_item_command_3();
+      }
+     } else {
+      player_item_command_selected();
+     }
+
+    }
+
+    function player_item_command_3() {
+     var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
+     var player_status = JSON.parse(localStorage.getItem('player_status_key'));
+
+     document.getElementById('player_battle_commands2').style.display = 'none';
+
+     //敵が複数の時だけ動くやつ
+     if (enemy_status.enemies.length > 1) {
+      //敵の数だけボタンを生成
+      document.getElementById('player_attack_enemy_select_2').innerHTML = "";
+      for (index in enemy_status.enemies) {
+       document.getElementById('player_attack_enemy_select_2').innerHTML += `<div style="height:40px;"><input type=\"submit\" value=\"${enemy_status.enemies[index].name}\"  id=\"testes-button\" class="btn btn-primary" style=\"opacity:100%;font-size:12px;height:30px;width:80%;\"onClick=\"sound_clicksound()\;player_attack_command_select_enemy_index = ${index}\;player_item_command_selected()\;\"></div>`;
+      }
+      document.getElementById('player_attack_enemy_select').style.display = 'block';
+     }
+     //敵が一体だけの時即実行
+     else {
+      player_attack_command_select_enemy_index = 0;
+      player_item_command_selected();
+     }
+    }
+
+    function player_item_command_selected() {
 
      var enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
      var player_status = JSON.parse(localStorage.getItem('player_status_key'));
@@ -1652,7 +1704,6 @@
      document.getElementById('player_attack_enemy_select').style.display = 'none';
      var enemy_index = player_attack_command_select_enemy_index * 1;
      var player_item_index = player_item_command_select_item_index * 1;
-     if (player_item_index > -1 && player_status.items[player_item_index].type == 'attack' && player_status.items[player_item_index].all == true) enemy_index = 0;
      var enemy_number = enemy_status.enemies.length * 1 - 1;
 
      var target_all = false;
@@ -1667,6 +1718,8 @@
 
      function player_item_command_selected_0() {
       //	alert("a");
+
+      enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
 
 
       if (player_status.items[player_item_index].type == 'heal') {
@@ -1688,56 +1741,34 @@
        var player_status_result = JSON.stringify(player_status);
        localStorage.setItem('player_status_key', player_status_result);
        enemy_pattern();
+       return;
       }
       else if (player_status.items[player_item_index].type == 'attack') {
        var enemy_attack_interval = 600 - (enemy_status.enemies.length * 50);
        enemy_attack_interval = enemy_attack_interval < 10 ? 10 : enemy_attack_interval;
 
        var player_attack_interval = setInterval(() => {
-        enemy_number = enemy_status.enemies.length * 1 - 1;
 
-        var kaishin_random = Math.floor(Math.random() * 100) + 1;
-        var kaishin_random_2 = 0;
-        var kaishin_text = ``;
+        enemy_status = JSON.parse(localStorage.getItem('enemy_status_key'));
+
         var new_battlelog_yotei = ``;
 
         var player_attack_damage = 0;
 
 
-        player_attack_damage = Math.floor((player_status.atk * 1.5 - enemy_status.enemies[enemy_index].def * 1.2) + (Math.random() * 6));
+        player_attack_damage = player_status.items[player_item_index].value * 1;
         player_attack_damage = player_attack_damage < 1 ? 1 : player_attack_damage;
 
-
-        if (kaishin_random <= 6) {
-         kaishin_random_2 = 1;
-         kaishin_text = `かいしんのいちげき！`;
-         player_attack_damage = player_attack_damage * 3;
-         sound_kaisinsound_1();
-        }
         enemy_status.enemies[enemy_index].hp = (enemy_status.enemies[enemy_index].hp * 1) - player_attack_damage;
         enemy_status.enemies[enemy_index].hp = enemy_status.enemies[enemy_index].hp * 1 < 0 ? 0 : enemy_status.enemies[enemy_index].hp * 1;
-        new_battlelog_yotei = `${kaishin_text}${enemy_status.enemies[enemy_index].name}は${player_attack_damage}ダメージうけた！`;
+        new_battlelog_yotei = `${enemy_status.enemies[enemy_index].name}は${player_attack_damage}ダメージうけた！`;
 
-
-        if (player_status.items[player_item_index].cost == true) {
-         if (player_status.items[player_item_index].number > 1) {
-          var item_number = player_status.items[player_item_index].number * 1 - 1;
-          player_status.items[player_item_index].number = item_number;
-         } else {
-          player_status.items.splice(player_item_index, 1);
-         }
-        }
         var player_status_result = JSON.stringify(player_status);
         localStorage.setItem('player_status_key', player_status_result);
 
         new_battlelog = new_battlelog_yotei;
-        if (kaishin_random_2 == 1) {
-         kaisinsound_1.stop();
-         damagesound.play();
-         sound_kaisinsound_2();
-        } else {
-         damagesound.play();
-        }
+        damagesound.play();
+
         var enemy_status_result = JSON.stringify(enemy_status);
         localStorage.setItem('enemy_status_key', enemy_status_result);
         if (enemy_status.enemies[enemy_index].hp <= 0) {
@@ -1797,7 +1828,18 @@
         } else {
          enemy_index += 1;
         }
+        enemy_number = (enemy_status.enemies.length * 1) - 1;
         if (enemy_index > enemy_number || target_all == false) {
+         if (player_status.items[player_item_index].cost == true) {
+          if (player_status.items[player_item_index].number > 1) {
+           var item_number = player_status.items[player_item_index].number * 1 - 1;
+           player_status.items[player_item_index].number = item_number;
+          } else {
+           player_status.items.splice(player_item_index, 1);
+          }
+         }
+         var player_status_result = JSON.stringify(player_status);
+         localStorage.setItem('player_status_key', player_status_result);
          var enemy_status_result = JSON.stringify(enemy_status);
          localStorage.setItem('enemy_status_key', enemy_status_result);
 
