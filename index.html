@@ -681,7 +681,8 @@
       <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="heal_kusuri_shop" value="回復薬  $250ｺｲﾝ" onClick="sound_clicksound();heal_kusuri_shop();"><br><br>
       <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="heal_kusuri_2_shop" value="つよい回復薬    $550ｺｲﾝ" onClick="sound_clicksound();heal_kusuri_2_shop();"><br><br>
       <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="heal_kusuri_3_shop" value="超回復薬    $1100ｺｲﾝ" onClick="sound_clicksound();heal_kusuri_3_shop();"><br><br>
-      <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="iyagarase_bomb_shop" value="いやがらせボム    $10ｺｲﾝ" onClick="sound_clicksound();iyagarase_bomb_shop();"><br><br><br>
+      <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="iyagarase_bomb_shop" value="いやがらせボム    $10ｺｲﾝ" onClick="sound_clicksound();iyagarase_bomb_shop();"><br><br>
+      <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="iyagarase_bomb_shop" value="クラッシュボム    $9000ｺｲﾝ" onClick="sound_clicksound();crash_bomb_shop();"><br><br><br>
       <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="skill_toriaezunaguru_shop" value="ぜんいんなぐる の秘伝書  $1200ｺｲﾝ" onClick="sound_clicksound();test_skill_toriaezunaguru_shop();"><br><br>
       <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="skill_heal_lv1_shop" value="かいふくじゅつLv1 の秘伝書  $1300ｺｲﾝ" onClick="sound_clicksound();skill_heal_lv1_shop();"><br><br>
       <input align="left" type="submit" style="color:black; width:8;font-size:100%;" id="skill_heal_lv2_shop" value="かいふくじゅつLv2 の秘伝書  $5000ｺｲﾝ" onClick="sound_clicksound();skill_heal_lv2_shop();"><br><br>
@@ -769,6 +770,20 @@
         value: 1.0,
         cost: true,
         all: true
+       });
+       item_type_shop(onedan, JSON.parse(item_data).id, JSON.parse(item_data).name, item_data);
+      }
+
+      function crash_bomb_shop() {
+       var onedan = 9000;
+       var item_data = JSON.stringify({
+        id: 'crash_bomb',
+        name: 'クラッシュボム',
+        number: 1,
+        type: "attack",
+        value: 999,
+        cost: true,
+        all: false
        });
        item_type_shop(onedan, JSON.parse(item_data).id, JSON.parse(item_data).name, item_data);
       }
@@ -931,6 +946,7 @@
     <input type="submit" value="戦闘開始(ダークサイド ミョン)  適正レベル 45" id="testes-button" onClick="sound_clicksound();enemy_myon();"><br><br><br>
     <input type="submit" value="戦闘開始(メタルなんとかフェスティバル) 適正レベル 60" id="testes-button" onClick="sound_clicksound();enemy_metal_nan_0();"><br><br>
     <input type="submit" value="戦闘開始(メタルなんとかフェスティバル EX)  適正レベル 90" id="testes-button" onClick="sound_clicksound();enemy_metal_nan_1();"><br><br><br>
+    <input type="submit" value="戦闘開始(ライトサイド ミョン)  適正レベル 75" id="testes-button" onClick="sound_clicksound();enemy_myon_light();"><br><br><br>
     <input type="submit" value="戦闘開始(クリル・クラルサー) 適正レベル 95" id="testes-button" onClick="sound_clicksound();enemy_cril();"><br><br>
     <!--     <input type="submit" value="戦闘開始(クリル・クラルサー テスト)"  id="testes-button" onClick="sound_clicksound();enemy_cril_2();"><br><br><br> -->
     <input type="submit" value="戦闘開始(テスト(音量注意))" id="testes-button" onClick="sound_clicksound();enemy_metal_mini();">
@@ -1914,8 +1930,8 @@
          enemy_data = JSON.stringify({
           id: "enm_testes",
           name: `エリートてすてす ${(enemy_status.enemies.length * 1)}`,
-          hp: 90,
-          maxhp: 90,
+          hp: 400,
+          maxhp: 400,
           atk: 20,
           def: 10,
           exp: 100,
@@ -1927,8 +1943,8 @@
          enemy_data = JSON.stringify({
           id: "enm_testes_dr",
           name: `ドクターてすてす ${(enemy_status.enemies.length * 1)}`,
-          hp: 100,
-          maxhp: 100,
+          hp: 200,
+          maxhp: 200,
           atk: 10,
           def: 18,
           exp: 100,
@@ -1956,7 +1972,7 @@
        var enemy_randomize = Math.floor(Math.random() * 1000);
        if (enemy_randomize - 500 <= 0 && total_hp <= total_maxhp) {
         var heal_randomize = Math.floor(Math.random() * enemy_status.enemies.length);
-        var enemy_heal = 60;
+        var enemy_heal = 250;
         enemy_status.enemies[heal_randomize].hp = enemy_status.enemies[heal_randomize].hp * 1 + enemy_heal;
         enemy_status.enemies[heal_randomize].hp = enemy_status.enemies[heal_randomize].maxhp < enemy_status.enemies[heal_randomize].hp ? enemy_status.enemies[heal_randomize].maxhp : enemy_status.enemies[heal_randomize].hp;
         enemy_total_maxhp_set();
@@ -2089,6 +2105,75 @@
         enemy_attack_damage = enemy_attack_damage < 1 ? 1 : enemy_attack_damage;
         player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
         new_battlelog = `${enemy_status.enemies[enemy_index].name}のサンライズパッシュメント Δ！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！`;
+        damagesound.play();
+       }
+       else {
+        var enemy_attack_damage = Math.floor(((enemy_status.enemies[enemy_index].atk * 1.5 - player_status.def * 1.2) + (Math.random() * 5)) * player_guard_value);
+        enemy_attack_damage = enemy_attack_damage < 1 ? 1 : enemy_attack_damage;
+        player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
+        new_battlelog = `${enemy_status.enemies[enemy_index].name}のこうげき！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！`;
+        damagesound.play();
+       }
+      }
+      //パターンライトミョン
+      else if (enemy_status.enemies[enemy_index].id == 'enm_myon_light') {
+
+       var enemy_randomize = Math.floor(Math.random() * 1000);
+       if (enemy_status.enemies[enemy_index].hp < 6000 && enemy_status.enemies[enemy_index].myon_hp_event_0 != true) {
+        enemy_status.enemies[enemy_index].myon_hp_event_0 = true;
+        enemy_status.enemies[enemy_index].atk = Math.floor(enemy_status.enemies[enemy_index].atk * 1.7);
+        enemy_status.enemies[enemy_index].def = Math.floor(enemy_status.enemies[enemy_index].def * 1.6);
+        enemy_total_maxhp_set();
+        new_battlelog = `${enemy_status.enemies[enemy_index].name}の魂統一 ブレイバー！<br>${enemy_status.enemies[enemy_index].name}のステータスが上昇した！`;
+        healsound.play();
+        sound_shoukansound();
+       }
+       else if (enemy_randomize - 65 <= 0) {
+        var enemy_attack_damage = Math.floor(((enemy_status.enemies[enemy_index].atk * 3.0 - player_status.def * 1.2) + (Math.random() * 5)) * player_guard_value);
+        enemy_attack_damage = enemy_attack_damage < 1 ? 1 : enemy_attack_damage;
+        player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
+        new_battlelog = `${enemy_status.enemies[enemy_index].name}の 無形剣 ヘブンズレーヴァテイン ！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！`;
+        damagesound.play();
+       }
+       else if (enemy_randomize - 140 <= 0) {
+        var enemy_attack_damage = Math.floor(((enemy_status.enemies[enemy_index].atk * 3.8) + (Math.random() * 5)));
+        enemy_attack_damage = enemy_attack_damage < 1 ? 1 : enemy_attack_damage;
+
+        var kuri_random = Math.floor(Math.random() * 1000);
+        var msg_0 = ``;
+        if (kuri_random <= 150) {
+         player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
+         msg_0 = `${player_status.name}は${enemy_attack_damage}ダメージうけた！`;
+        } else {
+         msg_0 = `${player_status.name}にはあたらなかった！`;
+        }
+        new_battlelog = `${enemy_status.enemies[enemy_index].name}のクリティカルフレイム！<br>${msg_0}`;
+        damagesound.play();
+       }
+       else if (enemy_randomize - 150 <= 0 && (enemy_status.enemies[enemy_index].hp * 1) > Math.floor(enemy_status.enemies[enemy_index].maxhp * 0.02)) {
+        var enemy_attack_damage = Math.floor(((enemy_status.enemies[enemy_index].atk * 3.5) + (Math.random() * 5)));
+        enemy_attack_damage = enemy_attack_damage < 1 ? 1 : enemy_attack_damage;
+        player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
+
+        var enemy_damage_num = Math.floor(enemy_status.enemies[enemy_index].maxhp * 0.02);
+        var enemy_damage = (enemy_status.enemies[enemy_index].hp * 1) - enemy_damage_num;
+        enemy_status.enemies[enemy_index].hp = enemy_damage * 1;
+
+        new_battlelog = `${enemy_status.enemies[enemy_index].name}のヘブンズレーヴァテイン！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！<br>${enemy_status.enemies[enemy_index].name}は${enemy_damage_num}ダメージうけた！`;
+        damagesound.play();
+       }
+       else if (enemy_randomize - 300 <= 0) {
+        var enemy_attack_damage = Math.floor(((enemy_status.enemies[enemy_index].atk * 1.1) + (Math.random() * 5)));
+        enemy_attack_damage = enemy_attack_damage < 1 ? 1 : enemy_attack_damage;
+        player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
+        new_battlelog = `${enemy_status.enemies[enemy_index].name}のブラッドメテオ！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！`;
+        damagesound.play();
+       }
+       else if (enemy_randomize - 400 <= 0) {
+        var enemy_attack_damage = Math.floor(((enemy_status.enemies[enemy_index].atk * 1.5 - player_status.def * 1.6) + (Math.random() * 5)) * player_guard_value);
+        enemy_attack_damage = enemy_attack_damage < 1 ? 1 : enemy_attack_damage;
+        player_status.hp = (player_status.hp * 1) - enemy_attack_damage;
+        new_battlelog = `${enemy_status.enemies[enemy_index].name}のドラゴンズヴィジョン！<br>${player_status.name}は${enemy_attack_damage}ダメージうけた！`;
         damagesound.play();
        }
        else {
@@ -2281,8 +2366,8 @@
       type: "boss",
       id: "enm_testes_king",
       name: "てすてすキング",
-      hp: 300,
-      maxhp: 300,
+      hp: 1800,
+      maxhp: 1800,
       atk: 25,
       def: 25,
       exp: 1000,
@@ -2292,8 +2377,8 @@
      var enemy_data = JSON.stringify({
       id: "enm_testes",
       name: "エリートてすてす 1",
-      hp: 150,
-      maxhp: 150,
+      hp: 400,
+      maxhp: 400,
       atk: 15,
       def: 30,
       exp: 200,
@@ -2304,8 +2389,8 @@
      var enemy_data = JSON.stringify({
       id: "enm_testes",
       name: "エリートてすてす 2",
-      hp: 90,
-      maxhp: 90,
+      hp: 200,
+      maxhp: 200,
       atk: 26,
       def: 10,
       exp: 300,
@@ -2357,12 +2442,12 @@
     function enemy_metal_nan_1() {
      var enemy_status = JSON.parse('{"type": "boss", "enemies":[]}');
 
-     for (let i = 1; i <= 1; i++) {
+     for (let i = 1; i <= 3; i++) {
       var enemy_data = JSON.stringify({
        id: "enm_metal_nan_ex",
        name: `メタルなんとかEX ${i}`,
-       hp: 30,
-       maxhp: 30,
+       hp: 20,
+       maxhp: 20,
        atk: 35,
        def: "Infinity",
        exp: 9999,
@@ -2378,7 +2463,7 @@
       maxhp: 50,
       atk: 45,
       def: "Infinity",
-      exp: 12000,
+      exp: 15000,
       coin: 1200
      });
      enemy_status.enemies.push(JSON.parse(enemy_data));
@@ -2399,7 +2484,7 @@
       hp: 9500,
       maxhp: 9500,
       atk: 40,
-      def: -70,
+      def: -30,
       exp: 6000,
       coin: 3000
      });
@@ -2409,6 +2494,30 @@
      localStorage.setItem('enemy_status_key', enemy_status);
      battle_start();
     }
+
+    //ラサイミョン
+    function enemy_myon_light() {
+     var enemy_status = JSON.parse('{"type": "boss", "enemies":[]}');
+
+     var enemy_data = JSON.stringify({
+      type: "boss",
+      id: "enm_myon_light",
+      name: "ライトサイド ミョン",
+      hp: 9600,
+      maxhp: 9600,
+      atk: 75,
+      def: 42,
+      exp: 15000,
+      coin: 8000
+     });
+     enemy_status.enemies.push(JSON.parse(enemy_data));
+
+     enemy_status = JSON.stringify(enemy_status);
+     localStorage.setItem('enemy_status_key', enemy_status);
+     battle_start();
+    }
+
+
     //クリルクラルサー
     function enemy_cril() {
      var enemy_status = JSON.parse('{"type": "boss", "enemies":[]}');
@@ -2440,7 +2549,7 @@
        name: `クリル・クラルサー ${i}`,
        hp: 9900,
        maxhp: 9900,
-       atk: 120,
+       atk: 110,
        def: 50,
        exp: 99999,
        coin: 10000
@@ -2482,6 +2591,8 @@
      var enemy_status = JSON.parse('{"enemies":[]}');
 
      for (let i = 1; i <= 1; i++) {
+      var coin = Math.floor(player_status.coin * 0.3);
+      coin = coin > 99999 ? 99999 : coin;
       var enemy_data = JSON.stringify({
        id: "enm_metal_nan_ex",
        name: `強さが変動するマン`,
@@ -2490,7 +2601,7 @@
        atk: Math.floor(player_status.atk * 0.4),
        def: Math.floor(player_status.def * 1.8),
        exp: Math.floor((player_status.nextexp * 1 - player_status.exp * 1) * 0.3),
-       coin: Math.floor(player_status.coin * 0.3)
+       coin: coin
       });
       enemy_status.enemies.push(JSON.parse(enemy_data));
      }
