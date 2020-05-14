@@ -1241,6 +1241,7 @@
       rpg_player_status_set();
      }
      setTimeout(() => {
+      document.getElementById("rpg-player_battlelog").style.height = "60%";
       document.getElementById("rpg-player_battlelog").innerHTML = `\nコイン ${enemy_coin} , けいけんち ${enemy_exp} かくとく！<br>${levelup_log}`;
      }, 900);
      localStorage.removeItem('enemy_exp');
@@ -1289,6 +1290,7 @@
     }
 
     function battle_end_2() {
+     document.getElementById("rpg-player_battlelog").style.height = "80px";
      player_battle = false;
      localStorage.removeItem('enemy_status_key');
      var player_status = JSON.parse(localStorage.getItem('player_status_key'));
