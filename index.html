@@ -953,6 +953,27 @@
     <input type="submit" value="戦闘開始(テスト(音量注意))" id="testes-button" onClick="sound_clicksound();enemy_metal_mini();">
    </div>
    <div id="player_battle_window" style="display:none;bottom: 20px;">
+    <div style="position: fixed;top: 0;left: 60px;height: 120%;width: 50px;background-size: 100% 100%;background-position: 0% 0px;background-image:url('https://cdn.discordapp.com/attachments/706660445519347763/709400542782292088/333-6.png');"></div>
+    <div id="playertpbar_core" style="position:fixed;bottom: 65px;left: 52px;">
+     <nobr style="position:relative;left: 20px;">
+      <a style="font-size:16px;color:white;position:relative; bottom: 30vh; left:9px;"><strong id="playertp_name">TP</strong></a>
+      <div style="transform: rotate(-90deg);position:relative;right: 60vh;bottom:173.5px;">
+       <progress id="playertpbar_back" max="100" value="0" style="width:60vh;position:relative; top: 0px; left:0px;-webkit-appearance: none;appearance: none;" class=""></progress>
+       <test style="position:relative;left:-3.5px;"><progress id="playertpbar" max="100" value="0" style="width:60vh;position:relative; top: 0px; left:-60vh;-webkit-appearance: none;appearance: none;"></progress>
+      </div>
+      <a style="color:white;position:relative; top: 0px; left:10px;text-align:left;"><strong id="playertp_value"></strong></a>
+     </nobr>
+     <!--
+     <nobr>
+      <br><a style="color:white;position:relative; bottom: 140px; left:18px;"><strong id="playertp_name">TP</strong></a>
+      <div style="transform: rotate(-90deg);position:relative;right: 212px;bottom:173.5px;">
+       <progress id="playertpbar_back" max="100" value="0" style="width:220px;position:relative; top: 0px; left:0px;-webkit-appearance: none;appearance: none;" class=""></progress>
+       <progress id="playertpbar" max="100" value="0" style="width:220px;position:relative; top: 0px; left:-223.5px;-webkit-appearance: none;appearance: none;"></progress>
+      </div>
+      <a style="color:white;position:relative; bottom: 5px; left:19px;text-align:left;"><strong id="playertp_value"></strong></a>
+     </nobr>
+ -->
+    </div><br>
     <!-- <div style="position:relative; top: -20px; left:0px;"><strong style="color:white">HP SET (デバッグ) - </strong><input type="text" id="hp" value="100"> <input type="submit" style="color: black;" value="SET" id="hp_button" onClick="return test_click();"></div> -->
     <div id="enemyhealthbar_core" style="width:35%;position:fixed; top: 12px; right:35%;display:block;" align="right">
      <nobr>
@@ -976,17 +997,7 @@
       <br><a style="color:white"><strong id="playerhealth_name"></strong></a>
      </nobr>
     </div><br>
-    <div style="position: fixed;top: 0;left: 60px;height: 120%;width: 50px;background-size: 100% 100%;background-position: 0% 0px;background-image:url('https://cdn.discordapp.com/attachments/706660445519347763/709400542782292088/333-6.png');"></div>
-    <div id="playertpbar_core" style="position:fixed;bottom: 50px;left: 68px;">
-     <nobr>
-      <br><a style="color:white;position:relative; bottom: 140px; left:18px;"><strong id="playertp_name">TP</strong></a>
-      <div style="transform: rotate(-90deg);position:relative;right: 212px;bottom:173.5px;">
-       <progress id="playertpbar_back" max="100" value="0" style="width:220px;position:relative; top: 0px; left:0px;-webkit-appearance: none;appearance: none;" class=""></progress>
-       <progress id="playertpbar" max="100" value="0" style="width:220px;position:relative; top: 0px; left:-223.5px;-webkit-appearance: none;appearance: none;"></progress>
-      </div>
-      <a style="color:white;position:relative; bottom: 5px; left:19px;text-align:left;"><strong id="playertp_value"></strong></a>
-     </nobr>
-    </div><br>
+    <img id="player_icon_battle" src="" style="position:relative;bottom: 25px;padding-left:55px;width:14%;height:14%;">
     <div id="player_attack_enemy_select" style="overflow:auto;z-index: 200;display:none;position:fixed;bottom:30px;right:10px;width:260px;height:85%;border: groove white;background-color: #141c29;opacity:100%;">
      <div id="player_attack_enemy_select_2" style="position:relative;top: 12px;left:20px;">
      </div>
@@ -994,11 +1005,11 @@
     </div>
     <div style="padding-left:50px;">
      <rpg-player_status>
-      <div id="rpg-player_battlelog" style="overflow:auto;font-size:13px;display:block;position:fixed;height:80px;width:80%;bottom:70px;border: groove white;background-color: #141c29;"></div>
+      <div id="rpg-player_battlelog" align="center" style="overflow:auto;font-size:13px;display:block;position:fixed;height:80px;width:83%;bottom:70px;border: groove white;background-color: #141c29;"></div>
       <rpg-player_status>
        <!-- <rpg-player_status><p id="rpg-player_status2"style="border: groove white;"></p></rpg-player_status> -->
        <br>
-       <div id="player_battle_commands2" style="width:76%;display:block;position:fixed;bottom:30px;">
+       <div id="player_battle_commands2" align="center" style="width:79%;display:block;position:fixed;bottom:30px;">
         <nobr>
          <input style="width:17%;" type="submit" value="こうげき" class="btn btn-primary" id="attack-button" onClick="sound_clicksound();player_skill_command_select_skill_index = -1;player_attack_command();">
          <input style="width:17%;" type="submit" value="わざ" class="btn btn-primary" id="skill-button" onClick="sound_clicksound();player_skill_command();">
@@ -1140,7 +1151,7 @@
      progress_anim_tp = Math.abs(tp - tpbarback) / 20.0;
 
      if (player_status) {
-      document.getElementById("playertp_value").innerHTML = `${player_status.tp}<br>%`;
+      document.getElementById("playertp_value").innerHTML = `${player_status.tp}<br><a style=\"color:white;font-size:20px;\">%</a>`;
       tp = (player_status.tp / player_status.maxtp) * 100;
      }
      if (tp <= 0) {
@@ -1286,6 +1297,11 @@
     }
     //エネミー
     function battle_start() {
+     var player_icon_uri = localStorage.getItem('player_icon_uri_key');
+     if (player_icon_uri) {
+      document.getElementById("player_icon_battle").src = player_icon_uri;
+     }
+
      sound_encountsound();
      enemy_total_maxhp_set();
 
